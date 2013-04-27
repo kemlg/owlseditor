@@ -1,0 +1,49 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<TITLE>JBuilder Project instrument_jtree.jpr</TITLE>
+</HEAD>
+<BODY>
+<H1>Project Notes</H1>
+<HR>
+<FONT SIZE=+1>
+<STRONG>Project: </STRONG>instrument/JTree<BR>
+<STRONG>Author: </STRONG>Bent Dalager<BR>
+<STRONG>Company: </STRONG>Todo Development<BR>
+<STRONG>Description:  </STRONG><BR>
+
+<HR>
+<STRONG>Things to do... </STRONG><BR>
+</FONT>
+<UL>
+<!-- Edit this section to keep track of your to do items -->
+<LI>
+When drag-and-dropping within same tree, operation is carried out as first an
+Add then a Delete. It should be optimized into a Move. One bad side effect with
+the current way is that DnD operations trying to move a node within its own
+parent and that result in a VetoException get undone when most of the time,
+the node should simply have changed indexes within its parent. Some
+head-scratching is in order over the code in TreeDropTargetListener.drop().
+</LI>
+<LI>
+Implement DND export of text with subtrees, tabs etc. Implement DND import of
+text with subtrees, tabs, etc.
+</LI>
+<LI>
+When VetoException causes Undo, the UndoManager generates a corresponding Redo.
+This should be suppressed.
+</LI>
+<LI>
+When VetoException is caught, it generally gets ignored. There should be an
+option for an action to be taken when this happens. Beep, status message, log
+event, etc., are possible options.
+</LI>
+<LI>
+Instrumenter.addNode(boolean, Object) and
+Instrumenter.addChildNode(boolean, Object)
+contain much identical code. The common code should be moved into a separate
+method called by both.
+</LI>
+</UL>
+</BODY>
+</HTML>

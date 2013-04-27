@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="owlstab" default="core" basedir=".">
+    <property name="project" value="owlseditor"/>
+    <property name="version" value="0.0.1"/>
+    <property name="build.dir" value="./bin"/>
+    <property name="build.src" value="${build.dir}/src"/>
+    <property name="build.dest" value="${build.dir}/classes"/>
+    <property name="protegedir" value="/Applications/Protege_3.4.8"/>
+    <property name="installdir" value="${protegedir}/plugins/com.sri.owlseditor"/>
+    <property name="build.war" value="${build.dir}/war"/>
+    <property name="src.java.dir" value="./src"/>
+    <property name="javadoc.destdir" value="./javadoc"/>
+    <property name="final.name" value="${project}-${version}"/>
+    <property name="final.dir" value="./${final.name}/"/>
+    <property name="debug" value="on"/>
+    <property name="year" value="2004"/>
+    <property name="ant.home" value="${ant.home}"/>
+    <property name="project.jar" value="${build.dir}/${project}.jar"/>
+    <property name="docs.dest" value="./site"/>
+    <property name="docs.src" value="./xdocs"/>
+    
+    <!-- Holds all the files that a full package should contain.-->
+    <property name="distribution.contents" value="src/*,build/*,docs/*,xdocs/*,lib/*,bin/${project}.jar"/>
+
+    <!-- =================================================================== -->
+    <!-- Build OWL-S Editor and copy it to the Protege plugin dir            -->
+    <!-- =================================================================== -->
+    <target name="install" depends="jar">
+    <echo message="Copying owlseditor files to ${installdir}"/>		
+    <mkdir dir="${installdir}/doc"/>
+    <copy file="${build.dir}/owlseditor.jar" todir="${installdir}"/>
+	<copy file="plugin.properties" todir="${installdir}"/>
+    <copy todir="${installdir}">
+    	<fileset dir="lib/"/>
+   	</copy>	
+	<copy todir="${installdir}/doc">
+   	  <fileset dir="doc/"/>
+	</copy>	
+	<copy todir="${installdir}/owl-s">
+       	  <fileset dir="owl-s/"/>
+    </copy>	
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Handles all javac compilations                                      -->
+    <!-- =================================================================== -->
+    <target name="core">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dest}"/>
+        <mkdir dir="${build.src}"/>
+        <echo message="Compiling in ${src.java.dir} and saving to ${build.dest}"/>
+        <javac deprecation="yes"
+               srcdir="${src.java.dir}/" 
+               destdir="${build.dest}" 
+               debug="${debug}">
+            <classpath>
+				<fileset dir="${protegedir}">
+                    <include name="*.jar"/>
+				</fileset>
+				<fileset dir="${protegedir}/plugins/edu.stanford.smi.protegex.owl">
+                    <include name="*.jar"/>
+				</fileset>
+            	<fileset dir="./lib">
+                     <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    
+    <!-- =================================================================== -->
+    <!-- Cleans up the distribution                                          -->
+    <!-- =================================================================== -->
+    <target name="clean">
+        <delete dir="${build.dir}/src"/>
+        <delete dir="${build.dir}/classes"/>
+	<delete dir="${installdir}"/>
+        <delete file="${project.jar}"/>
+        <delete file="${project.war}"/>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Rebuilds everything                                                 -->
+    <!-- Basic target which rebuilds Jetspeed clean and then does a full     -->
+    <!-- because there is no second JVM bootup.                              -->
+    <!-- =================================================================== -->
+    <target name="rebuild" depends="clean,core"/>
+
+    <!-- =================================================================== -->
+    <!-- Create Javadoc for everything					     				 -->
+    <!-- =================================================================== -->
+    <target name="javadoc">
+        <mkdir dir="./javadoc"/>
+        <javadoc packagenames="*"
+                 sourcepath="./src"
+                 destdir="{javadoc.destdir}"
+                 author="true"
+                 version="true"
+                 use="true"
+                 failonerror="yes">
+        </javadoc>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Create the jars         					     					 -->
+    <!-- =================================================================== -->
+    <target name="jar" depends="core">
+        <echo message="Building jar file..."/>
+        <mkdir dir="${build.dest}/com/sri/owlseditor/images"/>
+		<copy todir="${build.dest}/com/sri/owlseditor/images">
+   	  		<fileset dir="src/com/sri/owlseditor/images"/>
+		</copy>	
+        <jar destfile="${project.jar}"
+             compress="false"
+             update="no"
+             basedir="${build.dest}"
+             includes="com/**">
+	   	<manifest>
+        	<attribute name="Built-By" value="Daniel Elenius, daele@ida.liu.se"/>
+            <section name="com/sri/owlseditor/Owlstab.class">
+               	<attribute name="Tab-Widget" value="True"/>
+            </section>            
+			<!--
+	   		<section name="com/sri/owlseditor/widgets/ExprLangWidget.class">
+               	<attribute name="Slot-Widget" value="True"/>
+             	<attribute name="Default-Widget" value="True"/>
+             	<attribute name="Default-Widget-For-Slot" value="expr:expressionLanguage"/>  
+				<attribute name="Default-Widget-For-Cardinality" value="Single"/>
+            </section>            
+            <section name="com/sri/owlseditor/widgets/ExprBodyWidget.class">
+               	<attribute name="Slot-Widget" value="True"/>
+             	<attribute name="Default-Widget" value="True"/>
+             	<attribute name="Default-Widget-For-Slot" value="expr:expressionBody"/> 
+				<attribute name="Default-Widget-For-Cardinality" value="Single"/>
+            </section>          
+			-->
+	   		<section name="com/sri/owlseditor/widgets/swrl/SWRLWidget.class">
+               	<attribute name="Slot-Widget" value="True"/>
+             	<attribute name="Default-Widget" value="True"/>
+             	<attribute name="Default-Widget-For-Slot" value="expr:expressionObject"/> 
+				<attribute name="Default-Widget-For-Cardinality" value="Single"/>
+            </section>          
+	   		<section name="com/sri/owlseditor/widgets/dataflow/HasDataFromWidget.class">
+               	<attribute name="Slot-Widget" value="True"/>
+             	<attribute name="Default-Widget" value="True"/>
+             	<attribute name="Default-Widget-For-Slot" value="process:hasDataFrom"/>  
+				<attribute name="Default-Widget-For-Cardinality" value="Single"/>
+            </section>          
+	   		<section name="com/sri/owlseditor/widgets/dataflow/ProducedBindingWidget.class">
+               	<attribute name="Slot-Widget" value="True"/>
+             	<attribute name="Default-Widget" value="True"/>
+             	<attribute name="Default-Widget-For-Slot" value="process:producedBinding"/>  
+				<attribute name="Default-Widget-For-Cardinality" value="Single"/>
+            </section>          
+            <section name="com/sri/owlseditor/widgets/ParamTypeWidget.class">
+               	<attribute name="Slot-Widget" value="True"/>
+             	<attribute name="Default-Widget" value="True"/>
+             	<attribute name="Default-Widget-For-Slot" value="process:parameterType"/>  
+				<attribute name="Default-Widget-For-Cardinality" value="Single"/>
+			</section>
+            <section name="com/sri/owlseditor/widgets/wsdl/WSDLInputWidget.class">
+               	<attribute name="Slot-Widget" value="True"/>
+             	<attribute name="Default-Widget" value="True"/>
+             	<attribute name="Default-Widget-For-Slot" value="grounding:wsdlInput"/>  
+				<attribute name="Default-Widget-For-Cardinality" value="Single"/>
+			</section>
+            <section name="com/sri/owlseditor/widgets/wsdl/WSDLOutputWidget.class">
+               	<attribute name="Slot-Widget" value="True"/>
+             	<attribute name="Default-Widget" value="True"/>
+             	<attribute name="Default-Widget-For-Slot" value="grounding:wsdlOutput"/>  
+				<attribute name="Default-Widget-For-Cardinality" value="Single"/>
+			</section>
+	   	</manifest>
+       </jar>
+    </target>
+
+</project>
+
