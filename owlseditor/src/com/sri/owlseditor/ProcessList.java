@@ -25,6 +25,7 @@ public class ProcessList extends BoldableOWLSInstanceList {
 	}
 
 	public void update(RDFIndividual instance) {
+		// System.out.println("ProcessList.update()");
 		boldItems.clear();
 		if (instance == null) {
 			clearSelection();

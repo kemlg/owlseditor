@@ -19,6 +19,8 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.ListModel;
@@ -26,6 +28,7 @@ import javax.swing.ListModel;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.util.LabeledComponent;
 import edu.stanford.smi.protege.util.SelectableList;
+import edu.stanford.smi.protege.util.SimpleListModel;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
@@ -51,6 +54,12 @@ public class OWLSInstanceList extends OWLSDirectInstancesList {
 	protected OWLModel model;
 	protected String clsName;
 	protected OWLNamedClass cls;
+	
+	static List<OWLSInstanceList>	instances;
+	
+	static {
+		instances = new LinkedList<OWLSInstanceList>();
+	}
 
 	public OWLSInstanceList(Project project, String clsName, boolean checkboxes) {
 		super(project, checkboxes);
@@ -60,6 +69,7 @@ public class OWLSInstanceList extends OWLSDirectInstancesList {
 		cls = model.getOWLNamedClass(clsName);
 		setupOneClassMode();
 		setupHeaderButtons();
+		instances.add(this);
 	}
 
 	public RDFIndividual getSelectedInstance() {
@@ -71,6 +81,7 @@ public class OWLSInstanceList extends OWLSDirectInstancesList {
 	}
 
 	public void update(RDFIndividual instance) {
+		// System.out.println("OWLSInstanceList.update()");
 		if (instance == null)
 			clearSelection();
 		else if (instance.hasRDFType(cls, true))
@@ -177,33 +188,84 @@ class OWLSModelAdapter extends ModelAdapter {
 		ilist = list;
 	}
 
-	public void resourceNameChanged(RDFResource resource, String oldName) {
+	public void resourceReplaced(RDFResource oldResource,
+			RDFResource newResource, String oldName) {
 		// Handle class renaming, because we need to keep _clses in sync
 		// with the current names of user-defiend OWL-S subclasses
-		if (resource instanceof OWLNamedClass) {
+		if (oldResource instanceof OWLNamedClass) {
 			Iterator it = _clses.iterator();
 			while (it.hasNext()) {
 				OWLNamedClass oldcls = (OWLNamedClass) it.next();
 				if (oldcls.getName().equals(oldName)) {
-					oldcls.rename(resource.getName());
+					oldcls.rename(oldResource.getName());
 				}
 			}
 		}
 		// Redraw the instance list if one of the instances
 		// in it has changed name
-		else if (resource instanceof OWLIndividual) {
+		else if (oldResource instanceof OWLIndividual) {
 			// There should be a nicer way to do the following
+			SimpleListModel	target;
 			SelectableList list = (SelectableList) ilist.getSelectable();
 			ListModel listModel = list.getModel();
-			for (int i = listModel.getSize() - 1; i >= 0; i--) {
+			target = new SimpleListModel();
+			System.out.println("oldResource is: " + oldResource);
+			System.out.println("newResource is: " + newResource);
+			for (int i = 0; i < listModel.getSize(); i++) {
 				RDFIndividual inst = (RDFIndividual) listModel.getElementAt(i);
-				if (inst.getName().equals(resource.getName())) {
-					ilist.paint(ilist.getGraphics());
-					break;
+				System.out.println("inst: " + inst);
+				if (inst.getName().equals(oldResource.getName())) {
+					System.out.println("equals!!! " + inst.hashCode() + " : " + oldResource.hashCode());
+					System.out.println("Removing " + i);
+					System.out.println("new inst: " + inst);
+					target.addValue(newResource, i);
+				} else {
+					target.addValue(inst, i);
 				}
+			}
+			((SelectableList)ilist.getSelectable()).setModel(target);
+			ilist.paint(ilist.getGraphics());
+			
+			Iterator<OWLSInstanceList> it = OWLSInstanceList.instances.iterator();
+			while(it.hasNext()) {
+				OWLSInstanceList	oil;
+				
+				oil = it.next();
+				oil.reload();
 			}
 		}
 	}
+
+//	public void resourceNameChanged(RDFResource resource, String oldName) {
+//		System.out.println("OWLSModelAdapter.resourceNameChanged()");
+//		System.out.println(oldName + " to " + resource.getName());
+//		System.out.println(resource);
+//		// Handle class renaming, because we need to keep _clses in sync
+//		// with the current names of user-defiend OWL-S subclasses
+//		if (resource instanceof OWLNamedClass) {
+//			Iterator it = _clses.iterator();
+//			while (it.hasNext()) {
+//				OWLNamedClass oldcls = (OWLNamedClass) it.next();
+//				if (oldcls.getName().equals(oldName)) {
+//					oldcls.rename(resource.getName());
+//				}
+//			}
+//		}
+//		// Redraw the instance list if one of the instances
+//		// in it has changed name
+//		else if (resource instanceof OWLIndividual) {
+//			// There should be a nicer way to do the following
+//			SelectableList list = (SelectableList) ilist.getSelectable();
+//			ListModel listModel = list.getModel();
+//			for (int i = listModel.getSize() - 1; i >= 0; i--) {
+//				RDFIndividual inst = (RDFIndividual) listModel.getElementAt(i);
+//				if (inst.getName().equals(resource.getName())) {
+//					ilist.paint(ilist.getGraphics());
+//					break;
+//				}
+//			}
+//		}
+//	}
 
 	// See if a newly created class is a subclass of _cls.
 	// If so, add it to _clses, and attach a class listener to it to detect if
