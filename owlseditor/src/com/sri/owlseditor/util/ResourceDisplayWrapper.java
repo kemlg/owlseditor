@@ -5,23 +5,25 @@ import edu.stanford.smi.protegex.owl.model.RDFIndividual;
 import edu.stanford.smi.protegex.owl.ui.resourcedisplay.ResourceDisplay;
 
 /**
- * This class just extends ResourceDisplay to implement the OWLSResourceDisplay interface.
+ * This class just extends ResourceDisplay to implement the OWLSResourceDisplay
+ * interface.
  * 
  * 
  * @author Daniel Elenius
  */
-public class ResourceDisplayWrapper extends ResourceDisplay implements OWLSResourceDisplay {
+public class ResourceDisplayWrapper extends ResourceDisplay implements
+		OWLSResourceDisplay {
 
-	public ResourceDisplayWrapper(Project project){
+	public ResourceDisplayWrapper(Project project) {
 		super(project);
 	}
-	
-	public void setInstance(RDFIndividual instance){
+
+	public void setInstance(RDFIndividual instance) {
 		super.setInstance(instance);
 	}
-	
-	public void clearSelection(){
+
+	public void clearSelection() {
 		super.clearSelection();
 	}
-	
+
 }

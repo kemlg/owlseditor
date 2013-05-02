@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.util;
 
 import java.util.ArrayList;
@@ -33,12 +33,14 @@ import edu.stanford.smi.protegex.owl.model.triplestore.TripleStoreModel;
 
 public class OWLUtils {
 
-	public static RDFResource getParameterType(OWLIndividual param, OWLModel okb){
+	public static RDFResource getParameterType(OWLIndividual param, OWLModel okb) {
 		RDFResource type = null;
-		if (param != null){
-			OWLDatatypeProperty paramType = okb.getOWLDatatypeProperty("process:parameterType");
-			RDFSLiteral literal = (RDFSLiteral)param.getPropertyValueLiteral(paramType);
-			if (literal != null){
+		if (param != null) {
+			OWLDatatypeProperty paramType = okb
+					.getOWLDatatypeProperty("process:parameterType");
+			RDFSLiteral literal = (RDFSLiteral) param
+					.getPropertyValueLiteral(paramType);
+			if (literal != null) {
 				String uri = literal.getString();
 				String resourceName = okb.getResourceNameForURI(uri);
 				if (resourceName != null)
@@ -47,75 +49,74 @@ public class OWLUtils {
 		}
 		return type;
 	}
-	
+
 	/** Sorts a Collection of Frames alphabetically. */
-	public static Collection sortFrameCollection(Collection c){
+	public static Collection sortFrameCollection(Collection c) {
 		ArrayList list = new ArrayList(c);
 		Collections.sort(list, new FrameComparator());
 		return list;
 	}
-	
-	public static boolean setPropertyValueInHomeStore(OWLIndividual inst, RDFProperty prop, Object value){
-    	TripleStoreModel ts = inst.getOWLModel().getTripleStoreModel();
-    	TripleStore homeStore = ts.getHomeTripleStore(inst);
-    	TripleStore currentStore = ts.getActiveTripleStore();
-    	if (currentStore != homeStore){
-    		if (ts.isEditableTripleStore(homeStore)){
-    			//ts.setActiveTripleStore(homeStore);
-    			//inst.setPropertyValue (prop, value);
-    			//ts.setActiveTripleStore(currentStore);
-    			homeStore.add(inst, prop, value);
-    			return true;
-    		}
-    	}
-    	else{
-    		inst.setPropertyValue(prop, value);
-    		return true;
-    	}
-    	return false;
+
+	public static boolean setPropertyValueInHomeStore(OWLIndividual inst,
+			RDFProperty prop, Object value) {
+		TripleStoreModel ts = inst.getOWLModel().getTripleStoreModel();
+		TripleStore homeStore = ts.getHomeTripleStore(inst);
+		TripleStore currentStore = ts.getActiveTripleStore();
+		if (currentStore != homeStore) {
+			if (ts.isEditableTripleStore(homeStore)) {
+				// ts.setActiveTripleStore(homeStore);
+				// inst.setPropertyValue (prop, value);
+				// ts.setActiveTripleStore(currentStore);
+				homeStore.add(inst, prop, value);
+				return true;
+			}
+		} else {
+			inst.setPropertyValue(prop, value);
+			return true;
+		}
+		return false;
 	}
-	
+
 	/** @deprecated */
 	public static void removeNamedSlotValue(OWLIndividual inst,
-											String slotname,
-											OWLModel okb){
+			String slotname, OWLModel okb) {
 		OWLProperty slot = okb.getOWLProperty(slotname);
 		Iterator it = inst.getPropertyValues(slot, true).iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			Object value = it.next();
 			inst.removePropertyValue(slot, value);
 		}
 	}
-	
-	/* This method assumes the slot takes only one value, so it
-	 * removes any previous values for the slot.
+
+	/*
+	 * This method assumes the slot takes only one value, so it removes any
+	 * previous values for the slot.
 	 */
 	/** @deprecated */
-	public static void setNamedSlotValue(OWLIndividual inst, 
-										 String slotname, 
-										 Object value,
-										 OWLModel okb){
+	public static void setNamedSlotValue(OWLIndividual inst, String slotname,
+			Object value, OWLModel okb) {
 		/* First remove any previous occurence of the slot */
 		OWLProperty slot = okb.getOWLProperty(slotname);
 		Iterator it = inst.getPropertyValues(slot, true).iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			Object oldvalue = it.next();
 			inst.removePropertyValue(slot, oldvalue);
 		}
-		
+
 		/* Now add the new slot value */
 		inst.addPropertyValue(slot, value);
 	}
-	
+
 	/** @deprecated */
-	public static Object getNamedSlotValue(OWLIndividual inst, String slotname, OWLModel okb){
+	public static Object getNamedSlotValue(OWLIndividual inst, String slotname,
+			OWLModel okb) {
 		OWLProperty slot = okb.getOWLProperty(slotname);
 		return inst.getPropertyValue(slot);
 	}
-	
+
 	/** @deprecated */
-	public static String getClassNameOfInstance(OWLIndividual inst){
+	public static String getClassNameOfInstance(OWLIndividual inst) {
 		return inst.getRDFType().getName();
 	}
-	
+
 }

@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.owl2xml;
 
 import java.util.Enumeration;
@@ -25,25 +25,26 @@ import com.sri.owlseditor.xslt.XSLTNode;
 public class ElementNode extends XSLTNode {
 	public final static String DEFAULT_ELEMENT_NAME = "Element";
 
-	public ElementNode(){
+	public ElementNode() {
 		this(DEFAULT_ELEMENT_NAME);
 	}
-	
-	public ElementNode(String name){
+
+	public ElementNode(String name) {
 		super(name);
 		setAllowsChildren(true);
 	}
-	
+
 	public String getXSLTString(int indentnum) {
 		String str = "";
 		String indent = "";
-		for (int i=0;i<indentnum;i++) indent += TAB;
+		for (int i = 0; i < indentnum; i++)
+			indent += TAB;
 
 		str = indent + "<" + getNodeName() + ">" + NL;
 		boolean notFirstAttribute = false;
-		for (Enumeration e = children() ; e.hasMoreElements();) {
-			XSLTNode child = (XSLTNode)e.nextElement();
-			str += child.getXSLTString(indentnum+1);
+		for (Enumeration e = children(); e.hasMoreElements();) {
+			XSLTNode child = (XSLTNode) e.nextElement();
+			str += child.getXSLTString(indentnum + 1);
 		}
 		str += indent + "</" + getNodeName() + ">" + NL;
 

@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets.dataflow;
 
 import javax.swing.JPanel;
@@ -28,15 +28,15 @@ import edu.stanford.smi.protegex.owl.model.OWLModel;
 
 public abstract class AbstractBindingPanel extends JPanel {
 	OWLModel okb;
-	
-	public AbstractBindingPanel (OWLModel okb){
+
+	public AbstractBindingPanel(OWLModel okb) {
 		super();
 		this.okb = okb;
 	}
-	
-	public OWLModel getOWLModel(){
+
+	public OWLModel getOWLModel() {
 		return okb;
 	}
-	
-	public abstract void setBinding (OWLIndividual binding, OWLIndividual perform);
+
+	public abstract void setBinding(OWLIndividual binding, OWLIndividual perform);
 }

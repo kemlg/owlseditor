@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp.tree;
 
 import javax.swing.tree.DefaultTreeModel;
@@ -21,14 +21,14 @@ import javax.swing.tree.TreeNode;
 import edu.stanford.smi.protege.model.Project;
 
 /**
- *  The model for the composite process tree.
+ * The model for the composite process tree.
  * 
- *   @author Daniel Elenius <elenius@csl.sri.com>
+ * @author Daniel Elenius <elenius@csl.sri.com>
  * 
  */
 public class OWLSTreeModel extends DefaultTreeModel {
-	
-	public OWLSTreeModel(Project project, TreeNode root){
+
+	public OWLSTreeModel(Project project, TreeNode root) {
 		super(root);
 	}
 }

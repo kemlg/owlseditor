@@ -14,17 +14,16 @@
 // Portions created by the Initial Developer are Copyright (C) 2004 the
 // Initial Developer.  All Rights Reserved.
 
-
 package com.sri.owlseditor.iopr;
 
 import edu.stanford.smi.protege.model.Project;
 
 public class ResultList extends IOPRInstancesList {
 
-    public static final String RESULT = "process:Result";
-    public static final String RESULT_PROPERTY = ":hasResult";
+	public static final String RESULT = "process:Result";
+	public static final String RESULT_PROPERTY = ":hasResult";
 
-    public ResultList (Project project) {
-    	super (project, RESULT, RESULT_PROPERTY);
-    }
+	public ResultList(Project project) {
+		super(project, RESULT, RESULT_PROPERTY);
+	}
 }

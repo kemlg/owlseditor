@@ -12,18 +12,18 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.util;
 
 /**
- * The interface that must be implemented by any class that wishes to register itself with
- * the ListenerCleaner.
+ * The interface that must be implemented by any class that wishes to register
+ * itself with the ListenerCleaner.
  * 
  * @author Daniel Elenius
- *
+ * 
  */
 public interface CleanerListener {
 
 	public void cleanup();
-	
+
 }

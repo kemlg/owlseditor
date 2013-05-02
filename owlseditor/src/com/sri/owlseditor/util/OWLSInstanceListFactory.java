@@ -39,28 +39,36 @@ import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
  * @author Daniel Elenius
  */
 public class OWLSInstanceListFactory {
-	
-public static OWLSInstanceList create(Project project, OWLNamedClass cls){
-//	System.out.println(cls.getName());
-	if(cls == null)
-		return null;
-    if (cls.getPrefixedName().equals("service:Service"))// || cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Service.owl#Service"))
-	    return new ServiceList(project);
-	else if (cls.getPrefixedName().equals("profile:Profile"))// || cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Profile.owl#Profile"))
-	    return new ProfileList(project);
-	else if (cls.getPrefixedName().equals("process:Process"))// || cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Process.owl#Process"))
-	    return new ProcessList(project);
-	else if (cls.getPrefixedName().equals("grounding:WsdlGrounding"))// || cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Grounding.owl#WsdlGrounding"))
-	    return new GroundingList(project);
-	else if (cls.getPrefixedName().equals(InputList.INPUT))// || cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Process.owl#Input"))
-	    return new InputList (project);
-	else if (cls.getPrefixedName().equals(OutputList.OUTPUT)) // || cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Process.owl#Output"))
-	    return new OutputList (project);
-	else if (cls.getPrefixedName().equals(PreconditionList.PRECONDITION)) // || cls.getName().equals("http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#Condition"))
-	    return new PreconditionList (project);
-	else if (cls.getPrefixedName().equals(ResultList.RESULT)) // || cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Process.owl#Result"))
-	    return new ResultList (project);
-	else
-	    return null;
-    }
+
+	public static OWLSInstanceList create(Project project, OWLNamedClass cls) {
+		// System.out.println(cls.getName());
+		if (cls == null)
+			return null;
+		if (cls.getPrefixedName().equals("service:Service"))// ||
+															// cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Service.owl#Service"))
+			return new ServiceList(project);
+		else if (cls.getPrefixedName().equals("profile:Profile"))// ||
+																	// cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Profile.owl#Profile"))
+			return new ProfileList(project);
+		else if (cls.getPrefixedName().equals("process:Process"))// ||
+																	// cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Process.owl#Process"))
+			return new ProcessList(project);
+		else if (cls.getPrefixedName().equals("grounding:WsdlGrounding"))// ||
+																			// cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Grounding.owl#WsdlGrounding"))
+			return new GroundingList(project);
+		else if (cls.getPrefixedName().equals(InputList.INPUT))// ||
+																// cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Process.owl#Input"))
+			return new InputList(project);
+		else if (cls.getPrefixedName().equals(OutputList.OUTPUT)) // ||
+																	// cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Process.owl#Output"))
+			return new OutputList(project);
+		else if (cls.getPrefixedName().equals(PreconditionList.PRECONDITION)) // ||
+																				// cls.getName().equals("http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#Condition"))
+			return new PreconditionList(project);
+		else if (cls.getPrefixedName().equals(ResultList.RESULT)) // ||
+																	// cls.getName().equals("http://www.daml.org/services/owl-s/1.2/Process.owl#Result"))
+			return new ResultList(project);
+		else
+			return null;
+	}
 }

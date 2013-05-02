@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.options;
 
 import java.awt.Component;
@@ -42,65 +42,69 @@ public class GraphVizOptions extends OptionPanel {
 
 	private JTextField pathfield = new JTextField();
 	private Project project;
-	
-	public GraphVizOptions(Project project){
+
+	public GraphVizOptions(Project project) {
 		super();
 		this.project = project;
-		//Container contents = options.getContentPane();
-    	//JPanel panel = ComponentFactory.createPanel();
-    	//contents.add(panel);
-    	setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    	JPanel labelpanel = ComponentFactory.createPanel();
-    	labelpanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-    	JLabel label = ComponentFactory.createLabel("Path to GraphViz");
-    	label.setSize(new Dimension(350,20));
-    	labelpanel.add(label);
-    	add(labelpanel);
-    	JPanel pathpanel = ComponentFactory.createPanel();
-    	pathpanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-    	pathfield = ComponentFactory.createTextField();
-    	pathpanel.add(pathfield);
+		// Container contents = options.getContentPane();
+		// JPanel panel = ComponentFactory.createPanel();
+		// contents.add(panel);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		JPanel labelpanel = ComponentFactory.createPanel();
+		labelpanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JLabel label = ComponentFactory.createLabel("Path to GraphViz");
+		label.setSize(new Dimension(350, 20));
+		labelpanel.add(label);
+		add(labelpanel);
+		JPanel pathpanel = ComponentFactory.createPanel();
+		pathpanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		pathfield = ComponentFactory.createTextField();
+		pathpanel.add(pathfield);
 
-    	// Set up the path in the text field
-    	String path = (String)project.getClientInformation(OWLSEDITOR_GRAPHVIZ_PATH_KEY);
-    	if (path == null)
-    		pathfield.setText(DEFAULT_GRAPHVIZ_PATH);
-    	else
-    		pathfield.setText(path);
-    	
-    	class PathChooserAction extends AbstractAction{
-    		Component parent;
-    		JTextField pathfield;
-    		
-    		public PathChooserAction(Component parent, JTextField pathfield){
-    			this.parent = parent;
-    			this.pathfield = pathfield;
-    		}
-    		
-    		public void actionPerformed(ActionEvent e){
-    			JFileChooser chooser = ComponentFactory.createFileChooser("Choose a file", "");
-    			int returnval = chooser.showOpenDialog(parent);
-    			if (returnval == JFileChooser.APPROVE_OPTION){
-    				File file = chooser.getSelectedFile();
-    				try{
-    					pathfield.setText(file.getCanonicalPath());
-    				}
-    				catch(IOException io){
-    					System.out.println("ERROR! Couldn't open GraphViz executable.");
-    					io.printStackTrace();
-    				}
-    			}
-    		}
-    	}
-    	JButton pathbutton = ComponentFactory.createButton(new PathChooserAction(this, pathfield));
-    	pathbutton.setText("Browse...");
-    	pathpanel.add(pathbutton);
+		// Set up the path in the text field
+		String path = (String) project
+				.getClientInformation(OWLSEDITOR_GRAPHVIZ_PATH_KEY);
+		if (path == null)
+			pathfield.setText(DEFAULT_GRAPHVIZ_PATH);
+		else
+			pathfield.setText(path);
 
-    	add(pathpanel);
+		class PathChooserAction extends AbstractAction {
+			Component parent;
+			JTextField pathfield;
+
+			public PathChooserAction(Component parent, JTextField pathfield) {
+				this.parent = parent;
+				this.pathfield = pathfield;
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = ComponentFactory.createFileChooser(
+						"Choose a file", "");
+				int returnval = chooser.showOpenDialog(parent);
+				if (returnval == JFileChooser.APPROVE_OPTION) {
+					File file = chooser.getSelectedFile();
+					try {
+						pathfield.setText(file.getCanonicalPath());
+					} catch (IOException io) {
+						System.out
+								.println("ERROR! Couldn't open GraphViz executable.");
+						io.printStackTrace();
+					}
+				}
+			}
+		}
+		JButton pathbutton = ComponentFactory
+				.createButton(new PathChooserAction(this, pathfield));
+		pathbutton.setText("Browse...");
+		pathpanel.add(pathbutton);
+
+		add(pathpanel);
 	}
-	
-	public void commitChanges(){
-		project.setClientInformation(OWLSEDITOR_GRAPHVIZ_PATH_KEY, pathfield.getText());
+
+	public void commitChanges() {
+		project.setClientInformation(OWLSEDITOR_GRAPHVIZ_PATH_KEY,
+				pathfield.getText());
 	}
-	
+
 }

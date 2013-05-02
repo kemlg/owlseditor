@@ -11,7 +11,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets.wsdl;
 
 import java.awt.Dimension;
@@ -23,24 +23,22 @@ import javax.swing.JTextArea;
 import edu.stanford.smi.protege.util.ComponentFactory;
 
 public class WSDLTextPanel extends JPanel {
-    private JTextArea m_jta;
-    private JScrollPane m_textPane;
+	private JTextArea m_jta;
+	private JScrollPane m_textPane;
 
-    public WSDLTextPanel () {
-	m_jta = ComponentFactory.createTextArea();
-	m_jta.setLineWrap (false);
-	m_jta.setCaretPosition (0);
-	m_textPane = ComponentFactory.createScrollPane (m_jta);
-	add (m_textPane);
-    }
-	
-    public JTextArea getTextArea ()
-    {
-	return m_jta;
-    }
+	public WSDLTextPanel() {
+		m_jta = ComponentFactory.createTextArea();
+		m_jta.setLineWrap(false);
+		m_jta.setCaretPosition(0);
+		m_textPane = ComponentFactory.createScrollPane(m_jta);
+		add(m_textPane);
+	}
 
-    public void setPanelSize (Dimension d)
-    {
-	m_textPane.setPreferredSize (new Dimension (d.width, d.height - 10));
-    }
+	public JTextArea getTextArea() {
+		return m_jta;
+	}
+
+	public void setPanelSize(Dimension d) {
+		m_textPane.setPreferredSize(new Dimension(d.width, d.height - 10));
+	}
 }

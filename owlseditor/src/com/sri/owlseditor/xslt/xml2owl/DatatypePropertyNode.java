@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.xml2owl;
 
 import java.util.Enumeration;
@@ -31,38 +31,40 @@ import edu.stanford.smi.protegex.owl.ui.icons.OWLIcons;
  */
 public class DatatypePropertyNode extends OWLNode {
 	private OWLDatatypeProperty prop;
-	
-	public DatatypePropertyNode(OWLDatatypeProperty prop){
+
+	public DatatypePropertyNode(OWLDatatypeProperty prop) {
 		super(prop.getName());
 		this.prop = prop;
 		setAllowsChildren(true);
 	}
-	
-	public Icon getIcon(){
+
+	public Icon getIcon() {
 		return OWLIcons.getImageIcon(OWLIcons.OWL_DATATYPE_PROPERTY);
 	}
-	
-	public RDFResource getResource(){
+
+	public RDFResource getResource() {
 		return prop;
 	}
-	
+
 	public String getXSLTString(int indentnum) {
 		String str = "";
 		String indent = "";
-		for (int i=0;i<indentnum;i++) indent += TAB;
+		for (int i = 0; i < indentnum; i++)
+			indent += TAB;
 
 		str = indent + "<" + getNodeName();
 		String strBody = "";
 		boolean notFirstAttribute = false;
-		for (Enumeration e = children() ; e.hasMoreElements();) {
-			XSLTNode child = (XSLTNode)e.nextElement();
-			
-			if ( child instanceof AttributeNode ) {
-				if ( notFirstAttribute ) str += NL + indent;// else str += " ";
+		for (Enumeration e = children(); e.hasMoreElements();) {
+			XSLTNode child = (XSLTNode) e.nextElement();
+
+			if (child instanceof AttributeNode) {
+				if (notFirstAttribute)
+					str += NL + indent;// else str += " ";
 				str += child.getXSLTString(indentnum);
 				notFirstAttribute = true;
-			} else 
-				strBody += child.getXSLTString(indentnum+1);	
+			} else
+				strBody += child.getXSLTString(indentnum + 1);
 		}
 		str += ">" + NL;
 		str += strBody;

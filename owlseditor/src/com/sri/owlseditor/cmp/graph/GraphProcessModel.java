@@ -26,10 +26,9 @@ The following notice applies to the Original Code:
    1995), DFARS 252.227-7014 (June 1995), and FAR 52.227-14(a).
    This notice must appear in all copies of this file and its
    derivatives.
-*/
+ */
 
 package com.sri.owlseditor.cmp.graph;
-
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -39,15 +38,14 @@ import com.sri.owlseditor.cmp.tree.OWLSTreeNode;
 
 import edu.stanford.smi.protege.model.KnowledgeBase;
 
-
 public class GraphProcessModel {
 	static PrintWriter pw;
 	static KnowledgeBase kb;
-	static int clusterNumber=0;
-	static boolean graphClusters=false;
-	public  HashSet nameSet;
+	static int clusterNumber = 0;
+	static boolean graphClusters = false;
+	public HashSet nameSet;
 	private OWLSTreeNode node;
-	
+
 	public static final String NODE_EDGE_COLOR = "lemonchiffon4";
 	public static final String NODE_FILL_COLOR = "lemonchiffon1";
 	public static final String EDGE_COLOR = "lemonchiffon4";
@@ -60,11 +58,9 @@ public class GraphProcessModel {
 	public static final String DATAFLOW_EDGE_COLOR = "blue";
 	public static final String DATAFLOW_FONT_COLOR = "blue";
 	public static final String DATAFLOW_NODE_COLOR = "blue";
-	
+
 	public GraphProcessModel(OWLSTreeNode rootConstruct,
-							 OWLSTreeNode selectedNode,
-							 String outputFileName, 
-							 KnowledgeBase inkb) {
+			OWLSTreeNode selectedNode, String outputFileName, KnowledgeBase inkb) {
 		node = rootConstruct;
 		nameSet = new HashSet();
 		kb = inkb;
@@ -75,31 +71,33 @@ public class GraphProcessModel {
 			String kbName = kb.getName();
 			pw.println("digraph \"" + kbName + "\" {");
 
- 			pw.println("node [shape=box, fillcolor=" + NODE_FILL_COLOR + ", style=filled, color=" + 
-						NODE_EDGE_COLOR +"];");
+			pw.println("node [shape=box, fillcolor=" + NODE_FILL_COLOR
+					+ ", style=filled, color=" + NODE_EDGE_COLOR + "];");
 			pw.println("edge [color=" + EDGE_COLOR + "];");
 			pw.println("compound=true;");
-			//pw.println("ranksep=\"1.5\";");
+			// pw.println("ranksep=\"1.5\";");
 			pw.println("labelloc=t;");
 			pw.println("subgraph Top {rank=source;");
 			pw.println("Start [shape=ellipse, label=\"Start/In\"];");
 			pw.println("}");
 
-			if (rootConstruct != null){
+			if (rootConstruct != null) {
 				pw.println("subgraph Main {");
-				GraphNodeInfo nodeInfo = node.graph(nameSet, pw, 0, selectedNode);
+				GraphNodeInfo nodeInfo = node.graph(nameSet, pw, 0,
+						selectedNode);
 				pw.println("}");
-				pw.println("Start->" + nodeInfo.firstNode + nodeInfo.createInEdgeAttr(""));
-				pw.println(nodeInfo.lastNode + "->Finish" + nodeInfo.createOutEdgeAttr(""));
-			}
-			else
+				pw.println("Start->" + nodeInfo.firstNode
+						+ nodeInfo.createInEdgeAttr(""));
+				pw.println(nodeInfo.lastNode + "->Finish"
+						+ nodeInfo.createOutEdgeAttr(""));
+			} else
 				pw.println("Start->Finish");
-				
+
 			pw.println("subgraph End {rank=sink");
 			pw.println("Finish [shape=ellipse, label=\"Finish/Out\"];");
 			pw.println("}");
 
-			pw.println("}");   // end digraph
+			pw.println("}"); // end digraph
 			pw.flush();
 			pw.close();
 

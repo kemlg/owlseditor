@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp.tree;
 
 import java.awt.datatransfer.DataFlavor;
@@ -21,43 +21,43 @@ import com.sri.owlseditor.util.Cleaner;
 import com.sri.owlseditor.util.CleanerListener;
 
 /**
- * Singleton class which provides the dataflavor for our tree nodes.
- * Used by TreeDragSourceGestureListener in IJTree.
+ * Singleton class which provides the dataflavor for our tree nodes. Used by
+ * TreeDragSourceGestureListener in IJTree.
  * 
  * @author Daniel Elenius
- *
+ * 
  */
-public class OWLSDataFlavorProvider implements CleanerListener{
+public class OWLSDataFlavorProvider implements CleanerListener {
 	private static OWLSDataFlavorProvider instance;
 	private DataFlavor OWLSDataFlavor;
-	
-	private OWLSDataFlavorProvider(){
-		//System.out.println("Creating DataFlavorProvider");
+
+	private OWLSDataFlavorProvider() {
+		// System.out.println("Creating DataFlavorProvider");
 		/* This is needed for the drag and drop stuff */
-		//String flavor = DataFlavor.javaJVMLocalObjectMimeType + 
-		//"; class=org.pvv.bcd.instrument.JTree.DefaultNodeInfo";
-		try{
-			//OWLSDataFlavor = new DataFlavor(flavor, "DefaultNodeInfo");
-			OWLSDataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType);
-		}
-		catch (java.lang.Exception e){
+		// String flavor = DataFlavor.javaJVMLocalObjectMimeType +
+		// "; class=org.pvv.bcd.instrument.JTree.DefaultNodeInfo";
+		try {
+			// OWLSDataFlavor = new DataFlavor(flavor, "DefaultNodeInfo");
+			OWLSDataFlavor = new DataFlavor(
+					DataFlavor.javaJVMLocalObjectMimeType);
+		} catch (java.lang.Exception e) {
 			e.printStackTrace();
 		}
 		Cleaner.getInstance().registerCleanerListener(this);
 	}
 
-	public void cleanup(){
+	public void cleanup() {
 		instance = null;
 	}
-	
-	public static OWLSDataFlavorProvider getInstance(){
-		if (instance == null){
+
+	public static OWLSDataFlavorProvider getInstance() {
+		if (instance == null) {
 			instance = new OWLSDataFlavorProvider();
 		}
 		return instance;
 	}
-	
-	public DataFlavor getOWLSDataFlavor(){
-		return OWLSDataFlavor; 
+
+	public DataFlavor getOWLSDataFlavor() {
+		return OWLSDataFlavor;
 	}
 }

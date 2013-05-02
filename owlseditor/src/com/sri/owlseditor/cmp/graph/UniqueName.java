@@ -26,47 +26,46 @@ The following notice applies to the Original Code:
    1995), DFARS 252.227-7014 (June 1995), and FAR 52.227-14(a).
    This notice must appear in all copies of this file and its
    derivatives.
-*/
+ */
 package com.sri.owlseditor.cmp.graph;
 
 import java.util.*;
 
-public class UniqueName{
-String originalName;
-String uniqueName;
-HashSet mySet;
+public class UniqueName {
+	String originalName;
+	String uniqueName;
+	HashSet mySet;
 
-public UniqueName(String name, HashSet nameSet){
-  mySet=nameSet;
-  originalName=name;
-  uniqueName=name;
-  int count=0;
-  uniqueName=name.replace('-','_');
-  uniqueName=uniqueName.replace(':','_');
-  while (!mySet.add(uniqueName+"->"+originalName))
-  {
-   uniqueName=uniqueName+"UN"+ String.valueOf(count++);
-  }
+	public UniqueName(String name, HashSet nameSet) {
+		mySet = nameSet;
+		originalName = name;
+		uniqueName = name;
+		int count = 0;
+		uniqueName = name.replace('-', '_');
+		uniqueName = uniqueName.replace(':', '_');
+		while (!mySet.add(uniqueName + "->" + originalName)) {
+			uniqueName = uniqueName + "UN" + String.valueOf(count++);
+		}
+	}
+
+	public String getOriginalName() {
+		return originalName;
+	}
+
+	public String getUniqueName() {
+		return uniqueName;
+	}
+
+	public static String findOriginalName(String uniqueName, HashSet set) {
+
+		String pName = "Not found";
+		Iterator j = set.iterator();
+		while (j.hasNext()) {
+			pName = (String) j.next();
+			if (pName.startsWith(uniqueName + "->"))
+				break;
+		}
+		return pName.replaceAll(uniqueName + "->", "");
+	}
+
 }
-public String getOriginalName(){
-  return originalName;
-}
-
-public String getUniqueName(){
-  return uniqueName;
-}
-
-public static String findOriginalName(String uniqueName, HashSet set){
-
-  String pName="Not found";
-  Iterator j=set.iterator();
-  while (j.hasNext()) {
-     pName = (String) j.next();
-     if(pName.startsWith(uniqueName+"->"))
-       break;
-     }
-  return pName.replaceAll(uniqueName+"->","");
-}
-
-}
-

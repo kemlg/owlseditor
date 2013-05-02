@@ -12,18 +12,18 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets;
 
 import edu.stanford.smi.protege.widget.TextAreaWidget;
 
 /**
- * Exactly the same as TextAreaWidget, but we need a different name,
- * otherwise Protege gets confused and complains about duplicate widgets.
+ * Exactly the same as TextAreaWidget, but we need a different name, otherwise
+ * Protege gets confused and complains about duplicate widgets.
  * 
  * Uses TextAreaWidget from protege-core.
  * 
- *  * @author Daniel Elenius
+ * * @author Daniel Elenius
  */
 public class TextDescriptionWidget extends TextAreaWidget {
 

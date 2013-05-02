@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor;
 
 import edu.stanford.smi.protege.model.Project;
@@ -21,43 +21,39 @@ import com.sri.owlseditor.execute.ExecuteServiceAction;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.RDFIndividual;
 
-
 public class ServiceList extends BoldableOWLSInstanceList {
 	private ExecuteServiceAction esa;
-	
-    public ServiceList(Project project){
-    	super(project, "service:Service");
-    	esa = new ExecuteServiceAction((OWLModel)project.getKnowledgeBase(), this);
+
+	public ServiceList(Project project) {
+		super(project, "service:Service");
+		esa = new ExecuteServiceAction((OWLModel) project.getKnowledgeBase(),
+				this);
 		addHeaderButton(esa);
 		esa.setEnabled(false);
 
-    }
+	}
 
-	public void update(RDFIndividual instance){
+	public void update(RDFIndividual instance) {
 		boldItems.clear();
 
-		if (instance == null){
+		if (instance == null) {
 			clearSelection();
 			esa.setEnabled(false);
-		}
-		else if (instance.hasRDFType(service, true)){
+		} else if (instance.hasRDFType(service, true)) {
 			setSelectedInstance(instance);
 			esa.setEnabled(true);
 			boldItems.add(instance);
-		}
-		else if (instance.hasRDFType(profile, true)){
+		} else if (instance.hasRDFType(profile, true)) {
 			clearSelection();
 			// presentedBy: profile -> service
 			boldItems.addAll(instance.getPropertyValues(presentedBy));
 			esa.setEnabled(false);
-		}
-		else if (instance.hasRDFType(process, true)){
+		} else if (instance.hasRDFType(process, true)) {
 			clearSelection();
 			// describes: process -> service
 			boldItems.addAll(instance.getPropertyValues(describes));
 			esa.setEnabled(false);
-		}
-		else if (instance.hasRDFType(grounding, true)){
+		} else if (instance.hasRDFType(grounding, true)) {
 			clearSelection();
 			// supportedBy: grounding -> service
 			boldItems.addAll(instance.getPropertyValues(supportedBy));
@@ -66,6 +62,3 @@ public class ServiceList extends BoldableOWLSInstanceList {
 	}
 
 }
-
-
-

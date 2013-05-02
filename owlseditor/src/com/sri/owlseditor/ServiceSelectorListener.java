@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor;
 
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
@@ -22,11 +22,11 @@ import edu.stanford.smi.protegex.owl.model.OWLIndividual;
  * changes need to implement this interface and be registered using
  * ServiceSelector.addServiceSelectorListener().
  * 
- *  @author Daniel Elenius
- *
+ * @author Daniel Elenius
+ * 
  */
 public interface ServiceSelectorListener {
 
 	public void setInstance(OWLIndividual inst);
-	
+
 }

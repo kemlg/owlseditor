@@ -219,8 +219,8 @@ public class Owlstab extends AbstractTabWidget {
 	 * @return true if a reload is required
 	 */
 	private void setupImports() {
-		ProtegeOWLParser	pop;
-		OWLOntology			oo;
+		ProtegeOWLParser pop;
+		OWLOntology oo;
 
 		try {
 			groundingURI = new URI(GROUNDING_URI);
@@ -254,9 +254,10 @@ public class Owlstab extends AbstractTabWidget {
 		}
 
 		try {
-			String declarations[] = new String [] {"Expression", "Process", "Grounding", "Profile", "Service",
-					"ObjectList", "swrl", "time-entry", "swrlb"};
-			for(int j=0;j<declarations.length;j++) {
+			String declarations[] = new String[] { "Expression", "Process",
+					"Grounding", "Profile", "Service", "ObjectList", "swrl",
+					"time-entry", "swrlb" };
+			for (int j = 0; j < declarations.length; j++) {
 				ImportHelper ih = new ImportHelper(okb);
 				declareOntology(ih, declarations[j]);
 				ih.importOntologies(false);
@@ -272,7 +273,7 @@ public class Owlstab extends AbstractTabWidget {
 		// System.out.println(it.next());
 		// }
 		// tsm.endTripleStoreChanges();
-		
+
 		java.util.Collection imports = oi.getImports();
 		Iterator i = imports.iterator();
 
@@ -286,19 +287,21 @@ public class Owlstab extends AbstractTabWidget {
 		}
 	}
 
-	private void declareOntology(ImportHelper ih, String file) throws URISyntaxException, OntologyLoadException {
-//		OWLOntology			oo;
-//		ProtegeOWLParser	pop;
-//		OWLModel			om;
-		
+	private void declareOntology(ImportHelper ih, String file)
+			throws URISyntaxException, OntologyLoadException {
+		// OWLOntology oo;
+		// ProtegeOWLParser pop;
+		// OWLModel om;
+
 		System.out.println("Importing " + file + "... "
 				+ getLocalURL(file + ".owl").toURI());
-		//		om = ProtegeOWL.createJenaOWLModelFromURI(getLocalURL(file + ".owl").toURI().toString());
+		// om = ProtegeOWL.createJenaOWLModelFromURI(getLocalURL(file +
+		// ".owl").toURI().toString());
 		ih.addImport(getLocalURL(file + ".owl").toURI());
-//		oo = new DefaultOWLOntology();
-//		pop = new ProtegeOWLParser(oo.getOWLModel());
-//		pop.run(getLocalURL(file + ".owl").toURI());
-//		oi.addImports(om.getDefaultOWLOntology());
+		// oo = new DefaultOWLOntology();
+		// pop = new ProtegeOWLParser(oo.getOWLModel());
+		// pop.run(getLocalURL(file + ".owl").toURI());
+		// oi.addImports(om.getDefaultOWLOntology());
 		// oi.addImports(EXPR_URI);
 	}
 

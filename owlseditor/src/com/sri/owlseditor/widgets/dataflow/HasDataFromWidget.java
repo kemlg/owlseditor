@@ -11,7 +11,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets.dataflow;
 
 import java.util.ArrayList;
@@ -23,28 +23,30 @@ import edu.stanford.smi.protegex.owl.model.RDFSNamedClass;
 import edu.stanford.smi.protegex.owl.ui.widget.OWLWidgetMetadata;
 
 /**
- * This widget helps users with the horribly complicated task of managing data flow declarations.
+ * This widget helps users with the horribly complicated task of managing data
+ * flow declarations.
  * 
  * @author Daniel Elenius
  */
-public class HasDataFromWidget extends DataflowWidget implements OWLWidgetMetadata {
+public class HasDataFromWidget extends DataflowWidget implements
+		OWLWidgetMetadata {
 
-    public int getSuitability(RDFSNamedClass cls, RDFProperty property){
-		if (cls.hasRDFType(performCls, true) && 
-				property == hasDataFromSlot)
-			return OWLWidgetMetadata.DEFAULT+1;
+	public int getSuitability(RDFSNamedClass cls, RDFProperty property) {
+		if (cls.hasRDFType(performCls, true) && property == hasDataFromSlot)
+			return OWLWidgetMetadata.DEFAULT + 1;
 		else
 			return OWLWidgetMetadata.NOT_SUITABLE;
-    }
+	}
 
-	/** Returns a List of all Inputs of the process that this
-	 * Perform performs, except those that already have an InputBinding. 
+	/**
+	 * Returns a List of all Inputs of the process that this Perform performs,
+	 * except those that already have an InputBinding.
 	 */
-	protected List getToParameters(){
+	protected List getToParameters() {
 		OWLIndividual process = getProcess();
-		if (process==null)
+		if (process == null)
 			return null;
-		else{
+		else {
 			List inputs = new ArrayList();
 			inputs.addAll(process.getPropertyValues(hasInputSlot, false));
 			inputs.removeAll(bindings.keySet());
@@ -52,18 +54,18 @@ public class HasDataFromWidget extends DataflowWidget implements OWLWidgetMetada
 		}
 	}
 
-	private OWLIndividual getProcess(){
-		return (OWLIndividual)getPerform().getPropertyValue(processSlot);
+	private OWLIndividual getProcess() {
+		return (OWLIndividual) getPerform().getPropertyValue(processSlot);
 	}
-	
-	private OWLIndividual getPerform(){
-		return (OWLIndividual)getEditedResource();
+
+	private OWLIndividual getPerform() {
+		return (OWLIndividual) getEditedResource();
 	}
-	
-	protected OWLIndividual createBindingInstance(){
-		return (OWLIndividual)inputBindingCls.createInstance(null);
+
+	protected OWLIndividual createBindingInstance() {
+		return (OWLIndividual) inputBindingCls.createInstance(null);
 	}
-	
+
 	public void initialize() {
 		super.initialize("Add Input Binding", "Remove Input Binding");
 	}

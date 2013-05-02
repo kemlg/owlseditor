@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 
 package com.sri.owlseditor.graph;
 
@@ -21,154 +21,134 @@ import java.util.StringTokenizer;
 
 /**
  * @author Rukman
- *
+ * 
  */
-//--------------------------------------------------------------------------------------------
-//GraphObject Class
-//--------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// GraphObject Class
+// --------------------------------------------------------------------------------------------
 
-public class GraphObject 
-{
+public class GraphObject {
 	private String childName;
 	private String arrowText;
 	private String childColor;
 	private String parentColor;
-	private String type;										//Used to determine color scheme
+	private String type; // Used to determine color scheme
 	private int level;
-	private int xCenter;									//x coord of center of the node, calculated when node is drawn
-	private int yCenter;									//y coord of center of the node, calculated when node is drawn
-	private double nodeWidth;									//width of child node based on text and font settings and border gap
+	private int xCenter; // x coord of center of the node, calculated when node
+							// is drawn
+	private int yCenter; // y coord of center of the node, calculated when node
+							// is drawn
+	private double nodeWidth; // width of child node based on text and font
+								// settings and border gap
 	private ArrayList children;
 	private String parentName;
-	private int childNodeNum;								//The posn in dotNodeList for this nodes child instance
-	private int parentNodeNum;								//The posn in dotNodeList for this nodes parent instance
+	private int childNodeNum; // The posn in dotNodeList for this nodes child
+								// instance
+	private int parentNodeNum; // The posn in dotNodeList for this nodes parent
+								// instance
 
-	public GraphObject(String aParentName, String aChildName, String aArrowText)
-	{
+	public GraphObject(String aParentName, String aChildName, String aArrowText) {
 
 		parentName = aParentName;
 		childName = aChildName;
 		arrowText = aArrowText;
 		children = new ArrayList();
-		
+
 	}
 
-	public String getChildName()
-	{
+	public String getChildName() {
 		return childName;
 	}
 
-	public String getArrowText()
-	{
+	public String getArrowText() {
 		return arrowText;
 	}
 
-	public String getType()
-	{
+	public String getType() {
 		return type;
 	}
 
-	public int getLevel()
-	{
+	public int getLevel() {
 		return level;
 	}
 
-	public int getXChildCenter()
-	{
+	public int getXChildCenter() {
 		return xCenter;
-	}	
+	}
 
-	public int getYChildCenter()
-	{
+	public int getYChildCenter() {
 		return yCenter;
 	}
-	
-	public String getChildColor()
-	{
+
+	public String getChildColor() {
 		return childColor;
 	}
-	
-	public String getParentColor()
-	{
+
+	public String getParentColor() {
 		return parentColor;
 	}
-	
-	public double getChildWidth()
-	{
+
+	public double getChildWidth() {
 		return nodeWidth;
 	}
 
-	public void addChild(GraphObject gObject)
-	{
+	public void addChild(GraphObject gObject) {
 		this.children.add(gObject);
 	}
 
-	public int getChildCount()
-	{
+	public int getChildCount() {
 		return children.size();
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		String output = "\n";
 		output = output + "Parent  = " + parentName + ", ";
 		output = output + "ArrowText = " + getArrowText() + ", ";
-		output = output + "child = " + childName +"\n";
+		output = output + "child = " + childName + "\n";
 		return output;
 	}
 
-	public GraphObject getChild(int i)
-	{
-		return (GraphObject)children.get(i);
+	public GraphObject getChild(int i) {
+		return (GraphObject) children.get(i);
 	}
 
-	public String getParentName()
-	{
+	public String getParentName() {
 		return parentName;
 	}
 
-	public int getChildNodeNum()
-	{
+	public int getChildNodeNum() {
 		return childNodeNum;
 	}
 
-	public int getParentNodeNum()
-	{
+	public int getParentNodeNum() {
 		return parentNodeNum;
 	}
 
-	public void setChildNodeNum(int position)
-	{
+	public void setChildNodeNum(int position) {
 		childNodeNum = position;
 	}
 
-	public void setParentNodeNum(int position)
-	{
+	public void setParentNodeNum(int position) {
 		parentNodeNum = position;
 	}
 
-	public void setXCenter(int x)
-	{
+	public void setXCenter(int x) {
 		xCenter = x;
 	}
 
-	public void setYCenter(int y)
-	{
+	public void setYCenter(int y) {
 		yCenter = y;
 	}
 
-	public void setNodeWidth(int width)
-	{
+	public void setNodeWidth(int width) {
 		nodeWidth = width;
 	}
-	
-	public void setChildColor(String aColor)
-	{
+
+	public void setChildColor(String aColor) {
 		childColor = aColor;
 	}
 
-	public void setParentColor(String aColor)
-	{
+	public void setParentColor(String aColor) {
 		parentColor = aColor;
 	}
 

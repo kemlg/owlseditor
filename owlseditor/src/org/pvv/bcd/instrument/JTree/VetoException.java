@@ -1,25 +1,19 @@
 package org.pvv.bcd.instrument.JTree;
 
 /**
- * Title:        instrument/JTree
- * Description:
- * Copyright:    Copyright (c) 1998
- * Company:
+ * Title: instrument/JTree Description: Copyright: Copyright (c) 1998 Company:
+ * 
  * @author Bent Dalager
  * @version
  */
 
-public class VetoException
-   extends Exception
-{
+public class VetoException extends Exception {
 
-   public VetoException()
-   {
-      super();
-   }
+	public VetoException() {
+		super();
+	}
 
-   public VetoException(String text)
-   {
-      super(text);
-   }
+	public VetoException(String text) {
+		super(text);
+	}
 }

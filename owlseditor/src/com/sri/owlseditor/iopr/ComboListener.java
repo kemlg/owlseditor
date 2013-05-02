@@ -18,7 +18,8 @@ package com.sri.owlseditor.iopr;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 
 /**
- * Interface for listeners to changes in the combo box selection. Used by ListAndCheckboxPanel.
+ * Interface for listeners to changes in the combo box selection. Used by
+ * ListAndCheckboxPanel.
  * 
  * @author Daniel Elenius
  */

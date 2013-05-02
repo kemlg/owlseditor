@@ -11,7 +11,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets.dataflow;
 
 import java.util.ArrayList;
@@ -23,28 +23,31 @@ import edu.stanford.smi.protegex.owl.model.RDFSNamedClass;
 import edu.stanford.smi.protegex.owl.ui.widget.OWLWidgetMetadata;
 
 /**
- * This widget helps users with the horribly complicated task of managing data flow declarations.
+ * This widget helps users with the horribly complicated task of managing data
+ * flow declarations.
  * 
  * @author Daniel Elenius
  */
-public class ProducedBindingWidget extends DataflowWidget implements OWLWidgetMetadata {
+public class ProducedBindingWidget extends DataflowWidget implements
+		OWLWidgetMetadata {
 
-	public int getSuitability(RDFSNamedClass cls, RDFProperty property){
-		if (cls.hasRDFType(produceCls, true) && 
-				property == hasDataFromSlot)
-			return OWLWidgetMetadata.DEFAULT+1;
-		else	
+	public int getSuitability(RDFSNamedClass cls, RDFProperty property) {
+		if (cls.hasRDFType(produceCls, true) && property == hasDataFromSlot)
+			return OWLWidgetMetadata.DEFAULT + 1;
+		else
 			return OWLWidgetMetadata.NOT_SUITABLE;
 	}
-	
-	/** Returns a List of all Outputs of the parent Composite Process,
-	 *  except those that already have an OutputBinding. 
+
+	/**
+	 * Returns a List of all Outputs of the parent Composite Process, except
+	 * those that already have an OutputBinding.
 	 */
-	protected List getToParameters(){
-		OWLIndividual process = PerformTreeMapper.getInstance().getCompositeProcess(getProduce());
-		if (process==null)
+	protected List getToParameters() {
+		OWLIndividual process = PerformTreeMapper.getInstance()
+				.getCompositeProcess(getProduce());
+		if (process == null)
 			return null;
-		else{
+		else {
 			List inputs = new ArrayList();
 			inputs.addAll(process.getPropertyValues(hasOutputSlot, false));
 			inputs.removeAll(bindings.keySet());
@@ -52,15 +55,18 @@ public class ProducedBindingWidget extends DataflowWidget implements OWLWidgetMe
 		}
 	}
 
-	/* Returns the Produce instance that this producedBinding slot is connected to */
-	private OWLIndividual getProduce(){
-		return (OWLIndividual)getEditedResource();
+	/*
+	 * Returns the Produce instance that this producedBinding slot is connected
+	 * to
+	 */
+	private OWLIndividual getProduce() {
+		return (OWLIndividual) getEditedResource();
 	}
 
-	protected OWLIndividual createBindingInstance(){
-		return (OWLIndividual)outputBindingCls.createInstance(null);
+	protected OWLIndividual createBindingInstance() {
+		return (OWLIndividual) outputBindingCls.createInstance(null);
 	}
-	
+
 	public void initialize() {
 		super.initialize("Add Output Binding", "Add Output Binding");
 	}

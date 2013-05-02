@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.xml2owl;
 
 /**
@@ -20,8 +20,8 @@ package com.sri.owlseditor.xslt.xml2owl;
  */
 public class RDFNameNode extends RDFAttributeNode {
 
-	public RDFNameNode(){
+	public RDFNameNode() {
 		super();
 	}
-	
+
 }

@@ -14,7 +14,6 @@
 // Portions created by the Initial Developer are Copyright (C) 2004 the
 // Initial Developer.  All Rights Reserved.
 
-
 package com.sri.owlseditor.iopr;
 
 import java.awt.BorderLayout;
@@ -57,338 +56,337 @@ import com.sri.owlseditor.util.OWLSIcons;
 
 public class IOPRTopBox extends JPanel implements ItemListener {
 
-    private JButton           consistencyCheckButton;
-    private JButton           copyLeftToRightButton;
-    private JButton           copyRightToLeftButton;
-    private JComboBox         first;
-    private JComboBox         second;
-    private OWLModel  	      _okb;
-    private OWLIndividual     firstSelected;
-    private OWLIndividual     secondSelected;
-    public int desiredWidth = 0;
-    private IOPRSelector	m_ioprList;
-    private OWLNamedClass profileCls;
-    private OWLNamedClass processCls;
-    private String m_origName;
-    private String m_newName;
+	private JButton consistencyCheckButton;
+	private JButton copyLeftToRightButton;
+	private JButton copyRightToLeftButton;
+	private JComboBox first;
+	private JComboBox second;
+	private OWLModel _okb;
+	private OWLIndividual firstSelected;
+	private OWLIndividual secondSelected;
+	public int desiredWidth = 0;
+	private IOPRSelector m_ioprList;
+	private OWLNamedClass profileCls;
+	private OWLNamedClass processCls;
+	private String m_origName;
+	private String m_newName;
 
-    private HashSet comboListeners = new HashSet();
-    
-    IOPRTopBox (OWLModel okb, IOPRSelector ioprList) {
-    	_okb = okb;
-	m_ioprList = ioprList;
+	private HashSet comboListeners = new HashSet();
 
-	profileCls = _okb.getOWLNamedClass ("profile:Profile");
-	processCls = _okb.getOWLNamedClass ("process:Process");
+	IOPRTopBox(OWLModel okb, IOPRSelector ioprList) {
+		_okb = okb;
+		m_ioprList = ioprList;
 
-	IOPRConsistencyCheck.getInstance (_okb, m_ioprList);
+		profileCls = _okb.getOWLNamedClass("profile:Profile");
+		processCls = _okb.getOWLNamedClass("process:Process");
 
-	setLayout (new GridBagLayout());
-	GridBagConstraints gbc = new GridBagConstraints();
+		IOPRConsistencyCheck.getInstance(_okb, m_ioprList);
 
-	first  = ComponentFactory.createComboBox();
-	second = ComponentFactory.createComboBox();
-	desiredWidth = populateCombos (0);
+		setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
 
-	JLabel leftLabel = new JLabel (" Left CheckBoxes");
-	first.addItemListener (this);
-	first.setMaximumSize (new Dimension (500, 20));
+		first = ComponentFactory.createComboBox();
+		second = ComponentFactory.createComboBox();
+		desiredWidth = populateCombos(0);
 
-	gbc.gridx = 0;
-	gbc.gridy = 0;
-	gbc.anchor = GridBagConstraints.LINE_START;
-	gbc.weightx = 0.0;
-	gbc.weighty = 0.0;
-	add (leftLabel, gbc);
+		JLabel leftLabel = new JLabel(" Left CheckBoxes");
+		first.addItemListener(this);
+		first.setMaximumSize(new Dimension(500, 20));
 
-	JLabel rightLabel = new JLabel (" Right CheckBoxes ");
-	second.addItemListener (this);
-	second.setMaximumSize (new Dimension (500, 20));
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.weightx = 0.0;
+		gbc.weighty = 0.0;
+		add(leftLabel, gbc);
 
-	gbc.gridy = 1;
-	add (rightLabel, gbc);
+		JLabel rightLabel = new JLabel(" Right CheckBoxes ");
+		second.addItemListener(this);
+		second.setMaximumSize(new Dimension(500, 20));
 
-	gbc.gridx = 1;
-	gbc.gridy = 0;
-	gbc.weightx = 1.0;
-	add (first, gbc);
+		gbc.gridy = 1;
+		add(rightLabel, gbc);
 
-	gbc.gridy = 1;
-	add (second, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		add(first, gbc);
 
-	JPanel jj = new JPanel (new GridBagLayout());
-	//GridBagConstraints gbcc = new GridBagConstraints();
-	//gbcc.weightx = .5;
+		gbc.gridy = 1;
+		add(second, gbc);
 
-	//consistencyCheckButton = new JButton ("Consistency");
-	//consistencyCheckButton.setForeground (Color.red);
+		JPanel jj = new JPanel(new GridBagLayout());
+		// GridBagConstraints gbcc = new GridBagConstraints();
+		// gbcc.weightx = .5;
 
-        JToolBar toolbar = ComponentFactory.createToolBar();
+		// consistencyCheckButton = new JButton ("Consistency");
+		// consistencyCheckButton.setForeground (Color.red);
 
-	// iopr consistency check
-	consistencyCheckButton = new JButton (OWLSIcons.getConsistencyCheckIcon());
-    	consistencyCheckButton.setToolTipText ("IOPR Consistency Check");
-	toolbar.add (consistencyCheckButton);
+		JToolBar toolbar = ComponentFactory.createToolBar();
 
-	ActionListener consistencyListener = new ActionListener() {
-		public void actionPerformed (ActionEvent evt) {
-		    Vector vIOPRProblems = new Vector();
-		    IOPRConsistencyCheck.getInstance(_okb, null).checkIOPRProcessAndProfiles (vIOPRProblems);
-		    IOPRConsistencyCheck.getInstance(_okb, null).checkIOPRProcessParameterType (vIOPRProblems);
+		// iopr consistency check
+		consistencyCheckButton = new JButton(
+				OWLSIcons.getConsistencyCheckIcon());
+		consistencyCheckButton.setToolTipText("IOPR Consistency Check");
+		toolbar.add(consistencyCheckButton);
 
-		    if (vIOPRProblems.size() == 0)
-			JOptionPane.showMessageDialog (null, "IOPR Consistency Check Completed - No Inconsistencies Found");
-		    else
-			ConsistencyCheckDisplay.getInstance().updateDisplay (vIOPRProblems);
-		}
-	    };
+		ActionListener consistencyListener = new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				Vector vIOPRProblems = new Vector();
+				IOPRConsistencyCheck.getInstance(_okb, null)
+						.checkIOPRProcessAndProfiles(vIOPRProblems);
+				IOPRConsistencyCheck.getInstance(_okb, null)
+						.checkIOPRProcessParameterType(vIOPRProblems);
 
-	consistencyCheckButton.addActionListener (consistencyListener);
-	//jj.add (consistencyCheckButton, gbcc);
+				if (vIOPRProblems.size() == 0)
+					JOptionPane
+							.showMessageDialog(null,
+									"IOPR Consistency Check Completed - No Inconsistencies Found");
+				else
+					ConsistencyCheckDisplay.getInstance().updateDisplay(
+							vIOPRProblems);
+			}
+		};
 
-	copyLeftToRightButton = new JButton (OWLSIcons.getCopyLeftToRightIcon());
-    	copyLeftToRightButton.setToolTipText ("Copy Left to Right");
-	//copyLeftToRightButton.setForeground (Color.blue);
-	toolbar.add (copyLeftToRightButton);
+		consistencyCheckButton.addActionListener(consistencyListener);
+		// jj.add (consistencyCheckButton, gbcc);
 
-	ActionListener copyLeftToRightListener = new ActionListener() {
-		public void actionPerformed (ActionEvent evt) {
-		    if (firstSelected == null || secondSelected == null)
-			return;
+		copyLeftToRightButton = new JButton(OWLSIcons.getCopyLeftToRightIcon());
+		copyLeftToRightButton.setToolTipText("Copy Left to Right");
+		// copyLeftToRightButton.setForeground (Color.blue);
+		toolbar.add(copyLeftToRightButton);
 
-		    String msg = "Copy all parameter settings from " + firstSelected.getName() +
-			" to " + secondSelected.getName() + ".\nNote: this action will modify the knowledgebase.";
+		ActionListener copyLeftToRightListener = new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				if (firstSelected == null || secondSelected == null)
+					return;
 
-		    if (JOptionPane.showConfirmDialog (null, msg, "", JOptionPane.OK_CANCEL_OPTION) !=
-			JOptionPane.CANCEL_OPTION)
-			m_ioprList.copyPropertyValue (firstSelected, secondSelected, true);
-		}
-	    };
-	
-	copyLeftToRightButton.addActionListener (copyLeftToRightListener);
-	copyLeftToRightButton.setEnabled (false);
-	//jj.add (copyLeftToRightButton, gbcc);
+				String msg = "Copy all parameter settings from "
+						+ firstSelected.getName() + " to "
+						+ secondSelected.getName()
+						+ ".\nNote: this action will modify the knowledgebase.";
 
-	copyRightToLeftButton = new JButton (OWLSIcons.getCopyRightToLeftIcon());
-    	copyRightToLeftButton.setToolTipText ("Copy Right to Left");
-	//copyRightToLeftButton.setForeground (Color.blue);
-	toolbar.add (copyRightToLeftButton);
-	
-	ActionListener copyRightToLeftListener = new ActionListener() {
-		public void actionPerformed (ActionEvent evt) {
-		    if (firstSelected == null || secondSelected == null)
-			return;
+				if (JOptionPane.showConfirmDialog(null, msg, "",
+						JOptionPane.OK_CANCEL_OPTION) != JOptionPane.CANCEL_OPTION)
+					m_ioprList.copyPropertyValue(firstSelected, secondSelected,
+							true);
+			}
+		};
 
-		    String msg = "Copy all parameter settings from " + secondSelected.getName() +
-			" to " + firstSelected.getName() + ".\nNote: this action will modify the knowledgebase.";
+		copyLeftToRightButton.addActionListener(copyLeftToRightListener);
+		copyLeftToRightButton.setEnabled(false);
+		// jj.add (copyLeftToRightButton, gbcc);
 
-		    if (JOptionPane.showConfirmDialog (null, msg, "", JOptionPane.OK_CANCEL_OPTION) !=
-			JOptionPane.CANCEL_OPTION)
-			m_ioprList.copyPropertyValue (firstSelected, secondSelected, false);
-		}
-	    };
-	
-	copyRightToLeftButton.addActionListener (copyRightToLeftListener);
-	copyRightToLeftButton.setEnabled (false);
-	//jj.add (copyRightToLeftButton, gbcc);
+		copyRightToLeftButton = new JButton(OWLSIcons.getCopyRightToLeftIcon());
+		copyRightToLeftButton.setToolTipText("Copy Right to Left");
+		// copyRightToLeftButton.setForeground (Color.blue);
+		toolbar.add(copyRightToLeftButton);
 
-	gbc.gridx = 0;
-	gbc.gridy = 2;
-	//gbc.gridwidth = 3;
-	add (toolbar, gbc);
+		ActionListener copyRightToLeftListener = new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				if (firstSelected == null || secondSelected == null)
+					return;
 
-	_okb.addModelListener(new ModelAdapter() {
-		public void individualCreated(RDFResource inst) {
-		    if (inst.hasRDFType(processCls, true))
-		    	adjustCombosForChange();
-		}
+				String msg = "Copy all parameter settings from "
+						+ secondSelected.getName() + " to "
+						+ firstSelected.getName()
+						+ ".\nNote: this action will modify the knowledgebase.";
 
-		public void individualDeleted(RDFResource inst) {
-		    adjustCombosForChange();
-		}
+				if (JOptionPane.showConfirmDialog(null, msg, "",
+						JOptionPane.OK_CANCEL_OPTION) != JOptionPane.CANCEL_OPTION)
+					m_ioprList.copyPropertyValue(firstSelected, secondSelected,
+							false);
+			}
+		};
 
-		public void resourceNameChanged (RDFResource resource, String origName) {
-			if (resource.hasRDFType (profileCls, true) ||
-			    resource.hasRDFType (processCls, true)) {
-			    
-				System.out.println("Process or profile renamed");
-				
-				m_origName = origName;
-			    m_newName  = ((OWLIndividual) resource).getName();
-			    adjustCombosForRename();
-		    }
-		}
-	});
+		copyRightToLeftButton.addActionListener(copyRightToLeftListener);
+		copyRightToLeftButton.setEnabled(false);
+		// jj.add (copyRightToLeftButton, gbcc);
 
-	//profileCls = _okb.getOWLNamedClass ("profile:Profile");
-	/*
-	profileCls.addClassListener (new ClassAdapter() {
-		public void instanceAdded (RDFSClass cls, RDFResource inst) {
-		    adjustCombosForChange();
-		}
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		// gbc.gridwidth = 3;
+		add(toolbar, gbc);
 
-		public void instanceRemoved (RDFSClass cls, RDFResource inst) {
-		    adjustCombosForChange();
-		}
-	    });
-	    */
-    }
+		_okb.addModelListener(new ModelAdapter() {
+			public void individualCreated(RDFResource inst) {
+				if (inst.hasRDFType(processCls, true))
+					adjustCombosForChange();
+			}
 
+			public void individualDeleted(RDFResource inst) {
+				adjustCombosForChange();
+			}
 
-    private void adjustCombosForChange () {
-	Object firstSel  = first.getSelectedItem();
-	Object secondSel = second.getSelectedItem();
+			public void resourceNameChanged(RDFResource resource,
+					String origName) {
+				if (resource.hasRDFType(profileCls, true)
+						|| resource.hasRDFType(processCls, true)) {
 
-	populateCombos (0);
+					System.out.println("Process or profile renamed");
 
-	first.setSelectedItem (firstSel);
-	second.setSelectedItem (secondSel);
-    }
+					m_origName = origName;
+					m_newName = ((OWLIndividual) resource).getName();
+					adjustCombosForRename();
+				}
+			}
+		});
 
-
-    private void adjustCombosForRename () {
-	Object firstSel  = first.getSelectedItem();
-	Object secondSel = second.getSelectedItem();
-
-	populateCombos (0);
-
-	if (firstSel.equals (m_origName))
-	    firstSel = m_newName;
-	first.setSelectedItem (firstSel);
-
-	if (secondSel.equals (m_origName))
-	    secondSel = m_newName;
-	second.setSelectedItem (secondSel);
-    }
-
-
-    public void itemStateChanged (ItemEvent event) {
-    	int state = event.getStateChange();
-    	OWLIndividual item = _okb.getOWLIndividual ((String) event.getItem());
-
-    	if (event.getStateChange() == ItemEvent.SELECTED) {
-	    if ((JComboBox)event.getItemSelectable() == first) {
-		firstSelected = item;
-		Iterator it = comboListeners.iterator();
-		while (it.hasNext()){
-		    ComboListener listener = (ComboListener) it.next();
-		    listener.leftComboSelectionChanged (item);
-		}
-	    }
-	    else {
-		secondSelected = item;
-		Iterator it = comboListeners.iterator();
-		while (it.hasNext()) {
-		    ComboListener listener = (ComboListener) it.next();
-		    listener.rightComboSelectionChanged (item);
-		}
-	    }
-
-	    copyLeftToRightButton.setEnabled (firstSelected != null && secondSelected != null);
-	    copyRightToLeftButton.setEnabled (firstSelected != null && secondSelected != null);
-    	}
-    }
-
-
-    public OWLIndividual getLeftSelection(){
-    	return firstSelected;
-    }
-    
-
-    public OWLIndividual getRightSelection(){
-    	return secondSelected;
-    }
-    
-
-    public void addComboListener(ComboListener listener){
-    	comboListeners.add(listener);
-    }
-
-
-    public void removeComboListener(ComboListener listener){
-    	comboListeners.remove(listener);
-    }
-    
-
-    private int populateCombos (int width) {
-	//OWLNamedClass    processCls   = _okb.getOWLNamedClass("process:Process");
-	//OWLNamedClass    profileCls = _okb.getOWLNamedClass("profile:Profile");
-	FontMetrics fm = getFontMetrics (getFont());
-
-	first.removeAllItems();
-	second.removeAllItems();
- 
-	if (processCls != null) {
-	    Collection  processes = processCls.getInstances(true);
-
-	    if (processes != null) {
-		ArrayList instList = new ArrayList();
-		Iterator it = processes.iterator();
-
-		while (it.hasNext()) {
-		    OWLIndividual process = (OWLIndividual) it.next();
-		    instList.add (process.getName());
-		    width = Math.max (fm.stringWidth (process.getName()), width);
-		}
-
-		Collections.sort (instList);
-		for (int i = 0; i < instList.size(); i++) {
-		    first.addItem (instList.get(i));
-		    second.addItem (instList.get(i));
-		}
-	    }
-	}
-
-	first.insertItemAt  ("--- Processes ---", 0);
-	second.insertItemAt ("--- Processes ---", 0);
-
-	first.addItem ("--- Profiles ---");
-	second.addItem ("--- Profiles ---");
-
-	if (profileCls != null) {
-	    Collection profiles = profileCls.getInstances (true);
-
-	    if (profiles != null) {
-		ArrayList instList = new ArrayList();
-		Iterator it = profiles.iterator();
-
-		while (it.hasNext()) {
-		    OWLIndividual profile = (OWLIndividual) it.next();
-		    instList.add (profile.getName());
-		    width = Math.max (fm.stringWidth (profile.getName()), width);
-		}
-
-		Collections.sort (instList);
-		for (int i = 0; i < instList.size(); i++) {
-		    first.addItem (instList.get(i));
-		    second.addItem (instList.get(i));
-		}
-
+		// profileCls = _okb.getOWLNamedClass ("profile:Profile");
 		/*
-		OWLObjectProperty has_process = _okb.getOWLObjectProperty ("profile:has_process");
-		while (it.hasNext()) {
-		    OWLIndividual profile = (OWLIndividual) it.next();
-		    Collection associatedProcesses = profile.getPropertyValues(has_process);
-		    Iterator ii = associatedProcesses.iterator();
-		    while (ii.hasNext()) {
-			OWLIndividual associatedProcess =(OWLIndividual) ii.next();
-		    }
-		    instList.add (associatedProcess.getName());
-		    width = Math.max (fm.stringWidth (inst.getName()), width);
-		}
-
-		Collections.sort (instList);
-		for (int i = 0; i < instList.size(); i++) {
-		    first.addItem (instList.get(i));
-		    second.addItem (instList.get(i));
-		}
-		*/
-	    }
+		 * profileCls.addClassListener (new ClassAdapter() { public void
+		 * instanceAdded (RDFSClass cls, RDFResource inst) {
+		 * adjustCombosForChange(); }
+		 * 
+		 * public void instanceRemoved (RDFSClass cls, RDFResource inst) {
+		 * adjustCombosForChange(); } });
+		 */
 	}
 
-	first.setSelectedIndex (0);
-	second.setSelectedIndex (0);
+	private void adjustCombosForChange() {
+		Object firstSel = first.getSelectedItem();
+		Object secondSel = second.getSelectedItem();
 
-	return (width + fm.stringWidth ("Right CheckBoxes") + 20);
-    }
+		populateCombos(0);
+
+		first.setSelectedItem(firstSel);
+		second.setSelectedItem(secondSel);
+	}
+
+	private void adjustCombosForRename() {
+		Object firstSel = first.getSelectedItem();
+		Object secondSel = second.getSelectedItem();
+
+		populateCombos(0);
+
+		if (firstSel.equals(m_origName))
+			firstSel = m_newName;
+		first.setSelectedItem(firstSel);
+
+		if (secondSel.equals(m_origName))
+			secondSel = m_newName;
+		second.setSelectedItem(secondSel);
+	}
+
+	public void itemStateChanged(ItemEvent event) {
+		int state = event.getStateChange();
+		OWLIndividual item = _okb.getOWLIndividual((String) event.getItem());
+
+		if (event.getStateChange() == ItemEvent.SELECTED) {
+			if ((JComboBox) event.getItemSelectable() == first) {
+				firstSelected = item;
+				Iterator it = comboListeners.iterator();
+				while (it.hasNext()) {
+					ComboListener listener = (ComboListener) it.next();
+					listener.leftComboSelectionChanged(item);
+				}
+			} else {
+				secondSelected = item;
+				Iterator it = comboListeners.iterator();
+				while (it.hasNext()) {
+					ComboListener listener = (ComboListener) it.next();
+					listener.rightComboSelectionChanged(item);
+				}
+			}
+
+			copyLeftToRightButton.setEnabled(firstSelected != null
+					&& secondSelected != null);
+			copyRightToLeftButton.setEnabled(firstSelected != null
+					&& secondSelected != null);
+		}
+	}
+
+	public OWLIndividual getLeftSelection() {
+		return firstSelected;
+	}
+
+	public OWLIndividual getRightSelection() {
+		return secondSelected;
+	}
+
+	public void addComboListener(ComboListener listener) {
+		comboListeners.add(listener);
+	}
+
+	public void removeComboListener(ComboListener listener) {
+		comboListeners.remove(listener);
+	}
+
+	private int populateCombos(int width) {
+		// OWLNamedClass processCls = _okb.getOWLNamedClass("process:Process");
+		// OWLNamedClass profileCls = _okb.getOWLNamedClass("profile:Profile");
+		FontMetrics fm = getFontMetrics(getFont());
+
+		first.removeAllItems();
+		second.removeAllItems();
+
+		if (processCls != null) {
+			Collection processes = processCls.getInstances(true);
+
+			if (processes != null) {
+				ArrayList instList = new ArrayList();
+				Iterator it = processes.iterator();
+
+				while (it.hasNext()) {
+					OWLIndividual process = (OWLIndividual) it.next();
+					instList.add(process.getName());
+					width = Math.max(fm.stringWidth(process.getName()), width);
+				}
+
+				Collections.sort(instList);
+				for (int i = 0; i < instList.size(); i++) {
+					first.addItem(instList.get(i));
+					second.addItem(instList.get(i));
+				}
+			}
+		}
+
+		first.insertItemAt("--- Processes ---", 0);
+		second.insertItemAt("--- Processes ---", 0);
+
+		first.addItem("--- Profiles ---");
+		second.addItem("--- Profiles ---");
+
+		if (profileCls != null) {
+			Collection profiles = profileCls.getInstances(true);
+
+			if (profiles != null) {
+				ArrayList instList = new ArrayList();
+				Iterator it = profiles.iterator();
+
+				while (it.hasNext()) {
+					OWLIndividual profile = (OWLIndividual) it.next();
+					instList.add(profile.getName());
+					width = Math.max(fm.stringWidth(profile.getName()), width);
+				}
+
+				Collections.sort(instList);
+				for (int i = 0; i < instList.size(); i++) {
+					first.addItem(instList.get(i));
+					second.addItem(instList.get(i));
+				}
+
+				/*
+				 * OWLObjectProperty has_process = _okb.getOWLObjectProperty
+				 * ("profile:has_process"); while (it.hasNext()) { OWLIndividual
+				 * profile = (OWLIndividual) it.next(); Collection
+				 * associatedProcesses = profile.getPropertyValues(has_process);
+				 * Iterator ii = associatedProcesses.iterator(); while
+				 * (ii.hasNext()) { OWLIndividual associatedProcess
+				 * =(OWLIndividual) ii.next(); } instList.add
+				 * (associatedProcess.getName()); width = Math.max
+				 * (fm.stringWidth (inst.getName()), width); }
+				 * 
+				 * Collections.sort (instList); for (int i = 0; i <
+				 * instList.size(); i++) { first.addItem (instList.get(i));
+				 * second.addItem (instList.get(i)); }
+				 */
+			}
+		}
+
+		first.setSelectedIndex(0);
+		second.setSelectedIndex(0);
+
+		return (width + fm.stringWidth("Right CheckBoxes") + 20);
+	}
 }

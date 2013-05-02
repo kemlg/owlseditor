@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.options;
 
 import java.awt.event.ActionEvent;
@@ -25,17 +25,17 @@ import com.sri.owlseditor.util.OWLSIcons;
 /**
  * @author Daniel Elenius
  */
-public class OptionsAction extends AbstractAction{
+public class OptionsAction extends AbstractAction {
 	private OptionsManager options;
-	
+
 	public OptionsAction(OptionsManager options) {
-        super("", OWLSIcons.getOptionsIcon());
-        this.options = options;
+		super("", OWLSIcons.getOptionsIcon());
+		this.options = options;
 	}
-	
-    public void actionPerformed(ActionEvent e){
-    	JFrame window = options.getOptionsWindow();
-    	window.setVisible(true);
-    }
+
+	public void actionPerformed(ActionEvent e) {
+		JFrame window = options.getOptionsWindow();
+		window.setVisible(true);
+	}
 
 }

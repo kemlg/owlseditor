@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 
 package com.sri.owlseditor.consistency;
 
@@ -27,21 +27,25 @@ import com.sri.owlseditor.util.OWLSIcons;
 
 public class ConsistencyCheckAction extends AbstractAction {
 
-    OWLModel m_okb;
+	OWLModel m_okb;
 
-    public ConsistencyCheckAction (OWLModel okb) {
-	super ("", OWLSIcons.getConsistencyIcon());
-	m_okb = okb;
-    }
-	
-    public void actionPerformed (ActionEvent e) {
-	Vector vGlobalConsistency = new Vector();
-        IOPRConsistencyCheck.getInstance(m_okb, null).checkIOPRProcessAndProfiles (vGlobalConsistency);
-	IOPRConsistencyCheck.getInstance(m_okb, null).checkIOPRProcessParameterType (vGlobalConsistency);
+	public ConsistencyCheckAction(OWLModel okb) {
+		super("", OWLSIcons.getConsistencyIcon());
+		m_okb = okb;
+	}
 
-	if (vGlobalConsistency.size() == 0)
-	    JOptionPane.showMessageDialog (null, "Consistency Check Completed - No Inconsistencies Found");
-	else
-	    ConsistencyCheckDisplay.getInstance().updateDisplay (vGlobalConsistency);
-    }
+	public void actionPerformed(ActionEvent e) {
+		Vector vGlobalConsistency = new Vector();
+		IOPRConsistencyCheck.getInstance(m_okb, null)
+				.checkIOPRProcessAndProfiles(vGlobalConsistency);
+		IOPRConsistencyCheck.getInstance(m_okb, null)
+				.checkIOPRProcessParameterType(vGlobalConsistency);
+
+		if (vGlobalConsistency.size() == 0)
+			JOptionPane.showMessageDialog(null,
+					"Consistency Check Completed - No Inconsistencies Found");
+		else
+			ConsistencyCheckDisplay.getInstance().updateDisplay(
+					vGlobalConsistency);
+	}
 }

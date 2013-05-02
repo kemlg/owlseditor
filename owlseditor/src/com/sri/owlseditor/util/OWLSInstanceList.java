@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.util;
 
 import java.awt.Component;
@@ -46,31 +46,31 @@ import edu.stanford.smi.protegex.owl.ui.icons.OWLIcons;
  */
 public class OWLSInstanceList extends OWLSDirectInstancesList {
 	private ArrayList headerButtons;
-	
+
 	protected Project project;
 	protected OWLModel model;
 	protected String clsName;
 	protected OWLNamedClass cls;
-	
-	public OWLSInstanceList(Project project, String clsName, boolean checkboxes){
+
+	public OWLSInstanceList(Project project, String clsName, boolean checkboxes) {
 		super(project, checkboxes);
 		this.project = project;
-		model = (OWLModel)project.getKnowledgeBase();
-    	this.clsName = clsName;
-    	cls = model.getOWLNamedClass(clsName);
+		model = (OWLModel) project.getKnowledgeBase();
+		this.clsName = clsName;
+		cls = model.getOWLNamedClass(clsName);
 		setupOneClassMode();
 		setupHeaderButtons();
 	}
 
-	public RDFIndividual getSelectedInstance(){
+	public RDFIndividual getSelectedInstance() {
 		Iterator it = getSelection().iterator();
 		if (it.hasNext())
-			return (RDFIndividual)it.next();
+			return (RDFIndividual) it.next();
 		else
 			return null;
 	}
-	
-	public void update(RDFIndividual instance){
+
+	public void update(RDFIndividual instance) {
 		if (instance == null)
 			clearSelection();
 		else if (instance.hasRDFType(cls, true))
@@ -78,14 +78,15 @@ public class OWLSInstanceList extends OWLSDirectInstancesList {
 		else
 			clearSelection();
 	}
-	
-    /**
-     * Sets up the DirectInstancesList to work on only one class (and its subclasses).
-     *
-     */
-    private void setupOneClassMode(){
-        ArrayList clses = new ArrayList();
-		OWLNamedClass cls = model.getOWLNamedClass(clsName); 
+
+	/**
+	 * Sets up the DirectInstancesList to work on only one class (and its
+	 * subclasses).
+	 * 
+	 */
+	private void setupOneClassMode() {
+		ArrayList clses = new ArrayList();
+		OWLNamedClass cls = model.getOWLNamedClass(clsName);
 		clses.add(cls);
 		ArrayList subclasses = new ArrayList(cls.getNamedSubclasses(true));
 		if (subclasses.contains(cls))
@@ -96,107 +97,107 @@ public class OWLSInstanceList extends OWLSDirectInstancesList {
 		model.addModelListener(modellistener);
 		OWLSClassAdapter classlistener = new OWLSClassAdapter(this, model, cls);
 		model.addClassListener(classlistener);
-    }
+	}
 
-    /** Adds a button to the left of the existing ones. */
-    protected void addHeaderButton(Action newAction){
-        for (int i = 0; i < getComponentCount(); i++) {
-    	    Component c = getComponent(i);
-                if (c instanceof LabeledComponent) {
-                	LabeledComponent lc = (LabeledComponent) c;
-                    
-                    // remove the existing buttons
-                    while (lc.getHeaderButtons().size() > 0) {
-                        lc.removeHeaderButton(0);
-                    }
-                    
-                    // add the new one
-                    lc.addHeaderButton(newAction);
-                    
-                    // put the old ones back
-                    Iterator it = headerButtons.iterator();
-                    while (it.hasNext()){
-                    	Action oldAction = (Action)it.next();
-                    	lc.addHeaderButton(oldAction);
-                    }
-                    
-                    // store the new action in our list
-                    headerButtons.add(0, newAction);
-                }
-            }
-    }
-    
-    
-    /**
-     *  Change from protege-standard to protege-owl looks and behavior.
-     */
-    private void setupHeaderButtons(){
-        for (int i = 0; i < getComponentCount(); i++) {
-	    Component c = getComponent(i);
-            if (c instanceof LabeledComponent) {
-            	LabeledComponent lc = (LabeledComponent) c;
-                java.util.List actions = new ArrayList(lc.getHeaderButtonActions());
-                //viewAction = (Action) actions.get(0);
-                //Action viewReferencesAction = (Action) actions.get(1);
-                Action createAction = (Action) actions.get(2);
-                createAction.putValue(Action.SMALL_ICON, OWLIcons.getCreateIcon(OWLIcons.RDF_INDIVIDUAL));
-                Action copyAction = (Action) actions.get(3);
-                Action deleteAction = (Action) actions.get(4);
-                deleteAction.putValue(Action.SMALL_ICON, OWLIcons.getDeleteIcon());
-                while (lc.getHeaderButtons().size() > 0) {
-                    lc.removeHeaderButton(0);
-                }
-                lc.addHeaderButton(createAction);
-                lc.addHeaderButton(copyAction);
-                lc.addHeaderButton(deleteAction);
-                
-                headerButtons = new ArrayList();
-                headerButtons.add(createAction);
-                headerButtons.add(copyAction);
-                headerButtons.add(deleteAction);
-            }
-        }
-    }
+	/** Adds a button to the left of the existing ones. */
+	protected void addHeaderButton(Action newAction) {
+		for (int i = 0; i < getComponentCount(); i++) {
+			Component c = getComponent(i);
+			if (c instanceof LabeledComponent) {
+				LabeledComponent lc = (LabeledComponent) c;
 
-    
+				// remove the existing buttons
+				while (lc.getHeaderButtons().size() > 0) {
+					lc.removeHeaderButton(0);
+				}
+
+				// add the new one
+				lc.addHeaderButton(newAction);
+
+				// put the old ones back
+				Iterator it = headerButtons.iterator();
+				while (it.hasNext()) {
+					Action oldAction = (Action) it.next();
+					lc.addHeaderButton(oldAction);
+				}
+
+				// store the new action in our list
+				headerButtons.add(0, newAction);
+			}
+		}
+	}
+
+	/**
+	 * Change from protege-standard to protege-owl looks and behavior.
+	 */
+	private void setupHeaderButtons() {
+		for (int i = 0; i < getComponentCount(); i++) {
+			Component c = getComponent(i);
+			if (c instanceof LabeledComponent) {
+				LabeledComponent lc = (LabeledComponent) c;
+				java.util.List actions = new ArrayList(
+						lc.getHeaderButtonActions());
+				// viewAction = (Action) actions.get(0);
+				// Action viewReferencesAction = (Action) actions.get(1);
+				Action createAction = (Action) actions.get(2);
+				createAction.putValue(Action.SMALL_ICON,
+						OWLIcons.getCreateIcon(OWLIcons.RDF_INDIVIDUAL));
+				Action copyAction = (Action) actions.get(3);
+				Action deleteAction = (Action) actions.get(4);
+				deleteAction.putValue(Action.SMALL_ICON,
+						OWLIcons.getDeleteIcon());
+				while (lc.getHeaderButtons().size() > 0) {
+					lc.removeHeaderButton(0);
+				}
+				lc.addHeaderButton(createAction);
+				lc.addHeaderButton(copyAction);
+				lc.addHeaderButton(deleteAction);
+
+				headerButtons = new ArrayList();
+				headerButtons.add(createAction);
+				headerButtons.add(copyAction);
+				headerButtons.add(deleteAction);
+			}
+		}
+	}
+
 } // end of class OWLSInstanceList
 
-
-/** A Listener that reacts to:
- * 1) Renaming of classes in this instance pane
- * 2) Adding of subclasses to this instance pane
- * 3) Removing of subclasses to this instance pane
+/**
+ * A Listener that reacts to: 1) Renaming of classes in this instance pane 2)
+ * Adding of subclasses to this instance pane 3) Removing of subclasses to this
+ * instance pane
  */
-class OWLSModelAdapter extends ModelAdapter{
+class OWLSModelAdapter extends ModelAdapter {
 	private Collection _clses;
 	private OWLSInstanceList ilist;
-	
-	public OWLSModelAdapter(Collection _clses, OWLSInstanceList list){
+
+	public OWLSModelAdapter(Collection _clses, OWLSInstanceList list) {
 		this._clses = _clses;
 		ilist = list;
 	}
-	
-	public void resourceNameChanged(RDFResource resource, String oldName){
+
+	public void resourceNameChanged(RDFResource resource, String oldName) {
 		// Handle class renaming, because we need to keep _clses in sync
-        // with the current names of user-defiend OWL-S subclasses
-			if (resource instanceof OWLNamedClass){
+		// with the current names of user-defiend OWL-S subclasses
+		if (resource instanceof OWLNamedClass) {
 			Iterator it = _clses.iterator();
-			while (it.hasNext()){
-				OWLNamedClass oldcls = (OWLNamedClass)it.next();
-				if (oldcls.getName().equals(oldName)){
+			while (it.hasNext()) {
+				OWLNamedClass oldcls = (OWLNamedClass) it.next();
+				if (oldcls.getName().equals(oldName)) {
 					oldcls.rename(resource.getName());
 				}
 			}
 		}
 		// Redraw the instance list if one of the instances
 		// in it has changed name
-		else if (resource instanceof OWLIndividual){
+		else if (resource instanceof OWLIndividual) {
 			// There should be a nicer way to do the following
-			SelectableList list = (SelectableList)ilist.getSelectable();
+			SelectableList list = (SelectableList) ilist.getSelectable();
 			ListModel listModel = list.getModel();
-			for (int i = listModel.getSize()-1; i>=0; i--){
-				RDFIndividual inst = (RDFIndividual)listModel.getElementAt(i);
-				if (inst.getName().equals(resource.getName())){
+			for (int i = listModel.getSize() - 1; i >= 0; i--) {
+				RDFIndividual inst = (RDFIndividual) listModel.getElementAt(i);
+				if (inst.getName().equals(resource.getName())) {
 					ilist.paint(ilist.getGraphics());
 					break;
 				}
@@ -207,26 +208,26 @@ class OWLSModelAdapter extends ModelAdapter{
 	// See if a newly created class is a subclass of _cls.
 	// If so, add it to _clses, and attach a class listener to it to detect if
 	// it is moved outside of its OWL-S hierarchy.
-	public void classCreated(RDFSClass cls){
+	public void classCreated(RDFSClass cls) {
 		Collection supers = cls.getNamedSuperclasses(true);
 		Iterator it1 = supers.iterator();
 		boolean is_subclass = false;
-		while (it1.hasNext() && is_subclass == false){
-			OWLNamedClass supercls = (OWLNamedClass)it1.next();
+		while (it1.hasNext() && is_subclass == false) {
+			OWLNamedClass supercls = (OWLNamedClass) it1.next();
 			Iterator it2 = _clses.iterator();
-			while (it2.hasNext() && is_subclass == false){
-				OWLNamedClass oldcls = (OWLNamedClass)it2.next();
+			while (it2.hasNext() && is_subclass == false) {
+				OWLNamedClass oldcls = (OWLNamedClass) it2.next();
 				if (oldcls.getName().equals(supercls.getName()))
 					is_subclass = true;
 			}
 		}
-		if (is_subclass){
+		if (is_subclass) {
 			_clses.add(cls);
 			ilist.setClses(_clses);
 			// What is this??
-			//ArrayList instances = new ArrayList(getModel().getValues());
-			//instances.addAll(cls.getInstances(false));
-			//setClses(instances);
+			// ArrayList instances = new ArrayList(getModel().getValues());
+			// instances.addAll(cls.getInstances(false));
+			// setClses(instances);
 		}
 	}
 
@@ -234,15 +235,15 @@ class OWLSModelAdapter extends ModelAdapter{
 	// remove it from _clses. Note that we do not need to
 	// delete instances, because a class with instances
 	// cannot be deleted
-	public void classDeleted(RDFSClass cls){
+	public void classDeleted(RDFSClass cls) {
 		Iterator it = _clses.iterator();
-		while (it.hasNext()){
-			OWLNamedClass oldcls = (OWLNamedClass)it.next();
-			if (oldcls.getName() == null){
+		while (it.hasNext()) {
+			OWLNamedClass oldcls = (OWLNamedClass) it.next();
+			if (oldcls.getName() == null) {
 				_clses.remove(cls);
 				ilist.setClses(_clses);
 				// What is this??
-				//setClses(_cls.getInstances(true));    
+				// setClses(_cls.getInstances(true));
 				break;
 			}
 		}
@@ -250,20 +251,22 @@ class OWLSModelAdapter extends ModelAdapter{
 };
 
 /**
-*
-* A listener that reacts to moving of classes into/out from the OWL-S class
-* hierarchy. Used by the four main OWL-S instance lists.
-*
-*/
-class OWLSClassAdapter extends ClassAdapter{
+ * 
+ * A listener that reacts to moving of classes into/out from the OWL-S class
+ * hierarchy. Used by the four main OWL-S instance lists.
+ * 
+ */
+class OWLSClassAdapter extends ClassAdapter {
 	private OWLSInstanceList list;
-	private OWLNamedClass owlsClass;   // the OWL-S class to match against (service, profile, etc)
+	private OWLNamedClass owlsClass; // the OWL-S class to match against
+										// (service, profile, etc)
 	private OWLNamedClass service;
 	private OWLNamedClass profile;
 	private OWLNamedClass process;
 	private OWLNamedClass grounding;
-	
-	public OWLSClassAdapter(OWLSInstanceList list, OWLModel model, OWLNamedClass cls){
+
+	public OWLSClassAdapter(OWLSInstanceList list, OWLModel model,
+			OWLNamedClass cls) {
 		this.list = list;
 		owlsClass = cls;
 		service = model.getOWLNamedClass("service:Service");
@@ -271,23 +274,23 @@ class OWLSClassAdapter extends ClassAdapter{
 		process = model.getOWLNamedClass("process:Process");
 		grounding = model.getOWLNamedClass("grounding:WsdlGrounding");
 	}
-	
-	public void superclassRemoved(RDFSClass cls, RDFSClass superclass){
+
+	public void superclassRemoved(RDFSClass cls, RDFSClass superclass) {
 		ArrayList supers = new ArrayList(superclass.getNamedSuperclasses(true));
 		supers.add(superclass);
-		if (supers.contains(owlsClass)){
+		if (supers.contains(owlsClass)) {
 			ArrayList clses = new ArrayList(list.getClses());
 			clses.remove(cls);
 			list.setClses(clses);
 		}
 	}
-	
-	public void superclassAdded(RDFSClass cls, RDFSClass superclass){
+
+	public void superclassAdded(RDFSClass cls, RDFSClass superclass) {
 		ArrayList supers = new ArrayList(superclass.getNamedSuperclasses(true));
 		supers.add(superclass);
-		if (supers.contains(owlsClass)){
+		if (supers.contains(owlsClass)) {
 			ArrayList clses = new ArrayList(list.getClses());
-			if (!clses.contains(cls)){
+			if (!clses.contains(cls)) {
 				clses.add(cls);
 				list.setClses(clses);
 			}

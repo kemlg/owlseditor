@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 
 package com.sri.owlseditor.iopr;
 
@@ -21,19 +21,19 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import com.sri.owlseditor.util.OWLSIcons;
-	
+
 /** The action handler for the IOPR Manager toolbar button */
 public class IOPRManagerAction extends AbstractAction {
 
-    IOPRManager _ioprManager;
+	IOPRManager _ioprManager;
 
-    public IOPRManagerAction(IOPRManager ioprManager) {
-    	super("", OWLSIcons.getIOPRManagerIcon());
-    	_ioprManager = ioprManager;
-    }
-	
-    public void actionPerformed(ActionEvent e){
-    	_ioprManager.show();
-    }
+	public IOPRManagerAction(IOPRManager ioprManager) {
+		super("", OWLSIcons.getIOPRManagerIcon());
+		_ioprManager = ioprManager;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		_ioprManager.show();
+	}
 
 }

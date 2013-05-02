@@ -12,14 +12,14 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt;
 
 /**
  * @author Daniel Elenius
  */
-public	class XSLTException extends Exception{
-	public XSLTException(String message){
+public class XSLTException extends Exception {
+	public XSLTException(String message) {
 		super(message);
 	}
 }

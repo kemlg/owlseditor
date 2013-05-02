@@ -11,7 +11,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets.wsdl;
 
 import java.awt.Dimension;
@@ -21,22 +21,21 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 
 public class WSDLXSLTButtonPanel extends JPanel {
-    private JButton m_button;
+	private JButton m_button;
 
-    public WSDLXSLTButtonPanel () {
-	m_button = new JButton ("Edit XSLT String");
+	public WSDLXSLTButtonPanel() {
+		m_button = new JButton("Edit XSLT String");
 
-	JPanel upperBlank = new JPanel ();
-	upperBlank.setPreferredSize (new Dimension (180, 20));
-	JPanel j2 = new JPanel ();
-	j2.setLayout (new GridLayout (0, 1));
-	j2.add (upperBlank);
-	j2.add (m_button);
-	add (j2);
-    }
+		JPanel upperBlank = new JPanel();
+		upperBlank.setPreferredSize(new Dimension(180, 20));
+		JPanel j2 = new JPanel();
+		j2.setLayout(new GridLayout(0, 1));
+		j2.add(upperBlank);
+		j2.add(m_button);
+		add(j2);
+	}
 
-    public JButton getXSLTButton ()
-    {
-	return m_button;
-    }
+	public JButton getXSLTButton() {
+		return m_button;
+	}
 }

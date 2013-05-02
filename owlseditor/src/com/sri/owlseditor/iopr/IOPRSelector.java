@@ -14,7 +14,6 @@
 // Portions created by the Initial Developer are Copyright (C) 2004 the
 // Initial Developer.  All Rights Reserved.
 
-
 package com.sri.owlseditor.iopr;
 
 import java.awt.GridLayout;
@@ -36,88 +35,86 @@ import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 
 /**
-   The left part of the IOPR Manager (including the checkboxes, the combo boxes,
-   and the bottom buttons). This is analogous to the ServiceSelector for
-   the main instance panes.
-*/
-public class IOPRSelector extends MultipleInstanceSelector implements ComboListener{
+ * The left part of the IOPR Manager (including the checkboxes, the combo boxes,
+ * and the bottom buttons). This is analogous to the ServiceSelector for the
+ * main instance panes.
+ */
+public class IOPRSelector extends MultipleInstanceSelector implements
+		ComboListener {
 
-    private OWLModel model;
-    
-    private Collection ioprClasses;
-    private Collection m_IOPRproperties;
-    
-    public IOPRSelector(OWLModel okb, Project project, ResourceDisplayWrapper editor) {
-    	super(okb, project, editor);
-    	model = okb;
-    	setLayout(new GridLayout(4,1));
-    	
-    	setupClasses();
-    	setClasses (ioprClasses);
-	setupProperties();
-    }
-    
-    private void setupClasses(){
-    	OWLNamedClass input = model.getOWLNamedClass(InputList.INPUT);
-    	OWLNamedClass output = model.getOWLNamedClass(OutputList.OUTPUT);
-    	OWLNamedClass condition = model.getOWLNamedClass(PreconditionList.PRECONDITION);
-    	OWLNamedClass result = model.getOWLNamedClass(ResultList.RESULT);
-    	
-    	ArrayList classes = new ArrayList();
-    	classes.add(input);
-    	classes.add(output);
-    	classes.add(condition);
-    	classes.add(result);
-    	ioprClasses = classes;
-    }
+	private OWLModel model;
 
-    private void setupProperties()
-    {
-	m_IOPRproperties = new ArrayList();
-	m_IOPRproperties.add (InputList.INPUT_PROPERTY);
-	m_IOPRproperties.add (OutputList.OUTPUT_PROPERTY);
-	m_IOPRproperties.add (PreconditionList.PRECONDITION_PROPERTY);
-	m_IOPRproperties.add (ResultList.RESULT_PROPERTY);
-    }
-    
-    public void rightComboSelectionChanged(OWLIndividual inst){
-    	Iterator it = instancePanes.iterator();
-    	while(it.hasNext()){
-	    OWLSInstanceList list = (OWLSInstanceList)it.next();
-	    list.getCheckboxPanel().rightComboSelectionChanged(inst);
-    	}
-    }
-    
-    public void leftComboSelectionChanged(OWLIndividual inst) {
-    	Iterator it = instancePanes.iterator();
-    	while (it.hasNext()) {
-	    OWLSInstanceList list = (OWLSInstanceList)it.next();
-	    list.getCheckboxPanel().leftComboSelectionChanged(inst);
-    	}
-    }
+	private Collection ioprClasses;
+	private Collection m_IOPRproperties;
 
+	public IOPRSelector(OWLModel okb, Project project,
+			ResourceDisplayWrapper editor) {
+		super(okb, project, editor);
+		model = okb;
+		setLayout(new GridLayout(4, 1));
 
-    public void copyPropertyValue (OWLIndividual left, OWLIndividual right, boolean leftToRight) {
-    	Iterator it = instancePanes.iterator();
-    	while (it.hasNext()) {
-	    OWLSInstanceList list = (OWLSInstanceList) it.next();
-	    list.getCheckboxPanel().copyPropertyValue (left, right, leftToRight);
-    	}
-    }
+		setupClasses();
+		setClasses(ioprClasses);
+		setupProperties();
+	}
 
+	private void setupClasses() {
+		OWLNamedClass input = model.getOWLNamedClass(InputList.INPUT);
+		OWLNamedClass output = model.getOWLNamedClass(OutputList.OUTPUT);
+		OWLNamedClass condition = model
+				.getOWLNamedClass(PreconditionList.PRECONDITION);
+		OWLNamedClass result = model.getOWLNamedClass(ResultList.RESULT);
 
-    public void refreshIOPRDisplay () {
-    	Iterator it = instancePanes.iterator();
-    	while (it.hasNext()) {
-	    OWLSInstanceList list = (OWLSInstanceList)it.next();
-	    list.getCheckboxPanel().refreshIOPRDisplay();
-    	}
-    }
+		ArrayList classes = new ArrayList();
+		classes.add(input);
+		classes.add(output);
+		classes.add(condition);
+		classes.add(result);
+		ioprClasses = classes;
+	}
 
+	private void setupProperties() {
+		m_IOPRproperties = new ArrayList();
+		m_IOPRproperties.add(InputList.INPUT_PROPERTY);
+		m_IOPRproperties.add(OutputList.OUTPUT_PROPERTY);
+		m_IOPRproperties.add(PreconditionList.PRECONDITION_PROPERTY);
+		m_IOPRproperties.add(ResultList.RESULT_PROPERTY);
+	}
 
-    public Collection getIOPRproperties ()
-    {
-	return m_IOPRproperties;
-    }
+	public void rightComboSelectionChanged(OWLIndividual inst) {
+		Iterator it = instancePanes.iterator();
+		while (it.hasNext()) {
+			OWLSInstanceList list = (OWLSInstanceList) it.next();
+			list.getCheckboxPanel().rightComboSelectionChanged(inst);
+		}
+	}
+
+	public void leftComboSelectionChanged(OWLIndividual inst) {
+		Iterator it = instancePanes.iterator();
+		while (it.hasNext()) {
+			OWLSInstanceList list = (OWLSInstanceList) it.next();
+			list.getCheckboxPanel().leftComboSelectionChanged(inst);
+		}
+	}
+
+	public void copyPropertyValue(OWLIndividual left, OWLIndividual right,
+			boolean leftToRight) {
+		Iterator it = instancePanes.iterator();
+		while (it.hasNext()) {
+			OWLSInstanceList list = (OWLSInstanceList) it.next();
+			list.getCheckboxPanel().copyPropertyValue(left, right, leftToRight);
+		}
+	}
+
+	public void refreshIOPRDisplay() {
+		Iterator it = instancePanes.iterator();
+		while (it.hasNext()) {
+			OWLSInstanceList list = (OWLSInstanceList) it.next();
+			list.getCheckboxPanel().refreshIOPRDisplay();
+		}
+	}
+
+	public Collection getIOPRproperties() {
+		return m_IOPRproperties;
+	}
 }
-

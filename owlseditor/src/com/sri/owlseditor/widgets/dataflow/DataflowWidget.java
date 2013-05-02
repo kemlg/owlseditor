@@ -11,7 +11,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets.dataflow;
 
 import java.awt.Component;
@@ -30,7 +30,8 @@ import edu.stanford.smi.protegex.owl.model.OWLProperty;
 import edu.stanford.smi.protegex.owl.model.RDFIndividual;
 
 /**
- * This widget helps users with the horribly complicated task of managing data flow declarations.
+ * This widget helps users with the horribly complicated task of managing data
+ * flow declarations.
  * 
  * @author Daniel Elenius
  */
@@ -39,7 +40,7 @@ public abstract class DataflowWidget extends AbstractCombinationWidget {
 	// GUI components
 	ValueSourcePanel valueSourceEditor;
 	ValueTextPanel valueTextEditor;
-	
+
 	// KB
 	OWLModel okb;
 	OWLProperty hasDataFromSlot;
@@ -64,11 +65,11 @@ public abstract class DataflowWidget extends AbstractCombinationWidget {
 
 	// Internal data
 	// This HashSet has InputBindings and OutputBindings as values, and their
-	// toParam Inputs as keys. 
+	// toParam Inputs as keys.
 	HashMap bindings;
-		
-	private HashMap createClsesMap(){
-		okb = (OWLModel)getKnowledgeBase();
+
+	private HashMap createClsesMap() {
+		okb = (OWLModel) getKnowledgeBase();
 		HashMap clsesMap = new HashMap();
 		valueSourceEditor = new ValueSourcePanel(okb);
 		valueTextEditor = new ValueTextPanel(okb);
@@ -77,54 +78,52 @@ public abstract class DataflowWidget extends AbstractCombinationWidget {
 		clsesMap.put("valueData", valueTextEditor);
 		return clsesMap;
 	}
-	
+
 	public void initialize(String addString, String removeString) {
-		super.initialize("To Parameter",
-						 addString,
-						 removeString,
-						 "Binding type",
-						 createClsesMap());
+		super.initialize("To Parameter", addString, removeString,
+				"Binding type", createClsesMap());
 		bindings = new HashMap();
 		setupSlotsAndClasses();
-		//setEditorComponent(valueSourceEditor);
+		// setEditorComponent(valueSourceEditor);
 	}
-	
-	public Collection getValues(){
+
+	public Collection getValues() {
 		return bindings.values();
 	}
-	
+
 	/* Protege calls this when the user clicks on a Perform instance */
-	public void setValues(Collection values){
+	public void setValues(Collection values) {
 		bindings.clear();
 		Iterator it = values.iterator();
 		RDFIndividual instIO = null;
 		OWLIndividual binding = null;
-		while (it.hasNext()){
-			binding = (OWLIndividual)it.next();
-			instIO = (RDFIndividual)binding.getPropertyValue(toParamSlot);
+		while (it.hasNext()) {
+			binding = (OWLIndividual) it.next();
+			instIO = (RDFIndividual) binding.getPropertyValue(toParamSlot);
 			if (!bindings.containsKey(instIO))
 				bindings.put(instIO, binding);
 		}
 		setListValues(bindings.keySet());
-		
+
 		// If the bindings list is non-empty we select the first one
 		it = bindings.entrySet().iterator();
 		if (it.hasNext())
 			setSelectedListIndex(0);
-		
-		//valueSourceEditor.setPerform(getPerform());
+
+		// valueSourceEditor.setPerform(getPerform());
 	}
-	
-	/** Returns a list of all potential target parameters that do
-	 * not already have a binding.
+
+	/**
+	 * Returns a list of all potential target parameters that do not already
+	 * have a binding.
 	 */
 	protected abstract List getToParameters();
-	
+
 	/** Returns a new Binding of the appropriate type */
 	protected abstract OWLIndividual createBindingInstance();
-	
+
 	/* We look these up just once, and reuse them */
-	private void setupSlotsAndClasses(){
+	private void setupSlotsAndClasses() {
 		hasDataFromSlot = okb.getOWLProperty("process:hasDataFrom");
 		processSlot = okb.getOWLProperty("process:process");
 		hasParameterSlot = okb.getOWLProperty("process:hasParameter");
@@ -148,19 +147,17 @@ public abstract class DataflowWidget extends AbstractCombinationWidget {
 	}
 
 	/* Called when the add button is clicked on the LabeledComponent */
-	public Object addListItem(Component parent){
+	public Object addListItem(Component parent) {
 		List inputs = getToParameters();
-		if (inputs != null){
-			try{
-				RDFIndividual instIO = (RDFIndividual) DisplayUtilities.pickInstanceFromCollection(
-						parent,
-						inputs,
-						0,
-						"Choose a target parameter");
+		if (inputs != null) {
+			try {
+				RDFIndividual instIO = (RDFIndividual) DisplayUtilities
+						.pickInstanceFromCollection(parent, inputs, 0,
+								"Choose a target parameter");
 
 				if (bindings.containsKey(instIO))
 					return null;
-				else{	
+				else {
 					// Create an anonymous new Binding instance
 					OWLIndividual bindingInst = null;
 					bindingInst = createBindingInstance();
@@ -168,101 +165,101 @@ public abstract class DataflowWidget extends AbstractCombinationWidget {
 					bindingInst.addPropertyValue(toParamSlot, instIO);
 					// Also add this new binding to our internal list
 					bindings.put(instIO, bindingInst);
-					//System.out.println("Added " + bindingInst.getName());
-					//System.out.println("bindings now contain " + bindings);
+					// System.out.println("Added " + bindingInst.getName());
+					// System.out.println("bindings now contain " + bindings);
 					valueChanged();
 					return instIO;
 				}
+			} catch (Exception ex) {
+				// System.out.println("WARNING! No parameters on selected process.");
 			}
-			catch(Exception ex){
-				//System.out.println("WARNING! No parameters on selected process.");
-			}
-		}
-		else{
+		} else {
 			System.out.println("WARNING! No parameters on selected process.");
 		}
 		return null;
 	}
 
 	/* Called when the remove button is clicked on the LabeledComponent */
-	public boolean removeListItem(Object listItem){
-		RDFIndividual instIO = (RDFIndividual)listItem;
+	public boolean removeListItem(Object listItem) {
+		RDFIndividual instIO = (RDFIndividual) listItem;
 
-		OWLIndividual bindingInst = (OWLIndividual)bindings.get(instIO);
-			
+		OWLIndividual bindingInst = (OWLIndividual) bindings.get(instIO);
+
 		// Delete the ValueOf, etc
 		if (getComboSelection().equals("valueSource"))
 			valueSourceEditor.deleteValueSpecifier(bindingInst);
 		else
 			valueTextEditor.deleteValueSpecifier(bindingInst);
-				
+
 		bindingInst.delete();
-            
+
 		bindings.remove(instIO);
-		//System.out.println("Removed " + instIO.getName());
-		//System.out.println("bindings now contain " + bindings);
-		
+		// System.out.println("Removed " + instIO.getName());
+		// System.out.println("bindings now contain " + bindings);
+
 		setEditorComponent(null);
 		valueChanged();
 		return true;
 	}
 
 	/* TODO: Implement this method */
-	public void comboSelectionChanged(Object selectedItem){
-		System.out.println("comboSelectionChanged() - Not supported yet.");		
+	public void comboSelectionChanged(Object selectedItem) {
+		System.out.println("comboSelectionChanged() - Not supported yet.");
 		/*
-		if (selectedItem.equals("valueSource"))
-			setEditorComponent(valueSourceEditor);
-		else
-			setEditorComponent(valueTextEditor);
-		*/
+		 * if (selectedItem.equals("valueSource"))
+		 * setEditorComponent(valueSourceEditor); else
+		 * setEditorComponent(valueTextEditor);
+		 */
 	}
-	
-	/* Called when the selection in the toParam component changes 
-	 */
-	public void listSelectionChanged(Object selectedItem){
-		//if (selectedItem == null)
-		//	setEditorComponent(null);
-		
-		OWLIndividual perform = (OWLIndividual)getEditedResource();  // can also be a produce
-		RDFIndividual instIO = (RDFIndividual)selectedItem;
-		OWLIndividual binding = (OWLIndividual)bindings.get(instIO);
-			
-		OWLIndividual valueSource = (OWLIndividual)binding.getPropertyValue(valueSourceSlot);		
-		OWLIndividual valueForm = (OWLIndividual)binding.getPropertyValue(valueFormSlot);
-		OWLIndividual valueData = (OWLIndividual)binding.getPropertyValue(valueDataSlot);
-		OWLIndividual valueType = (OWLIndividual)binding.getPropertyValue(valueTypeSlot);
-		OWLIndividual valueFunction = (OWLIndividual)binding.getPropertyValue(valueFunctionSlot);		
 
-		
-		if (valueSource != null){
+	/*
+	 * Called when the selection in the toParam component changes
+	 */
+	public void listSelectionChanged(Object selectedItem) {
+		// if (selectedItem == null)
+		// setEditorComponent(null);
+
+		OWLIndividual perform = (OWLIndividual) getEditedResource(); // can also
+																		// be a
+																		// produce
+		RDFIndividual instIO = (RDFIndividual) selectedItem;
+		OWLIndividual binding = (OWLIndividual) bindings.get(instIO);
+
+		OWLIndividual valueSource = (OWLIndividual) binding
+				.getPropertyValue(valueSourceSlot);
+		OWLIndividual valueForm = (OWLIndividual) binding
+				.getPropertyValue(valueFormSlot);
+		OWLIndividual valueData = (OWLIndividual) binding
+				.getPropertyValue(valueDataSlot);
+		OWLIndividual valueType = (OWLIndividual) binding
+				.getPropertyValue(valueTypeSlot);
+		OWLIndividual valueFunction = (OWLIndividual) binding
+				.getPropertyValue(valueFunctionSlot);
+
+		if (valueSource != null) {
 			valueSourceEditor.setBinding(binding, perform);
 			setComboSelection("valueSource");
 			setEditorComponent(valueSourceEditor);
-		}
-		else if (valueForm != null){
+		} else if (valueForm != null) {
 			valueTextEditor.setBinding(binding, perform);
 			setEditorComponent(valueTextEditor);
-		}
-		else if (valueData != null){
+		} else if (valueData != null) {
 			valueTextEditor.setBinding(binding, perform);
 			setEditorComponent(valueTextEditor);
-		}
-		else if (valueType != null){
+		} else if (valueType != null) {
 			valueTextEditor.setBinding(binding, perform);
 			setEditorComponent(valueTextEditor);
-		}
-		else if (valueFunction != null){
+		} else if (valueFunction != null) {
 			valueTextEditor.setBinding(binding, perform);
-			setEditorComponent(valueTextEditor);						
-		}
-		else{
+			setEditorComponent(valueTextEditor);
+		} else {
 			// If there is no binding, we create a new valueSource binding
-			OWLIndividual valueOf = (OWLIndividual) valueOfCls.createInstance(null);
+			OWLIndividual valueOf = (OWLIndividual) valueOfCls
+					.createInstance(null);
 			binding.setPropertyValue(valueSourceSlot, valueOf);
-				
+
 			valueSourceEditor.setBinding(binding, perform);
-			setEditorComponent(valueSourceEditor);						
+			setEditorComponent(valueSourceEditor);
 		}
 	}
 }

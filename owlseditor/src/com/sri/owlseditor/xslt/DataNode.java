@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt;
 
 import javax.swing.Icon;
@@ -23,11 +23,11 @@ import javax.swing.Icon;
 public class DataNode extends XSLTNode {
 	public final static String DEFAULT_DATA_NAME = "Data";
 
-	public DataNode(){
+	public DataNode() {
 		this(DEFAULT_DATA_NAME);
 	}
-	
-	public DataNode(String name){
+
+	public DataNode(String name) {
 		super(name);
 		setAllowsChildren(false);
 	}
@@ -35,14 +35,16 @@ public class DataNode extends XSLTNode {
 	public String getXSLTString(int indentnum) {
 		String str = "";
 		String indent = "";
-		for (int i=0;i<indentnum;i++) indent += TAB;
+		for (int i = 0; i < indentnum; i++)
+			indent += TAB;
 
 		XSLTFunction function = getXSLTFunction();
-		if ( function.getFunctionName().equals("") )
+		if (function.getFunctionName().equals(""))
 			str = indent + function.getParameter(0) + NL;
 		else
-			str = indent + "<xsl:value-of select=\""+function.function2String()+"\"/>"+NL;
+			str = indent + "<xsl:value-of select=\""
+					+ function.function2String() + "\"/>" + NL;
 		return str;
 	}
-	
+
 }

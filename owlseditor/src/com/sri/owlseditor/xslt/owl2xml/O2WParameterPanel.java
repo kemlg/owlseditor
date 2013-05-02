@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.owl2xml;
 
 import java.awt.CardLayout;
@@ -49,84 +49,76 @@ public class O2WParameterPanel extends TransformationPanel {
 	public XSLTComboPanel getAttributePanel() {
 		return attributePanel;
 	}
-	
+
 	public void switchPanel(XSLTNode node) {
-		CardLayout cl = (CardLayout)getLayout();
-		if (node instanceof RootNode){
-			cl.show(this,"Root Panel");
-		}
-		else if (node instanceof ElementNode){
-			cl.show(this,"Element Panel");
-		}
-		else if (node instanceof DataNode){
-			cl.show(this,"Data Panel");
-		}
-		else if (node instanceof VariableNode){
-			cl.show(this,"Variable Panel");
-		}
-		else if (node instanceof AttributeNode){
-			cl.show(this,"Attribute Panel");
+		CardLayout cl = (CardLayout) getLayout();
+		if (node instanceof RootNode) {
+			cl.show(this, "Root Panel");
+		} else if (node instanceof ElementNode) {
+			cl.show(this, "Element Panel");
+		} else if (node instanceof DataNode) {
+			cl.show(this, "Data Panel");
+		} else if (node instanceof VariableNode) {
+			cl.show(this, "Variable Panel");
+		} else if (node instanceof AttributeNode) {
+			cl.show(this, "Attribute Panel");
 		}
 	}
-	
+
 	public void writeFromPanel2Node(XSLTNode node) {
-		if (node instanceof DataNode){
+		if (node instanceof DataNode) {
 			node.setXSLTFunction(dataPanel.getXSLTFunction());
-		}
-		else if (node instanceof ElementNode){
+		} else if (node instanceof ElementNode) {
 			node.setNodeName(elementPanel.getName());
-		}
-		else if (node instanceof VariableNode){
+		} else if (node instanceof VariableNode) {
 			node.setNodeName(variablePanel.getName());
 			node.setXSLTFunction(variablePanel.getXSLTFunction());
-		}
-		else if (node instanceof AttributeNode){
+		} else if (node instanceof AttributeNode) {
 			node.setNodeName(attributePanel.getName());
 			node.setXSLTFunction(attributePanel.getXSLTFunction());
 		}
 	}
-	
+
 	public void writeFromNode2Panel(XSLTNode node) {
-		if (node instanceof DataNode){
+		if (node instanceof DataNode) {
 			dataPanel.setXSLTFunction(node.getXSLTFunction());
-		}
-		else if (node instanceof ElementNode){
+		} else if (node instanceof ElementNode) {
 			elementPanel.setName(node.getNodeName());
-		}
-		else if (node instanceof VariableNode){
+		} else if (node instanceof VariableNode) {
 			variablePanel.setName(node.getNodeName());
 			variablePanel.setXSLTFunction(node.getXSLTFunction());
-		}
-		else if (node instanceof AttributeNode){
+		} else if (node instanceof AttributeNode) {
 			attributePanel.setName(node.getNodeName());
 			attributePanel.setXSLTFunction(node.getXSLTFunction());
 		}
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("action performed");
-		
-		XSLTNode node = (XSLTNode)parent.getTree().getLastSelectedPathComponent();
-		if ( node != null ) {
-			if ( e.getSource() instanceof JTextField ) {
-				if ( node instanceof VariableNode ) {
+
+		XSLTNode node = (XSLTNode) parent.getTree()
+				.getLastSelectedPathComponent();
+		if (node != null) {
+			if (e.getSource() instanceof JTextField) {
+				if (node instanceof VariableNode) {
 					String oldname = "$" + node.getNodeName();
 					variablePanel.removeParameter(oldname);
 					attributePanel.removeParameter(oldname);
 					dataPanel.removeParameter(oldname);
-					
-					String newname = "$" + ((JTextField)e.getSource()).getText();
+
+					String newname = "$"
+							+ ((JTextField) e.getSource()).getText();
 
 					System.out.println("Parameter name is " + newname);
-					
+
 					variablePanel.addParameter(newname);
 					attributePanel.addParameter(newname);
 					dataPanel.addParameter(newname);
 				}
-				((DefaultTreeModel)parent.getTree().getModel()).reload();
+				((DefaultTreeModel) parent.getTree().getModel()).reload();
 			}
 			writeFromPanel2Node(node);
 		}
 	}
-	
+
 }

@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp.tree;
 
 import java.io.PrintWriter;
@@ -25,70 +25,78 @@ import com.sri.owlseditor.cmp.graph.UniqueName;
 import com.sri.owlseditor.util.OWLSList;
 
 public class SequenceNode extends BagOrTreeNode {
-	public SequenceNode(OWLSTreeNodeInfo ni){
+	public SequenceNode(OWLSTreeNodeInfo ni) {
 		super(ni, OWLSList.CC_LIST);
 	}
-	
-	public GraphNodeInfo graph(HashSet nameSet, PrintWriter pw, int clusterNumber,
-								OWLSTreeNode selectedNode){
-		UniqueName controlConstructName=new UniqueName(getInstance().getName(), nameSet);
+
+	public GraphNodeInfo graph(HashSet nameSet, PrintWriter pw,
+			int clusterNumber, OWLSTreeNode selectedNode) {
+		UniqueName controlConstructName = new UniqueName(getInstance()
+				.getName(), nameSet);
 		int newClusterNumber = clusterNumber;
-		Integer clusterInt= new Integer(newClusterNumber++);
-        //boolean error = true;
-		
+		Integer clusterInt = new Integer(newClusterNumber++);
+		// boolean error = true;
+
 		pw.println("subgraph " + clusterInt.toString() + " {");
 
-        // If this node is the selected one, 'highlight' it.
-        if (this.equals(selectedNode)){
- 			pw.println("node [fillcolor=" + GraphProcessModel.SELECTED_NODE_FILL_COLOR + 
- 					   ", color=" + GraphProcessModel.SELECTED_NODE_EDGE_COLOR +"];");
- 			pw.println("edge [color=" + GraphProcessModel.SELECTED_EDGE_COLOR + "];");
-        }
-        
-		Enumeration e = children();
-		if (!e.hasMoreElements()){
-			// nothing inside this construct
-			UniqueName dummyNodeName = new UniqueName("dummySequenceNode", nameSet);
-			pw.println(dummyNodeName.getUniqueName() + " [shape=point, label=\"\"];");
-			pw.println("}");
-	        return new GraphNodeInfo(dummyNodeName.getUniqueName(), dummyNodeName.getUniqueName(), 
-	        						 "", "", newClusterNumber);
+		// If this node is the selected one, 'highlight' it.
+		if (this.equals(selectedNode)) {
+			pw.println("node [fillcolor="
+					+ GraphProcessModel.SELECTED_NODE_FILL_COLOR + ", color="
+					+ GraphProcessModel.SELECTED_NODE_EDGE_COLOR + "];");
+			pw.println("edge [color=" + GraphProcessModel.SELECTED_EDGE_COLOR
+					+ "];");
 		}
-		//if (error)
-        //	pw.println("node [color=red, fontcolor=red]; edge [color=red];");
-		
+
+		Enumeration e = children();
+		if (!e.hasMoreElements()) {
+			// nothing inside this construct
+			UniqueName dummyNodeName = new UniqueName("dummySequenceNode",
+					nameSet);
+			pw.println(dummyNodeName.getUniqueName()
+					+ " [shape=point, label=\"\"];");
+			pw.println("}");
+			return new GraphNodeInfo(dummyNodeName.getUniqueName(),
+					dummyNodeName.getUniqueName(), "", "", newClusterNumber);
+		}
+		// if (error)
+		// pw.println("node [color=red, fontcolor=red]; edge [color=red];");
+
 		String inNode;
 		GraphNodeInfo firstPair = null;
-		//String previousNode = null;
+		// String previousNode = null;
 		// We have to treat the first node as a special case
-		if (e.hasMoreElements()){
-			OWLSTreeNode firstChild = (OWLSTreeNode)e.nextElement();
-			firstPair = firstChild.graph(nameSet, pw, newClusterNumber++, selectedNode);
+		if (e.hasMoreElements()) {
+			OWLSTreeNode firstChild = (OWLSTreeNode) e.nextElement();
+			firstPair = firstChild.graph(nameSet, pw, newClusterNumber++,
+					selectedNode);
 			newClusterNumber = firstPair.clusterNumber;
 			inNode = firstPair.firstNode;
-			//previousNode = firstPair.lastNode;
+			// previousNode = firstPair.lastNode;
 		}
 		GraphNodeInfo thisPair = firstPair;
 		GraphNodeInfo previousPair = thisPair;
 		// The rest of the nodes
-		while (e.hasMoreElements()){
-			OWLSTreeNode child = (OWLSTreeNode)e.nextElement();
-			thisPair = child.graph(nameSet, pw, newClusterNumber++, selectedNode);
+		while (e.hasMoreElements()) {
+			OWLSTreeNode child = (OWLSTreeNode) e.nextElement();
+			thisPair = child.graph(nameSet, pw, newClusterNumber++,
+					selectedNode);
 			newClusterNumber = thisPair.clusterNumber;
-			pw.println(previousPair.lastNode + "->" + thisPair.firstNode + 
-						thisPair.createInEdgeAttr(previousPair.outEdgeAttr));  // a bit ugly
+			pw.println(previousPair.lastNode + "->" + thisPair.firstNode
+					+ thisPair.createInEdgeAttr(previousPair.outEdgeAttr)); // a
+																			// bit
+																			// ugly
 			previousPair = thisPair;
-			//previousNode = thisPair.lastNode;
+			// previousNode = thisPair.lastNode;
 		}
 
 		pw.println("}");
-        
-        return new GraphNodeInfo(firstPair.firstNode, thisPair.lastNode, 
-        						 firstPair.inEdgeAttr, thisPair.outEdgeAttr,
-								 newClusterNumber);
+
+		return new GraphNodeInfo(firstPair.firstNode, thisPair.lastNode,
+				firstPair.inEdgeAttr, thisPair.outEdgeAttr, newClusterNumber);
 	}
 
-	public String toString(){
+	public String toString() {
 		return "Sequence";
 	}
 

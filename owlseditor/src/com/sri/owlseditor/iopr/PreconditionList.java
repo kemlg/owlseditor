@@ -14,17 +14,16 @@
 // Portions created by the Initial Developer are Copyright (C) 2004 the
 // Initial Developer.  All Rights Reserved.
 
-
 package com.sri.owlseditor.iopr;
 
 import edu.stanford.smi.protege.model.Project;
 
 public class PreconditionList extends IOPRInstancesList {
 
-    public static final String PRECONDITION = "expr:Condition";
-    public static final String PRECONDITION_PROPERTY = ":hasPrecondition";
+	public static final String PRECONDITION = "expr:Condition";
+	public static final String PRECONDITION_PROPERTY = ":hasPrecondition";
 
-    public PreconditionList (Project project) {
-    	super (project, PRECONDITION, PRECONDITION_PROPERTY);
-    }
+	public PreconditionList(Project project) {
+		super(project, PRECONDITION, PRECONDITION_PROPERTY);
+	}
 }

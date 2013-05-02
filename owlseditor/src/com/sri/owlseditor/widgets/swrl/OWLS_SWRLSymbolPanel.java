@@ -35,305 +35,295 @@ import edu.stanford.smi.protegex.owl.ui.icons.OWLIcons;
 import edu.stanford.smi.protegex.owl.ui.resourceselection.ResourceSelectionAction;
 
 /**
- * @author Holger Knublauch  <holger@smi.stanford.edu>
+ * @author Holger Knublauch <holger@smi.stanford.edu>
  */
 public class OWLS_SWRLSymbolPanel extends SWRLSymbolPanel {
 
-    private Action andAction;
+	private Action andAction;
 
-    private ResourceSelectionAction builtinAction;
+	private ResourceSelectionAction builtinAction;
 
-    private Action createVariableAction;
+	private Action createVariableAction;
 
-    private Action datatypeAction;
+	private Action datatypeAction;
 
-    private Action differentFromAction;
+	private Action differentFromAction;
 
-    private Action impAction;
+	private Action impAction;
 
-    private Action insertVariableAction;
+	private Action insertVariableAction;
 
-    private JButton insertVariableButton;
+	private JButton insertVariableButton;
 
-    private Action openBracketsAction;
+	private Action openBracketsAction;
 
-    private Action closeBracketsAction;
+	private Action closeBracketsAction;
 
-    private Action openParenthesisAction;
+	private Action openParenthesisAction;
 
-    private Action closeParenthesisAction;
+	private Action closeParenthesisAction;
 
-    private Action sameAsAction;
+	private Action sameAsAction;
 
+	public OWLS_SWRLSymbolPanel(OWLModel owlModel, boolean closeable,
+			boolean draggable) {
+		super(owlModel, closeable, draggable);
+	}
 
-    public OWLS_SWRLSymbolPanel(OWLModel owlModel, boolean closeable, boolean draggable) {
-        super(owlModel, closeable, draggable);
-    }
+	protected String getDisplayErrorMessage(Throwable ex) {
+		if (ex instanceof SWRLParseException) {
+			return ((SWRLParseException) ex).getMessage();
+		} else {
+			return "" + ex;
+		}
+	}
 
+	public Dimension getPreferredSize() {
+		Dimension pref = super.getPreferredSize();
+		return new Dimension(500, pref.height);
+	}
 
-    protected String getDisplayErrorMessage(Throwable ex) {
-        if (ex instanceof SWRLParseException) {
-            return ((SWRLParseException) ex).getMessage();
-        }
-        else {
-            return "" + ex;
-        }
-    }
+	private Collection getUsedVariableNames() {
+		String text = getSymbolEditor().getText();
+		Collection result = new HashSet();
+		for (int i = 0; i < text.length(); i++) {
+			if (text.charAt(i) == '?') {
+				String varName = getVariableName(text, i);
+				if (varName.length() > 0) {
+					result.add(varName);
+				}
+			}
+		}
+		return result;
+	}
 
+	private String getVariableName(String text, int beginIndex) {
+		int index = beginIndex + 1;
+		while (index < text.length()
+				&& Character.isJavaIdentifierPart(text.charAt(index))) {
+			index++;
+		}
+		return text.substring(beginIndex + 1, index);
+	}
 
-    public Dimension getPreferredSize() {
-        Dimension pref = super.getPreferredSize();
-        return new Dimension(500, pref.height);
-    }
+	protected void initMiddleBar(JToolBar toolBar) {
 
+		datatypeAction = new InsertXMLSchemaDatatypeAction();
+		addButton(toolBar, datatypeAction);
 
-    private Collection getUsedVariableNames() {
-        String text = getSymbolEditor().getText();
-        Collection result = new HashSet();
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '?') {
-                String varName = getVariableName(text, i);
-                if (varName.length() > 0) {
-                    result.add(varName);
-                }
-            }
-        }
-        return result;
-    }
+		andAction = new AbstractAction("Insert conjunction ("
+				+ SWRLParser.AND_CHAR + ")", SWRLIcons.getInsertAndIcon()) {
+			public void actionPerformed(ActionEvent e) {
+				getSymbolEditor().insertText("  " + SWRLParser.AND_CHAR + "  ");
+			}
+		};
+		addButton(toolBar, andAction);
 
+		/*
+		 * This is the only modification to the original SWRLSymbolPanel class:
+		 * We're removing the implication arrow. impAction = new
+		 * AbstractAction("Insert implication (" + SWRLParser.IMP_CHAR + ")",
+		 * SWRLIcons.getInsertImpIcon()) { public void
+		 * actionPerformed(ActionEvent e) { getSymbolEditor().insertText("  " +
+		 * SWRLParser.IMP_CHAR + "  "); } }; addButton(toolBar, impAction);
+		 */
 
-    private String getVariableName(String text, int beginIndex) {
-        int index = beginIndex + 1;
-        while (index < text.length() &&
-                Character.isJavaIdentifierPart(text.charAt(index))) {
-            index++;
-        }
-        return text.substring(beginIndex + 1, index);
-    }
+		toolBar.addSeparator();
 
+		openParenthesisAction = new AbstractAction(
+				"Insert open parenthesis: (", SWRLIcons.getOpenParenthesis()) {
+			public void actionPerformed(ActionEvent e) {
+				getSymbolEditor().insertText("(", 1);
+			}
+		};
+		addButton(toolBar, openParenthesisAction);
 
-    protected void initMiddleBar(JToolBar toolBar) {
+		closeParenthesisAction = new AbstractAction(
+				"Insert close parenthesis: )", SWRLIcons.getCloseParenthesis()) {
+			public void actionPerformed(ActionEvent e) {
+				getSymbolEditor().insertText(")", 1);
+			}
+		};
+		addButton(toolBar, closeParenthesisAction);
 
-        datatypeAction = new InsertXMLSchemaDatatypeAction();
-        addButton(toolBar, datatypeAction);
+		toolBar.addSeparator();
 
-        andAction = new AbstractAction("Insert conjunction (" + SWRLParser.AND_CHAR + ")",
-                SWRLIcons.getInsertAndIcon()) {
-            public void actionPerformed(ActionEvent e) {
-                getSymbolEditor().insertText("  " + SWRLParser.AND_CHAR + "  ");
-            }
-        };
-        addButton(toolBar, andAction);
+		openBracketsAction = new AbstractAction("Insert open brackets: [",
+				SWRLIcons.getOpenBrackets()) {
+			public void actionPerformed(ActionEvent e) {
+				getSymbolEditor().insertText("[", 1);
+			}
+		};
+		addButton(toolBar, openBracketsAction);
 
-        /* This is the only modification to the original SWRLSymbolPanel class:
-         * We're removing the implication arrow.
-        impAction = new AbstractAction("Insert implication (" + SWRLParser.IMP_CHAR + ")",
-                SWRLIcons.getInsertImpIcon()) {
-            public void actionPerformed(ActionEvent e) {
-                getSymbolEditor().insertText("  " + SWRLParser.IMP_CHAR + "  ");
-            }
-        };
-        addButton(toolBar, impAction);
-        */
-        
-        toolBar.addSeparator();
+		closeBracketsAction = new AbstractAction("Insert close brackets: ]",
+				SWRLIcons.getCloseBrackets()) {
+			public void actionPerformed(ActionEvent e) {
+				getSymbolEditor().insertText("]", 1);
+			}
+		};
+		addButton(toolBar, closeBracketsAction);
+	}
 
-        openParenthesisAction = new AbstractAction("Insert open parenthesis: (",
-                SWRLIcons.getOpenParenthesis()) {
-            public void actionPerformed(ActionEvent e) {
-                getSymbolEditor().insertText("(", 1);
-            }
-        };
-        addButton(toolBar, openParenthesisAction);
+	protected void initTopBar(JToolBar toolBar) {
 
-        closeParenthesisAction = new AbstractAction("Insert close parenthesis: )",
-                SWRLIcons.getCloseParenthesis()) {
-            public void actionPerformed(ActionEvent e) {
-                getSymbolEditor().insertText(")", 1);
-            }
-        };
-        addButton(toolBar, closeParenthesisAction);
+		classAction.activateComboBox(addButton(toolBar, classAction));
+		propertyAction.activateComboBox(addButton(toolBar, propertyAction));
+		individiualAction
+				.activateComboBox(addButton(toolBar, individiualAction));
+		toolBar.addSeparator();
+		createVariableAction = new CreateVariableAction();
+		addButton(toolBar, createVariableAction);
+		insertVariableAction = new InsertVariableAction();
+		insertVariableButton = addButton(toolBar, insertVariableAction);
 
-        toolBar.addSeparator();
+		toolBar.addSeparator();
 
-        openBracketsAction = new AbstractAction("Insert open brackets: [",
-                SWRLIcons.getOpenBrackets()) {
-            public void actionPerformed(ActionEvent e) {
-                getSymbolEditor().insertText("[", 1);
-            }
-        };
-        addButton(toolBar, openBracketsAction);
+		builtinAction = new InsertBuiltinAction();
+		builtinAction.activateComboBox(addButton(toolBar, builtinAction));
 
-        closeBracketsAction = new AbstractAction("Insert close brackets: ]",
-                SWRLIcons.getCloseBrackets()) {
-            public void actionPerformed(ActionEvent e) {
-                getSymbolEditor().insertText("]", 1);
-            }
-        };
-        addButton(toolBar, closeBracketsAction);
-    }
+		differentFromAction = new AbstractAction("Insert differentFrom",
+				SWRLIcons.getDifferentFromIcon()) {
+			public void actionPerformed(ActionEvent e) {
+				getSymbolEditor().insertText("differentFrom(", 14);
+			}
+		};
+		addButton(toolBar, differentFromAction);
+		sameAsAction = new AbstractAction("Insert sameAs",
+				SWRLIcons.getSameAsIcon()) {
+			public void actionPerformed(ActionEvent e) {
+				getSymbolEditor().insertText("sameAs(", 7);
+			}
+		};
+		addButton(toolBar, sameAsAction);
 
+		toolBar.addSeparator();
+	}
 
-    protected void initTopBar(JToolBar toolBar) {
+	private void insertVariable(ActionEvent e) {
+		Set vars = new HashSet(getUsedVariableNames());
+		final Collection instances = getOWLModel().getRDFSNamedClass(
+				SWRLNames.Cls.VARIABLE).getInstances(true);
+		for (Iterator it = instances.iterator(); it.hasNext();) {
+			RDFResource resource = (RDFResource) it.next();
+			vars.add(resource.getName());
+		}
+		String[] symbols = (String[]) vars.toArray(new String[0]);
+		Arrays.sort(symbols);
 
-        classAction.activateComboBox(addButton(toolBar, classAction));
-        propertyAction.activateComboBox(addButton(toolBar, propertyAction));
-        individiualAction.activateComboBox(addButton(toolBar, individiualAction));
-        toolBar.addSeparator();
-        createVariableAction = new CreateVariableAction();
-        addButton(toolBar, createVariableAction);
-        insertVariableAction = new InsertVariableAction();
-        insertVariableButton = addButton(toolBar, insertVariableAction);
+		JPopupMenu menu = new JPopupMenu();
+		for (int i = 0; i < symbols.length; i++) {
+			String symbol = symbols[i];
+			final JMenuItem item = new JMenuItem(symbol,
+					SWRLIcons.getVariableIcon());
+			item.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String text = (String) item.getText();
+					getSymbolEditor().insertText("?" + text);
+				}
+			});
+			menu.add(item);
+		}
+		if (menu.getComponentCount() > 0) {
+			menu.show(insertVariableButton, 0, insertVariableButton.getHeight());
+		}
+	}
 
-        toolBar.addSeparator();
+	private class InsertBuiltinAction extends ResourceSelectionAction {
 
-        builtinAction = new InsertBuiltinAction();
-        builtinAction.activateComboBox(addButton(toolBar, builtinAction));
-
-        differentFromAction = new AbstractAction("Insert differentFrom",
-                SWRLIcons.getDifferentFromIcon()) {
-            public void actionPerformed(ActionEvent e) {
-                getSymbolEditor().insertText("differentFrom(", 14);
-            }
-        };
-        addButton(toolBar, differentFromAction);
-        sameAsAction = new AbstractAction("Insert sameAs",
-                SWRLIcons.getSameAsIcon()) {
-            public void actionPerformed(ActionEvent e) {
-                getSymbolEditor().insertText("sameAs(", 7);
-            }
-        };
-        addButton(toolBar, sameAsAction);
-
-        toolBar.addSeparator();
-    }
-
-
-    private void insertVariable(ActionEvent e) {
-        Set vars = new HashSet(getUsedVariableNames());
-        final Collection instances = getOWLModel().getRDFSNamedClass(SWRLNames.Cls.VARIABLE).getInstances(true);
-        for (Iterator it = instances.iterator(); it.hasNext();) {
-            RDFResource resource = (RDFResource) it.next();
-            vars.add(resource.getName());
-        }
-        String[] symbols = (String[]) vars.toArray(new String[0]);
-        Arrays.sort(symbols);
-
-        JPopupMenu menu = new JPopupMenu();
-        for (int i = 0; i < symbols.length; i++) {
-            String symbol = symbols[i];
-            final JMenuItem item = new JMenuItem(symbol, SWRLIcons.getVariableIcon());
-            item.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    String text = (String) item.getText();
-                    getSymbolEditor().insertText("?" + text);
-                }
-            });
-            menu.add(item);
-        }
-        if (menu.getComponentCount() > 0) {
-            menu.show(insertVariableButton, 0, insertVariableButton.getHeight());
-        }
-    }
-
-
-    private class InsertBuiltinAction extends ResourceSelectionAction {
-
-        InsertBuiltinAction() {
-            super("Insert builtin...", SWRLIcons.getBuiltinIcon());
-        }
+		InsertBuiltinAction() {
+			super("Insert builtin...", SWRLIcons.getBuiltinIcon());
+		}
 
 		public Collection getSelectableResources() {
-            java.util.List result = new ArrayList(new SWRLFactory(getOWLModel()).getBuiltins());
-            Collections.sort(result, new FrameComparator());
-            return result;
+			java.util.List result = new ArrayList(
+					new SWRLFactory(getOWLModel()).getBuiltins());
+			Collections.sort(result, new FrameComparator());
+			return result;
 		}
 
 		public void resourceSelected(RDFResource resource) {
-            String str = resource.getBrowserText() + "(";
-            getSymbolEditor().insertText(str);
+			String str = resource.getBrowserText() + "(";
+			getSymbolEditor().insertText(str);
 		}
 
 		public RDFResource pickResource() {
-            Collection frames = getSelectableResources();
-            return (RDFResource) DisplayUtilities.pickInstanceFromCollection(OWLS_SWRLSymbolPanel.this, frames, 0,
-                    "Select the builtin to insert");
-        }
-    }
+			Collection frames = getSelectableResources();
+			return (RDFResource) DisplayUtilities.pickInstanceFromCollection(
+					OWLS_SWRLSymbolPanel.this, frames, 0,
+					"Select the builtin to insert");
+		}
+	}
 
+	private class CreateVariableAction extends AbstractAction {
 
-    private class CreateVariableAction extends AbstractAction {
+		CreateVariableAction() {
+			super("Insert new variable", OWLIcons.getCreateIcon(
+					SWRLIcons.VARIABLE, SWRLIcons.class));
+		}
 
-        CreateVariableAction() {
-            super("Insert new variable",
-                    OWLIcons.getCreateIcon(SWRLIcons.VARIABLE, SWRLIcons.class));
-        }
+		public void actionPerformed(ActionEvent e) {
+			String variableName = getNextVariableName();
+			if (variableName != null) {
+				getSymbolEditor().insertText("?" + variableName);
+			}
+		}
 
+		private String getNextVariableName() {
+			Collection usedNames = getUsedVariableNames();
+			Collection existingVariableNames = new ArrayList();
+			OWLModel owlModel = getOWLModel();
+			SWRLFactory factory = new SWRLFactory(owlModel);
+			final Collection variables = factory.getVariables();
+			for (Iterator it = variables.iterator(); it.hasNext();) {
+				SWRLVariable variable = (SWRLVariable) it.next();
+				existingVariableNames.add(variable.getName());
+			}
+			String chars = "xyzabcdefghijklmnopqrstuvwXYZABCDEFGHIJKLMNOPQRSTUVW";
+			for (int i = 0; i < chars.length(); i++) {
+				char c = chars.charAt(i);
+				String name = "" + c;
+				if (!usedNames.contains(name)) {
+					if (owlModel.getRDFResource(name) == null
+							|| owlModel.getRDFResource(name) instanceof SWRLVariable) {
+						return name;
+					}
+				}
+			}
+			return null;
+		}
+	}
 
-        public void actionPerformed(ActionEvent e) {
-            String variableName = getNextVariableName();
-            if (variableName != null) {
-                getSymbolEditor().insertText("?" + variableName);
-            }
-        }
+	private class InsertVariableAction extends AbstractAction {
 
+		InsertVariableAction() {
+			super("Insert existing variable...", OWLIcons.getAddIcon(
+					SWRLIcons.VARIABLE, SWRLIcons.class));
+		}
 
-        private String getNextVariableName() {
-            Collection usedNames = getUsedVariableNames();
-            Collection existingVariableNames = new ArrayList();
-            OWLModel owlModel = getOWLModel();
-            SWRLFactory factory = new SWRLFactory(owlModel);
-            final Collection variables = factory.getVariables();
-            for (Iterator it = variables.iterator(); it.hasNext();) {
-                SWRLVariable variable = (SWRLVariable) it.next();
-                existingVariableNames.add(variable.getName());
-            }
-            String chars = "xyzabcdefghijklmnopqrstuvwXYZABCDEFGHIJKLMNOPQRSTUVW";
-            for (int i = 0; i < chars.length(); i++) {
-                char c = chars.charAt(i);
-                String name = "" + c;
-                if (!usedNames.contains(name)) {
-                    if (owlModel.getRDFResource(name) == null || owlModel.getRDFResource(name) instanceof SWRLVariable) {
-                        return name;
-                    }
-                }
-            }
-            return null;
-        }
-    }
+		public void actionPerformed(ActionEvent e) {
+			insertVariable(e);
+		}
+	}
 
+	private class InsertXMLSchemaDatatypeAction extends AbstractAction {
 
-    private class InsertVariableAction extends AbstractAction {
+		InsertXMLSchemaDatatypeAction() {
+			super("Insert XML Schema datatype", OWLIcons
+					.getImageIcon(OWLIcons.XSD_DATATYPE));
+		}
 
-        InsertVariableAction() {
-            super("Insert existing variable...",
-                    OWLIcons.getAddIcon(SWRLIcons.VARIABLE, SWRLIcons.class));
-        }
+		public void actionPerformed(ActionEvent e) {
+			Object datatypeName;
+			Collection symbols = XMLSchemaDatatypes.getSlotSymbols();
 
+			datatypeName = (String) DisplayUtilities.pickSymbol(new JButton(
+					OWLIcons.getNerdSmilingIcon()),
+					"Select the XML Schema Datatype to insert", null, symbols);
 
-        public void actionPerformed(ActionEvent e) {
-            insertVariable(e);
-        }
-    }
-
-    private class InsertXMLSchemaDatatypeAction extends AbstractAction {
-
-        InsertXMLSchemaDatatypeAction() {
-            super("Insert XML Schema datatype", OWLIcons.getImageIcon(OWLIcons.XSD_DATATYPE));
-        }
-
-
-        public void actionPerformed(ActionEvent e) {
-            Object datatypeName;
-            Collection symbols = XMLSchemaDatatypes.getSlotSymbols();
-
-            datatypeName = (String) DisplayUtilities.pickSymbol(new JButton(OWLIcons.getNerdSmilingIcon()),
-                    "Select the XML Schema Datatype to insert",
-                    null, symbols);
-
-            if (datatypeName != null) {
-                getSymbolEditor().insertText("xsd:" + datatypeName);
-            }
-        }
-    }
+			if (datatypeName != null) {
+				getSymbolEditor().insertText("xsd:" + datatypeName);
+			}
+		}
+	}
 }

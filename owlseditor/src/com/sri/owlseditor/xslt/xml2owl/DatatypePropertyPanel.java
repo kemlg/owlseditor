@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.xml2owl;
 
 import java.awt.event.ActionListener;
@@ -24,8 +24,8 @@ import com.sri.owlseditor.xslt.XSLTSimplePanel;
  */
 public class DatatypePropertyPanel extends XSLTSimplePanel {
 
-	public DatatypePropertyPanel(ActionListener listener){
+	public DatatypePropertyPanel(ActionListener listener) {
 		super(listener, "Datatype Property name: ");
 	}
-	
+
 }

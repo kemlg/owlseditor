@@ -23,17 +23,18 @@ import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 
 /**
- * An OWLSInstanceList with checkbox support, and the IOPR classes pre-generated for
- * its subclasses.
+ * An OWLSInstanceList with checkbox support, and the IOPR classes pre-generated
+ * for its subclasses.
  * 
  * @author Daniel Elenius
- *
+ * 
  */
 public class IOPRInstancesList extends OWLSInstanceList {
-	
-    public IOPRInstancesList (Project project, String clsName, String property) {
-	super (project, clsName, true);
-	ListAndCheckboxPanel checkboxPanel = getCheckboxPanel();
-	checkboxPanel.setClassAndProperty (model.getOWLNamedClass (clsName), property);
-    }
+
+	public IOPRInstancesList(Project project, String clsName, String property) {
+		super(project, clsName, true);
+		ListAndCheckboxPanel checkboxPanel = getCheckboxPanel();
+		checkboxPanel.setClassAndProperty(model.getOWLNamedClass(clsName),
+				property);
+	}
 }

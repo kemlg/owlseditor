@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.xml2owl;
 
 import java.awt.BorderLayout;
@@ -31,14 +31,14 @@ import javax.swing.JTextField;
 public class ClassPanel extends JPanel {
 	private String className = "";
 	private JTextField classField = null;
-	
+
 	public ClassPanel(ActionListener parent) {
 		this(parent, "Class Name: ");
 	}
-	
+
 	public ClassPanel(ActionListener parent, String text) {
 		super(new BorderLayout());
-		
+
 		Box mainbox = Box.createVerticalBox();
 		Box box = Box.createHorizontalBox();
 		JLabel label = new JLabel(text);
@@ -46,15 +46,16 @@ public class ClassPanel extends JPanel {
 		classField = new JTextField(className);
 		classField.addActionListener(parent);
 		box.add(classField);
-		box.setMaximumSize(new Dimension(1000,25));
+		box.setMaximumSize(new Dimension(1000, 25));
 		mainbox.add(box);
 		mainbox.add(Box.createRigidArea(new Dimension(10, 30)));
 		add(mainbox);
 	}
-	
+
 	public String getClassName() {
 		return classField.getText();
 	}
+
 	public void setClassName(String s) {
 		classField.setText(s);
 	}

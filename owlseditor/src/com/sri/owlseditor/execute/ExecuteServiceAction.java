@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.execute;
 
 import java.awt.event.ActionEvent;
@@ -28,32 +28,36 @@ import com.sri.owlseditor.util.OWLSIcons;
 import edu.stanford.smi.protege.Application;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
+
 //import com.sri.owlseditor.execute.ExecuteFrame;
 
-public class ExecuteServiceAction extends AbstractAction{
+public class ExecuteServiceAction extends AbstractAction {
 	private OWLModel okb;
 	private JFrame frame;
-	private OWLIndividual selectedInstance = null; 
-    public static boolean RIGHT_TO_LEFT = false;
-    private ServiceList list;
-    
+	private OWLIndividual selectedInstance = null;
+	public static boolean RIGHT_TO_LEFT = false;
+	private ServiceList list;
+
 	public ExecuteServiceAction(OWLModel okb, ServiceList list) {
 		super("", OWLSIcons.getExecuteIcon());
 		this.okb = okb;
 		this.list = list;
 	}
-    
+
 	public void actionPerformed(ActionEvent e) {
-		ExecuteFrame frame = new ExecuteFrame(okb, (OWLIndividual)list.getSelectedInstance());
+		ExecuteFrame frame = new ExecuteFrame(okb,
+				(OWLIndividual) list.getSelectedInstance());
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		if ( frame.Launch() ) {
-			//Display the window.
-		    frame.pack();
-		    frame.AdjustFrame();
-		    frame.setVisible(true);
+		if (frame.Launch()) {
+			// Display the window.
+			frame.pack();
+			frame.AdjustFrame();
+			frame.setVisible(true);
 			SwingUtils.centerFrame(frame);
 		} else {
-			JOptionPane.showMessageDialog(Application.getMainWindow(), "Error reading the process or its parameters.","Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(Application.getMainWindow(),
+					"Error reading the process or its parameters.", "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

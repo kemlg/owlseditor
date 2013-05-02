@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt;
 
 import javax.swing.Icon;
@@ -24,16 +24,16 @@ import com.sri.owlseditor.util.OWLSIcons;
  */
 public class RootNode extends XSLTNode {
 
-	public RootNode(){
+	public RootNode() {
 		super("");
 		setAllowsChildren(true);
 	}
-	
+
 	public String getXSLTString(int indentnum) {
 		return "";
 	}
-	
-	public Icon getIcon(){
+
+	public Icon getIcon() {
 		return OWLSIcons.getXMLRootNodeIcon();
 	}
 }

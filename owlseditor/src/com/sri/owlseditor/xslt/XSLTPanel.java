@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt;
 
 import java.awt.LayoutManager;
@@ -20,17 +20,17 @@ import java.awt.LayoutManager;
 import javax.swing.JPanel;
 
 /**
- * Just in case we want to introduce some common code for
- * the different types of panels.
+ * Just in case we want to introduce some common code for the different types of
+ * panels.
  * 
  * @author Daniel Elenius
  */
 public abstract class XSLTPanel extends JPanel {
-	public XSLTPanel(){
+	public XSLTPanel() {
 		super();
 	}
-	
-	public XSLTPanel(LayoutManager layout){
+
+	public XSLTPanel(LayoutManager layout) {
 		super(layout);
 	}
 }

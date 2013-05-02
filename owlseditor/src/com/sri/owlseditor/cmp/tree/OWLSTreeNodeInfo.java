@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp.tree;
 
 import org.pvv.bcd.instrument.JTree.DefaultNodeInfo;
@@ -23,31 +23,31 @@ import edu.stanford.smi.protegex.owl.model.OWLModel;
 /**
  * Each OWLSTreeNode will have an instance of this class as its user-object.
  * This class implements the NodeInfo interface, so tree nodes with objects of
- * this class can be manipulated by the IJTree methods. 
+ * this class can be manipulated by the IJTree methods.
  * 
  * @author Daniel Elenius
- *
+ * 
  */
 public class OWLSTreeNodeInfo extends DefaultNodeInfo {
-	private OWLModel okb;	
+	private OWLModel okb;
 	private OWLIndividual inst;
-	
-	public OWLSTreeNodeInfo(OWLIndividual inst, OWLModel okb){
+
+	public OWLSTreeNodeInfo(OWLIndividual inst, OWLModel okb) {
 		super("", inst);
 		this.okb = okb;
 		this.inst = inst;
-	}	
+	}
 
-	public OWLModel getOWLModel(){
+	public OWLModel getOWLModel() {
 		return okb;
 	}
-	
-	public OWLIndividual getInstance(){
+
+	public OWLIndividual getInstance() {
 		return inst;
 	}
 
-	public String toString(){
+	public String toString() {
 		return "OWLSTreeNode for " + inst;
 	}
-	
+
 }

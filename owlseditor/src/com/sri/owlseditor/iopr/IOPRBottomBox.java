@@ -21,31 +21,31 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-public class IOPRBottomBox extends JPanel{
+public class IOPRBottomBox extends JPanel {
 
-    private Box        box;
-    private JButton    helpButton;
-    private JButton    validateButton;
-    private JButton    updateButton;
-    private JButton    cancelButton;
+	private Box box;
+	private JButton helpButton;
+	private JButton validateButton;
+	private JButton updateButton;
+	private JButton cancelButton;
 
-    IOPRBottomBox () {
+	IOPRBottomBox() {
 
-	box = Box.createHorizontalBox();
-	//	box.add(Box.createHorizontalStrut(300));
-	box.add(Box.createHorizontalGlue());
+		box = Box.createHorizontalBox();
+		// box.add(Box.createHorizontalStrut(300));
+		box.add(Box.createHorizontalGlue());
 
-	helpButton = new JButton("Help");
-	validateButton = new JButton("Validate");
-	updateButton = new JButton("Update");
-	cancelButton = new JButton("Cancel");
-	box.add(helpButton);
-	box.add(validateButton);
-	box.add(updateButton);
-	box.add(cancelButton);
-    }
+		helpButton = new JButton("Help");
+		validateButton = new JButton("Validate");
+		updateButton = new JButton("Update");
+		cancelButton = new JButton("Cancel");
+		box.add(helpButton);
+		box.add(validateButton);
+		box.add(updateButton);
+		box.add(cancelButton);
+	}
 
-    JComponent getContentsComponent() {
-	return box;
-    }
+	JComponent getContentsComponent() {
+		return box;
+	}
 }

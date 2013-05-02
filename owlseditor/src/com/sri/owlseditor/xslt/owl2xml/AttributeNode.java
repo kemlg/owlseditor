@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.owl2xml;
 
 import javax.swing.Icon;
@@ -27,28 +27,29 @@ import com.sri.owlseditor.xslt.XSLTNode;
 public class AttributeNode extends XSLTNode {
 	public final static String DEFAULT_ATTRIBUTE_NAME = "Attribute";
 
-	public AttributeNode(){
+	public AttributeNode() {
 		super("Attribute");
 		setAllowsChildren(false);
 	}
-	
-	public Icon getIcon(){
+
+	public Icon getIcon() {
 		return OWLSIcons.getXMLAttributeIcon();
 	}
-	
+
 	public String getXSLTString(int indentnum) {
 		String indent = "";
-		for (int i=0;i<indentnum;i++) indent += TAB;
+		for (int i = 0; i < indentnum; i++)
+			indent += TAB;
 		String str = indent + "<xsl:attribute name=\"" + getNodeName();
-		
+
 		XSLTFunction function = getXSLTFunction();
-		if ( !function.getFunctionName().equals("") )
+		if (!function.getFunctionName().equals(""))
 			str += " select=\"" + function.function2String() + "\"/>" + NL;
-		else{
+		else {
 			str += "\">" + NL;
 			if (!function.getParameter(0).equals(""))
 				str += indent + TAB + function.getParameter(0) + NL;
-		}	
+		}
 		str += indent + "</xsl:attribute>" + NL;
 		return str;
 	}

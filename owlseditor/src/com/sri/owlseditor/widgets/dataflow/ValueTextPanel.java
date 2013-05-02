@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets.dataflow;
 
 import java.awt.Dimension;
@@ -27,25 +27,25 @@ import edu.stanford.smi.protegex.owl.model.OWLModel;
 
 /**
  * @author Daniel Elenius
- *
+ * 
  */
 public class ValueTextPanel extends AbstractBindingPanel {
 
-	public ValueTextPanel(OWLModel okb){
+	public ValueTextPanel(OWLModel okb) {
 		super(okb);
-		
+
 		JLabel valueTextEditorLabel;
 		JTextArea textArea = ComponentFactory.createTextArea();
-		textArea.setPreferredSize(new Dimension(180,180));
+		textArea.setPreferredSize(new Dimension(180, 180));
 		JScrollPane textPane = ComponentFactory.createScrollPane(textArea);
 		add(textArea);
 	}
-	
-	public void setBinding(OWLIndividual binding, OWLIndividual perform){
+
+	public void setBinding(OWLIndividual binding, OWLIndividual perform) {
 
 	}
-	
-	public void deleteValueSpecifier(OWLIndividual binding){
+
+	public void deleteValueSpecifier(OWLIndividual binding) {
 	}
 
 }

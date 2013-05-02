@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 
 package com.sri.owlseditor.graph;
 
@@ -20,8 +20,7 @@ package com.sri.owlseditor.graph;
 //DotNode Class
 //--------------------------------------------------------------------------------------------
 
-public class DotNode
-{
+public class DotNode {
 	private String nodeName;
 	private String nodeText;
 	private int nodeType;
@@ -29,56 +28,47 @@ public class DotNode
 	private String color;
 	private boolean selected;
 	private String shape;
-	
-	public DotNode(String aNodeName, String aNodeText)
-	{
-		nodeName = aNodeName;			//The node name for the dot file
-		nodeText = aNodeText;			//The text displayed in the dot and graphviz files
+
+	public DotNode(String aNodeName, String aNodeText) {
+		nodeName = aNodeName; // The node name for the dot file
+		nodeText = aNodeText; // The text displayed in the dot and graphviz
+								// files
 	}
-	
-	public String getDotNodeName()
-	{
+
+	public String getDotNodeName() {
 		return nodeName;
 	}
-	
-	public String getColor()
-	{
+
+	public String getColor() {
 		return color;
 	}
-	
-	public String getShape()
-	{
+
+	public String getShape() {
 		return shape;
 	}
-	
-	public String getRank()
-	{
+
+	public String getRank() {
 		return rank;
 	}
-	
-	public String getNodeText()
-	{
+
+	public String getNodeText() {
 		return nodeText;
 	}
-	
-	public void setShape(String ashape)
-	{
-		shape=ashape;
+
+	public void setShape(String ashape) {
+		shape = ashape;
 	}
-	
-	public void setColor(String aColor)
-	{
-		color=aColor;
+
+	public void setColor(String aColor) {
+		color = aColor;
 	}
-	
-	public void setRank(String aRank)
-	{
+
+	public void setRank(String aRank) {
 		rank = aRank;
 	}
-	
-	public void setNodetext(String aNodeText)
-	{
+
+	public void setNodetext(String aNodeText) {
 		nodeText = aNodeText;
 	}
-	
+
 }

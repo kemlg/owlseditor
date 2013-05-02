@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.xml2owl;
 
 import com.sri.owlseditor.xslt.XSLTFunction;
@@ -23,26 +23,28 @@ import com.sri.owlseditor.xslt.XSLTNode;
  */
 public class RDFAttributeNode extends XSLTNode {
 	public static final String DEFAULT_RDF_ATTRIBUTE = "rdf:ID";
-	
-	public RDFAttributeNode(){
+
+	public RDFAttributeNode() {
 		this(DEFAULT_RDF_ATTRIBUTE);
 	}
-	
-	public RDFAttributeNode(String attr){
+
+	public RDFAttributeNode(String attr) {
 		super(attr);
 		setAllowsChildren(false);
 	}
-	
+
 	public String getXSLTString(int indentnum) {
 		String indent = "";
-		for (int i=0;i<indentnum;i++) indent += TAB;
+		for (int i = 0; i < indentnum; i++)
+			indent += TAB;
 		String str = indent + "<xsl:attribute name=\"" + getNodeName() + "\"";
-		
+
 		XSLTFunction function = getXSLTFunction();
-		if ( !function.getFunctionName().equals("") )
-			str += " select=\""+function.function2String() + "\"/>"+NL;
+		if (!function.getFunctionName().equals(""))
+			str += " select=\"" + function.function2String() + "\"/>" + NL;
 		else
-			str += "\">" + NL + indent + TAB + function.getParameter(0) + NL + indent + "</xsl:attribute>" + NL;
+			str += "\">" + NL + indent + TAB + function.getParameter(0) + NL
+					+ indent + "</xsl:attribute>" + NL;
 		return str;
 	}
 

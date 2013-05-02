@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor;
 
 import java.awt.Component;
@@ -32,34 +32,37 @@ import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
 
-/** A modification of FrameRenderer, which is normally used to render
-    the items in the instances selectors. This supports displaying
-    some of the items in bold, which is used to show which instances
-    are related to each other. See the OWLSInstanceList 
-    class for more details */
-public class OWLSFrameRenderer extends FrameRenderer{
+/**
+ * A modification of FrameRenderer, which is normally used to render the items
+ * in the instances selectors. This supports displaying some of the items in
+ * bold, which is used to show which instances are related to each other. See
+ * the OWLSInstanceList class for more details
+ */
+public class OWLSFrameRenderer extends FrameRenderer {
 
 	protected OWLNamedClass atomicProcess;
 	protected OWLNamedClass simpleProcess;
 	protected OWLNamedClass compositeProcess;
 
-    /* The InstanceList that this renderer renders for */
-    private BoldableOWLSInstanceList _instlist;
+	/* The InstanceList that this renderer renders for */
+	private BoldableOWLSInstanceList _instlist;
 
-    public OWLSFrameRenderer(OWLModel model, BoldableOWLSInstanceList instlist){
-    	super();
-    	_instlist = instlist;
-    	atomicProcess = model.getOWLNamedClass("process:AtomicProcess");
-    	simpleProcess = model.getOWLNamedClass("process:SimpleProcess");
-    	compositeProcess = model.getOWLNamedClass("process:CompositeProcess");
-    }
+	public OWLSFrameRenderer(OWLModel model, BoldableOWLSInstanceList instlist) {
+		super();
+		_instlist = instlist;
+		atomicProcess = model.getOWLNamedClass("process:AtomicProcess");
+		simpleProcess = model.getOWLNamedClass("process:SimpleProcess");
+		compositeProcess = model.getOWLNamedClass("process:CompositeProcess");
+	}
 
-    /* Returns true if the instance is in the list of instances
-       that should currently be painted in bold face */
-    private boolean boldItem(OWLIndividual inst){
+	/*
+	 * Returns true if the instance is in the list of instances that should
+	 * currently be painted in bold face
+	 */
+	private boolean boldItem(OWLIndividual inst) {
 		Collection boldList = _instlist.getBoldItems();
 		Iterator it = boldList.iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			OWLIndividual boldinst = (OWLIndividual) it.next();
 			if (inst != null)
 				if (boldinst != null)
@@ -67,68 +70,71 @@ public class OWLSFrameRenderer extends FrameRenderer{
 						return true;
 		}
 		return false;
-    }
+	}
 
-
-    /** This adds a small A, S or C next to the process name, for
-	Atomic, Simple, or Composite Processes */
-    private void addProcessTypeMiniIcon(OWLIndividual inst){ 
-    	if (inst.hasRDFType(atomicProcess, true)){
+	/**
+	 * This adds a small A, S or C next to the process name, for Atomic, Simple,
+	 * or Composite Processes
+	 */
+	private void addProcessTypeMiniIcon(OWLIndividual inst) {
+		if (inst.hasRDFType(atomicProcess, true)) {
 			this.appendIcon(OWLSIcons.getAtomicProcessIcon());
-    	}
-    	else if (inst.hasRDFType(simpleProcess, true)){
+		} else if (inst.hasRDFType(simpleProcess, true)) {
 			this.appendIcon(OWLSIcons.getSimpleProcessIcon());
-    	}
-    	else if (inst.hasRDFType(compositeProcess, true)){
+		} else if (inst.hasRDFType(compositeProcess, true)) {
 			this.appendIcon(OWLSIcons.getCompositeProcessIcon());
-    	}
-    }
+		}
+	}
 
-    /** This is where we change the font to bold if the item value is
-	in the list of values that should be in bold face. This method
-	is a slightly modified version of the setup method in the superclass.
-	
-	value -- this is an Instance (actually a DefaultSimpleOWLInstance here) */
-    protected Component setup(Component c, Object value, boolean hasFocus, boolean isSelected) {
+	/**
+	 * This is where we change the font to bold if the item value is in the list
+	 * of values that should be in bold face. This method is a slightly modified
+	 * version of the setup method in the superclass.
+	 * 
+	 * value -- this is an Instance (actually a DefaultSimpleOWLInstance here)
+	 */
+	protected Component setup(Component c, Object value, boolean hasFocus,
+			boolean isSelected) {
 
-	//System.out.println("--- value is of class: " + value.getClass().getName());
+		// System.out.println("--- value is of class: " +
+		// value.getClass().getName());
 
-        _grayedText = false;
-        Font font = c.getFont();
-        if (font.isBold()) {
-            font = font.deriveFont(Font.PLAIN);
-        }
+		_grayedText = false;
+		Font font = c.getFont();
+		if (font.isBold()) {
+			font = font.deriveFont(Font.PLAIN);
+		}
 
-	/* Set the font to bold or not bold depending on the current
-	   selection */
-        if (boldItem((OWLIndividual) value))
-        	setFont(font.deriveFont(Font.BOLD));
-        else
-	    setFont(font);
+		/*
+		 * Set the font to bold or not bold depending on the current selection
+		 */
+		if (boldItem((OWLIndividual) value))
+			setFont(font.deriveFont(Font.BOLD));
+		else
+			setFont(font);
 
-        _hasFocus = hasFocus;
-        _isSelected = isSelected;
-	
-        _elements.clear();
-        if (value == null) {
-            loadNull();
-        } else if (value instanceof LazyTreeNode) {
-            load(((LazyTreeNode) value).getUserObject());
-        } else {
-            load(value);
-        }
-	
-        _fontMetrics = getFontMetrics(getFont());
-        LookAndFeel currentLookAndFeel = UIManager.getLookAndFeel();
-        if (currentLookAndFeel != _cachedLookAndFeel) {
-            loadTreeColors();
-            _cachedLookAndFeel = currentLookAndFeel;
-        }
-        checkDropTarget(c, value);
-        if (value != null) 
-        	addProcessTypeMiniIcon((OWLIndividual)value);
-        return this;
-    }
-    
-    
+		_hasFocus = hasFocus;
+		_isSelected = isSelected;
+
+		_elements.clear();
+		if (value == null) {
+			loadNull();
+		} else if (value instanceof LazyTreeNode) {
+			load(((LazyTreeNode) value).getUserObject());
+		} else {
+			load(value);
+		}
+
+		_fontMetrics = getFontMetrics(getFont());
+		LookAndFeel currentLookAndFeel = UIManager.getLookAndFeel();
+		if (currentLookAndFeel != _cachedLookAndFeel) {
+			loadTreeColors();
+			_cachedLookAndFeel = currentLookAndFeel;
+		}
+		checkDropTarget(c, value);
+		if (value != null)
+			addProcessTypeMiniIcon((OWLIndividual) value);
+		return this;
+	}
+
 }

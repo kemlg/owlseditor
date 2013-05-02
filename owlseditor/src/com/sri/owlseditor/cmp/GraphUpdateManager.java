@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp;
 
 /**
@@ -20,7 +20,7 @@ package com.sri.owlseditor.cmp;
  */
 public interface GraphUpdateManager {
 	public void addListeners();
-	
+
 	public void removeListeners();
 
 	public void updateGraph();

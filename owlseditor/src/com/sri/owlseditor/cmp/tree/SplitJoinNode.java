@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp.tree;
 
 import java.io.PrintWriter;
@@ -25,62 +25,65 @@ import com.sri.owlseditor.cmp.graph.UniqueName;
 import com.sri.owlseditor.util.OWLSList;
 
 public class SplitJoinNode extends BagOrTreeNode {
-	public SplitJoinNode(OWLSTreeNodeInfo ni){
+	public SplitJoinNode(OWLSTreeNodeInfo ni) {
 		super(ni, OWLSList.CC_BAG);
 	}
 
-	public GraphNodeInfo graph(HashSet nameSet, PrintWriter pw, int clusterNumber,
-								OWLSTreeNode selectedNode){
-		UniqueName controlConstructName = new UniqueName(getInstance().getName(), nameSet);
+	public GraphNodeInfo graph(HashSet nameSet, PrintWriter pw,
+			int clusterNumber, OWLSTreeNode selectedNode) {
+		UniqueName controlConstructName = new UniqueName(getInstance()
+				.getName(), nameSet);
 		int newClusterNumber = clusterNumber;
-		Integer clusterInt= new Integer(newClusterNumber++);
-        
-       	pw.println("subgraph " + clusterInt.toString() + " {");
-        
-        // If this node is the selected one, 'highlight' it.
-        if (this.equals(selectedNode)){
- 			pw.println("node [fillcolor=" + GraphProcessModel.SELECTED_NODE_FILL_COLOR + 
- 					   ", color=" + GraphProcessModel.SELECTED_NODE_EDGE_COLOR +"];");
- 			pw.println("edge [color=" + GraphProcessModel.SELECTED_EDGE_COLOR + "];");
-        }
-        
+		Integer clusterInt = new Integer(newClusterNumber++);
+
+		pw.println("subgraph " + clusterInt.toString() + " {");
+
+		// If this node is the selected one, 'highlight' it.
+		if (this.equals(selectedNode)) {
+			pw.println("node [fillcolor="
+					+ GraphProcessModel.SELECTED_NODE_FILL_COLOR + ", color="
+					+ GraphProcessModel.SELECTED_NODE_EDGE_COLOR + "];");
+			pw.println("edge [color=" + GraphProcessModel.SELECTED_EDGE_COLOR
+					+ "];");
+		}
+
 		// Create the split node
 		UniqueName splitNodeName = new UniqueName("splitNode", nameSet);
-		pw.println(splitNodeName.getUniqueName() + " [shape=point, label=\"\"];");
+		pw.println(splitNodeName.getUniqueName()
+				+ " [shape=point, label=\"\"];");
 
 		Enumeration e = children();
-		if (!e.hasMoreElements()){
+		if (!e.hasMoreElements()) {
 			// nothing inside this construct
 			pw.println("}");
-	        return new GraphNodeInfo(splitNodeName.getUniqueName(), splitNodeName.getUniqueName(), 
-	        						 "", "", newClusterNumber);
+			return new GraphNodeInfo(splitNodeName.getUniqueName(),
+					splitNodeName.getUniqueName(), "", "", newClusterNumber);
 		}
 
 		// Create the join node
 		UniqueName joinNodeName = new UniqueName("joinNode", nameSet);
 		pw.println(joinNodeName.getUniqueName() + " [shape=point, label=\"\"];");
-		
+
 		String newNodeName;
 		GraphNodeInfo thisPair = null;
 		while (e.hasMoreElements()) {
-			OWLSTreeNode child = (OWLSTreeNode)e.nextElement();
-			thisPair = child.graph(nameSet, pw, newClusterNumber++, selectedNode);
+			OWLSTreeNode child = (OWLSTreeNode) e.nextElement();
+			thisPair = child.graph(nameSet, pw, newClusterNumber++,
+					selectedNode);
 			newClusterNumber = thisPair.clusterNumber;
-			// connect new node to the split and join nodes			
-			pw.println(splitNodeName.getUniqueName() + "->" + thisPair.firstNode +
-						thisPair.createInEdgeAttr(""));			
-			pw.println(thisPair.lastNode + "->" + joinNodeName.getUniqueName() +
-						thisPair.createOutEdgeAttr(""));
+			// connect new node to the split and join nodes
+			pw.println(splitNodeName.getUniqueName() + "->"
+					+ thisPair.firstNode + thisPair.createInEdgeAttr(""));
+			pw.println(thisPair.lastNode + "->" + joinNodeName.getUniqueName()
+					+ thisPair.createOutEdgeAttr(""));
 		}
 
 		pw.println("}");
-        return new GraphNodeInfo(splitNodeName.getUniqueName(), 
-        						 joinNodeName.getUniqueName(), "", "",
-								 newClusterNumber);
+		return new GraphNodeInfo(splitNodeName.getUniqueName(),
+				joinNodeName.getUniqueName(), "", "", newClusterNumber);
 	}
 
-	
-	public String toString(){
+	public String toString() {
 		return "Split+Join";
 	}
 

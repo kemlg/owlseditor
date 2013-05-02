@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.execute;
 
 import java.net.URI;
@@ -36,6 +36,7 @@ class ProcessParameter extends Object {
 	public void setparameterType(URI uri) {
 		parameterTypeURI = uri;
 	}
+
 	public void setparameterName(String name) {
 		parameterName = name;
 	}
@@ -43,42 +44,48 @@ class ProcessParameter extends Object {
 	public void setJComponent(JComponent j) {
 		cmp = j;
 	}
+
 	public URI getparameterTypeURI() {
 		return parameterTypeURI;
 	}
+
 	public String getparameterName() {
-		if ( parameterName.indexOf(":") > -1 ) 
-			return parameterName.substring(parameterName.lastIndexOf(":")+1);
+		if (parameterName.indexOf(":") > -1)
+			return parameterName.substring(parameterName.lastIndexOf(":") + 1);
 		return parameterName;
 	}
 
 	public boolean isXSDType() {
 		String t = parameterTypeURI.toString();
-		//http://www.owl-ontologies.com/unnamed.owl#TheDate
+		// http://www.owl-ontologies.com/unnamed.owl#TheDate
 
-		if ( t.indexOf("http://www.w3.org/2001/XMLSchema")>-1 ) return true;
+		if (t.indexOf("http://www.w3.org/2001/XMLSchema") > -1)
+			return true;
 		return false;
 	}
+
 	public String getparameterResource() {
 		String t = parameterTypeURI.toString();
-		if ( t.lastIndexOf("#") > -1 )
-			return t.substring(0,t.lastIndexOf("#")+1);
-		return t;
-	}	
-	public String getparameterTypeString() {
-		String t = parameterTypeURI.toString();
-		if ( t.lastIndexOf("#") > -1 )
-			return t.substring(t.lastIndexOf("#")+1);
+		if (t.lastIndexOf("#") > -1)
+			return t.substring(0, t.lastIndexOf("#") + 1);
 		return t;
 	}
+
+	public String getparameterTypeString() {
+		String t = parameterTypeURI.toString();
+		if (t.lastIndexOf("#") > -1)
+			return t.substring(t.lastIndexOf("#") + 1);
+		return t;
+	}
+
 	public Object getValue() {
-		if ( cmp instanceof JTextComponent ) {
+		if (cmp instanceof JTextComponent) {
 			value = ((JTextComponent) cmp).getText();
-		} else if ( cmp instanceof JCheckBox ) {
+		} else if (cmp instanceof JCheckBox) {
 			value = new Boolean(((JCheckBox) cmp).isSelected());
-		} else if ( cmp instanceof JSpinner ) {
+		} else if (cmp instanceof JSpinner) {
 			value = ((JSpinner) cmp).getValue();
-		} else if ( cmp instanceof OWLSInstanceList ) {
+		} else if (cmp instanceof OWLSInstanceList) {
 			value = ((OWLSInstanceList) cmp).getSelectedInstance();
 		} else
 			value = new String("");
@@ -86,24 +93,23 @@ class ProcessParameter extends Object {
 	}
 
 	public void setValue(Object obj) {
-		if ( cmp instanceof JTextArea ) {
-			if ( obj instanceof OWLIndividual )
-				((JTextArea) cmp).setText(((OWLIndividual)obj).toRDF());
+		if (cmp instanceof JTextArea) {
+			if (obj instanceof OWLIndividual)
+				((JTextArea) cmp).setText(((OWLIndividual) obj).toRDF());
 			else
 				((JTextArea) cmp).setText(obj.toString());
-		} else if ( cmp instanceof JTextField ) {
-				((JTextField) cmp).setText(obj.toString());
-		} else if ( cmp instanceof JCheckBox ) {
-			((JCheckBox) cmp).setSelected(((Boolean)obj).booleanValue());
-		} else if ( cmp instanceof JSpinner ) {
+		} else if (cmp instanceof JTextField) {
+			((JTextField) cmp).setText(obj.toString());
+		} else if (cmp instanceof JCheckBox) {
+			((JCheckBox) cmp).setSelected(((Boolean) obj).booleanValue());
+		} else if (cmp instanceof JSpinner) {
 			((JSpinner) cmp).setValue(obj);
 		} else {
 		}
 		value = obj;
 	}
+
 	public String toString() {
 		return value.toString();
 	}
 }
-
-

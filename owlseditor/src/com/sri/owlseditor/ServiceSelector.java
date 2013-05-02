@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor;
 
 import java.util.ArrayList;
@@ -32,80 +32,90 @@ import edu.stanford.smi.protegex.owl.model.RDFProperty;
 import edu.stanford.smi.protegex.owl.model.RDFResource;
 import edu.stanford.smi.protegex.owl.model.event.PropertyValueAdapter;
 
-
 /**
-   The pane on the left of the OWL-S Tab, where the user selects which Service
-   instance, or associated profile, process or grounding, to edit.
+ * The pane on the left of the OWL-S Tab, where the user selects which Service
+ * instance, or associated profile, process or grounding, to edit.
  */
-public class ServiceSelector extends MultipleInstanceSelector{
-    
+public class ServiceSelector extends MultipleInstanceSelector {
+
 	private OWLModel model;
-    private ServiceEditor _editor;
+	private ServiceEditor _editor;
 	private Vector listeners = new Vector();
-   
+
 	private Collection owlsProperties;
 	private Collection owlsClasses;
-	
 
-    /**
+	/**
      */
-    public ServiceSelector(OWLModel okb, Project project, ServiceEditor editor){
-    	super(okb, project, editor);
-    	
-    	this.model = okb;
-    	setupClassesAndProperties();
-    	
-    	setClasses(owlsClasses);
-    	
-    	/* A listener that reacts when describedBy, presents,
-    	   support, etc. slots are modified on an instance, so that the
-    	   bold-status remains correct. */
-    	model.addPropertyValueListener(new PropertyValueAdapter(){
-    		public void propertyValueChanged(RDFResource resource, RDFProperty property, java.util.Collection oldValues){
-    			if (resource == getSelectedInstance())
-    				if (owlsProperties.contains(property))
-    						updateInstanceLists((OWLIndividual)resource);
-    		}
-    	});
-    	
-    }
-    
-	private void setupClassesAndProperties(){
-    	ArrayList classes = new ArrayList();
+	public ServiceSelector(OWLModel okb, Project project, ServiceEditor editor) {
+		super(okb, project, editor);
+
+		this.model = okb;
+		setupClassesAndProperties();
+
+		setClasses(owlsClasses);
+
+		/*
+		 * A listener that reacts when describedBy, presents, support, etc.
+		 * slots are modified on an instance, so that the bold-status remains
+		 * correct.
+		 */
+		model.addPropertyValueListener(new PropertyValueAdapter() {
+			public void propertyValueChanged(RDFResource resource,
+					RDFProperty property, java.util.Collection oldValues) {
+				if (resource == getSelectedInstance())
+					if (owlsProperties.contains(property))
+						updateInstanceLists((OWLIndividual) resource);
+			}
+		});
+
+	}
+
+	private void setupClassesAndProperties() {
+		ArrayList classes = new ArrayList();
 
 		OWLNamedClass service = model.getOWLNamedClass("service:Service");
-		System.out.println("service:Service " + service + " : " + service.getPrefixedName());
+		System.out.println("service:Service " + service + " : "
+				+ service.getPrefixedName());
 		OWLNamedClass profile = model.getOWLNamedClass("profile:Profile");
 		System.out.println("profile:Profile " + profile);
 		OWLNamedClass process = model.getOWLNamedClass("process:Process");
 		System.out.println("process:Process " + process);
-		OWLNamedClass grounding = model.getOWLNamedClass("grounding:WsdlGrounding");
+		OWLNamedClass grounding = model
+				.getOWLNamedClass("grounding:WsdlGrounding");
 		System.out.println("grounding:WsdlGrounding " + grounding);
-    	
-    	classes.add(service);
-    	classes.add(profile);
-    	classes.add(process);
-    	classes.add(grounding);
 
-    	owlsClasses = classes;
-    	
-    	Iterator it = owlsClasses.iterator();
-    	while(it.hasNext())
-    	{
-    		System.out.println(it.next());
-    	}
+		classes.add(service);
+		classes.add(profile);
+		classes.add(process);
+		classes.add(grounding);
+
+		owlsClasses = classes;
+
+		Iterator it = owlsClasses.iterator();
+		while (it.hasNext()) {
+			System.out.println(it.next());
+		}
 
 		ArrayList properties = new ArrayList();
-		
-		OWLObjectProperty describedBy = model.getOWLObjectProperty("service:describedBy");
-		OWLObjectProperty presents = model.getOWLObjectProperty("service:presents");
-		OWLObjectProperty supports = model.getOWLObjectProperty("service:supports");
-		OWLObjectProperty presentedBy = model.getOWLObjectProperty("service:presentedBy");
-		OWLObjectProperty has_process = model.getOWLObjectProperty("profile:has_process");
-		OWLObjectProperty describes = model.getOWLObjectProperty("service:describes");
-		OWLObjectProperty supportedBy = model.getOWLObjectProperty("service:supportedBy");
-		OWLObjectProperty hasAtomicProcessGrounding = model.getOWLObjectProperty("grounding:hasAtomicProcessGrounding");
-		
+
+		OWLObjectProperty describedBy = model
+				.getOWLObjectProperty("service:describedBy");
+		OWLObjectProperty presents = model
+				.getOWLObjectProperty("service:presents");
+		OWLObjectProperty supports = model
+				.getOWLObjectProperty("service:supports");
+		OWLObjectProperty presentedBy = model
+				.getOWLObjectProperty("service:presentedBy");
+		OWLObjectProperty has_process = model
+				.getOWLObjectProperty("profile:has_process");
+		OWLObjectProperty describes = model
+				.getOWLObjectProperty("service:describes");
+		OWLObjectProperty supportedBy = model
+				.getOWLObjectProperty("service:supportedBy");
+		OWLObjectProperty hasAtomicProcessGrounding = model
+				.getOWLObjectProperty("grounding:hasAtomicProcessGrounding");
+
 		properties.add(describedBy);
 		properties.add(presents);
 		properties.add(supports);
@@ -118,25 +128,25 @@ public class ServiceSelector extends MultipleInstanceSelector{
 		owlsProperties = properties;
 	}
 
-    public void addServiceSelectorListener(ServiceSelectorListener listener){
-    	listeners.add(listener);
-    }
-    
-    public void removeServiceSelectorListener(ServiceSelectorListener listener){
-    	listeners.remove(listener);
-    }
+	public void addServiceSelectorListener(ServiceSelectorListener listener) {
+		listeners.add(listener);
+	}
 
-    /* Called when the selection changes, to notify all listeners */
-    private void fireSelectionEvent(OWLIndividual inst){
-    	for (Enumeration e = listeners.elements() ; e.hasMoreElements() ;) {
-			((ServiceSelectorListener)e.nextElement()).setInstance(inst);
+	public void removeServiceSelectorListener(ServiceSelectorListener listener) {
+		listeners.remove(listener);
+	}
+
+	/* Called when the selection changes, to notify all listeners */
+	private void fireSelectionEvent(OWLIndividual inst) {
+		for (Enumeration e = listeners.elements(); e.hasMoreElements();) {
+			((ServiceSelectorListener) e.nextElement()).setInstance(inst);
 		}
-    }
+	}
 
-    private void updateInstanceLists(OWLIndividual instance){
-    	super.updateInstanceLists(instance);
-    	if (instance != null)
-    		fireSelectionEvent(instance);
-    }
-    
+	private void updateInstanceLists(OWLIndividual instance) {
+		super.updateInstanceLists(instance);
+		if (instance != null)
+			fireSelectionEvent(instance);
+	}
+
 }

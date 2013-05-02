@@ -251,11 +251,10 @@ public class ParamTypeWidget extends AbstractListWidget implements
 			RDFSLiteral literal;
 			Object o = iter.next();
 			System.out.println(o.getClass());
-			if(o instanceof String) {
-				literal = new DefaultRDFSLiteral(m_okb, (String)o);
-			}
-			else {
-				literal = (RDFSLiteral)o;
+			if (o instanceof String) {
+				literal = new DefaultRDFSLiteral(m_okb, (String) o);
+			} else {
+				literal = (RDFSLiteral) o;
 			}
 			// System.out.println("parameterType.setValues() got a " +
 			// o.getClass() + " with value " + o);

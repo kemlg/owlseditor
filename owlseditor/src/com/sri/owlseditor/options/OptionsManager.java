@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.options;
 
 import java.awt.BorderLayout;
@@ -38,71 +38,73 @@ import edu.stanford.smi.protege.util.ComponentFactory;
 /**
  * @author Daniel Elenius
  */
-public class OptionsManager implements CleanerListener{
+public class OptionsManager implements CleanerListener {
 	private Project project;
 	private JFrame instance;
-	
-	public OptionsManager(Project project){
+
+	public OptionsManager(Project project) {
 		this.project = project;
 	}
-	
-	public JFrame getOptionsWindow(){
-		if (instance == null){
+
+	public JFrame getOptionsWindow() {
+		if (instance == null) {
 			instance = createOptionsWindow();
 		}
 		return instance;
 	}
 
-	public void cleanup(){
+	public void cleanup() {
 		instance = null;
 		project = null;
 	}
-	
-    private JFrame createOptionsWindow(){
-    	JFrame options = ComponentFactory.createFrame();
-    	options.setTitle("Options");
-    	    	
-    	class CloseAction extends AbstractAction{
-    		private JTextField pathfield;
-    		private JFrame window;
-    		private OptionPanel graphvizOptions;
-    		private OptionPanel searchOptions;
-    		
-    		public CloseAction(JFrame window, OptionPanel graphvizOptions, OptionPanel searchOptions){
-    			this.window = window;
-    			this.graphvizOptions = graphvizOptions;
-    			this.searchOptions = searchOptions;
-    		}
-    		
-    		public void actionPerformed(ActionEvent e){
-    			graphvizOptions.commitChanges();
-    			searchOptions.commitChanges();
-    			window.setVisible(false);
-    		}
-    	}
-    	
-    	options.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-    	options.setSize(new Dimension(400,350));
-    	Container contents = options.getContentPane();
-    	contents.setLayout(new BoxLayout(contents, BoxLayout.Y_AXIS));
 
-    	/* Create and add all the option panels for the different tabs */
-    	OptionPanel graphvizOptions = new GraphVizOptions(project);
-    	OptionPanel searchOptions = new SearchOptions(project);
-    	JTabbedPane tabbedPane = new JTabbedPane();
-    	tabbedPane.addTab("Graph-drawing", graphvizOptions);
-    	tabbedPane.addTab("Service Search", searchOptions);
-    	
-    	JButton okbutton;
-    	okbutton = ComponentFactory.createButton(new CloseAction(options, graphvizOptions, searchOptions));
-    	okbutton.setText("OK");
+	private JFrame createOptionsWindow() {
+		JFrame options = ComponentFactory.createFrame();
+		options.setTitle("Options");
 
-    	JPanel bottombuttonpanel = ComponentFactory.createPanel();
-    	bottombuttonpanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-    	bottombuttonpanel.add(okbutton, BorderLayout.SOUTH);
-       	contents.add(tabbedPane);
-       	contents.add(bottombuttonpanel);   	
-     	return options;
-    }
+		class CloseAction extends AbstractAction {
+			private JTextField pathfield;
+			private JFrame window;
+			private OptionPanel graphvizOptions;
+			private OptionPanel searchOptions;
+
+			public CloseAction(JFrame window, OptionPanel graphvizOptions,
+					OptionPanel searchOptions) {
+				this.window = window;
+				this.graphvizOptions = graphvizOptions;
+				this.searchOptions = searchOptions;
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				graphvizOptions.commitChanges();
+				searchOptions.commitChanges();
+				window.setVisible(false);
+			}
+		}
+
+		options.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		options.setSize(new Dimension(400, 350));
+		Container contents = options.getContentPane();
+		contents.setLayout(new BoxLayout(contents, BoxLayout.Y_AXIS));
+
+		/* Create and add all the option panels for the different tabs */
+		OptionPanel graphvizOptions = new GraphVizOptions(project);
+		OptionPanel searchOptions = new SearchOptions(project);
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Graph-drawing", graphvizOptions);
+		tabbedPane.addTab("Service Search", searchOptions);
+
+		JButton okbutton;
+		okbutton = ComponentFactory.createButton(new CloseAction(options,
+				graphvizOptions, searchOptions));
+		okbutton.setText("OK");
+
+		JPanel bottombuttonpanel = ComponentFactory.createPanel();
+		bottombuttonpanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		bottombuttonpanel.add(okbutton, BorderLayout.SOUTH);
+		contents.add(tabbedPane);
+		contents.add(bottombuttonpanel);
+		return options;
+	}
 
 }

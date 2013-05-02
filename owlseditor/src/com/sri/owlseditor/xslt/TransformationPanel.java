@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt;
 
 import java.awt.CardLayout;
@@ -29,19 +29,22 @@ import javax.swing.tree.TreePath;
 /**
  * @author Daniel Elenius
  */
-public abstract class TransformationPanel extends JPanel 
-										  implements ActionListener, ItemListener, TreeSelectionListener {
+public abstract class TransformationPanel extends JPanel implements
+		ActionListener, ItemListener, TreeSelectionListener {
 	protected XSLTComboPanel dataPanel = null;
 	protected XSLTComboPanel variablePanel = null;
 	protected JPanel rootPanel = null;
 	protected XSLTDialog parent;
-	
+
 	public abstract void actionPerformed(ActionEvent e);
+
 	public abstract void switchPanel(XSLTNode node);
+
 	public abstract void writeFromPanel2Node(XSLTNode node);
+
 	public abstract void writeFromNode2Panel(XSLTNode node);
 
-	public TransformationPanel(XSLTDialog parent){
+	public TransformationPanel(XSLTDialog parent) {
 		super(new CardLayout());
 		this.parent = parent;
 		dataPanel = new DataPanel(this);
@@ -52,7 +55,7 @@ public abstract class TransformationPanel extends JPanel
 		add(variablePanel, "Variable Panel");
 
 	}
-	
+
 	public JPanel getRootPanel() {
 		return rootPanel;
 	}
@@ -60,31 +63,35 @@ public abstract class TransformationPanel extends JPanel
 	public XSLTComboPanel getDataPanel() {
 		return dataPanel;
 	}
+
 	public XSLTComboPanel getVariablePanel() {
 		return variablePanel;
 	}
-	
+
 	public void itemStateChanged(ItemEvent e) {
-		XSLTNode node = (XSLTNode)parent.getTree().getLastSelectedPathComponent();
-		if ( node != null ) writeFromPanel2Node(node);
+		XSLTNode node = (XSLTNode) parent.getTree()
+				.getLastSelectedPathComponent();
+		if (node != null)
+			writeFromPanel2Node(node);
 	}
-	
+
 	public void valueChanged(TreeSelectionEvent e) {
 		TreePath path;
 		XSLTNode newNode = null;
 		XSLTNode lastNode = null;
 		path = e.getNewLeadSelectionPath();
-		if ( path != null ) newNode = (XSLTNode)path.getLastPathComponent(); 
+		if (path != null)
+			newNode = (XSLTNode) path.getLastPathComponent();
 		path = e.getOldLeadSelectionPath();
-		if ( path != null ) lastNode = (XSLTNode)path.getLastPathComponent();
-		if ( lastNode != null ) {
+		if (path != null)
+			lastNode = (XSLTNode) path.getLastPathComponent();
+		if (lastNode != null) {
 			writeFromPanel2Node(lastNode);
 		}
-		if ( newNode != null ) {
+		if (newNode != null) {
 			switchPanel(newNode);
 			writeFromNode2Panel(newNode);
 		}
 	}
-
 
 }

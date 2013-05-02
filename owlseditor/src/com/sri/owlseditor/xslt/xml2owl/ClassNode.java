@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.xml2owl;
 
 import java.util.Enumeration;
@@ -31,36 +31,36 @@ import edu.stanford.smi.protegex.owl.model.RDFResource;
 public class ClassNode extends OWLNode {
 
 	private OWLNamedClass cls;
-	
-	public ClassNode(OWLNamedClass cls){
+
+	public ClassNode(OWLNamedClass cls) {
 		super(cls.getName());
 		this.cls = cls;
 		setAllowsChildren(true);
 	}
-	
-	public Icon getIcon(){
+
+	public Icon getIcon() {
 		return Icons.getInstanceIcon();
 	}
-	
-	public RDFResource getResource(){
+
+	public RDFResource getResource() {
 		return cls;
 	}
-	
+
 	public String getXSLTString(int indentnum) {
 		String str = "";
 		String indent = "";
-		for (int i=0;i<indentnum;i++) indent += TAB;
+		for (int i = 0; i < indentnum; i++)
+			indent += TAB;
 
 		str = indent + "<" + getNodeName() + ">" + NL;
 		boolean notFirstAttribute = false;
-		for (Enumeration e = children() ; e.hasMoreElements();) {
-			XSLTNode child = (XSLTNode)e.nextElement();
-			str += child.getXSLTString(indentnum+1);
+		for (Enumeration e = children(); e.hasMoreElements();) {
+			XSLTNode child = (XSLTNode) e.nextElement();
+			str += child.getXSLTString(indentnum + 1);
 		}
 		str += indent + "</" + getNodeName() + ">" + NL;
 
 		return str;
 	}
 
-	
 }

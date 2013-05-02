@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.matchmaker;
 
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
@@ -21,61 +21,66 @@ import edu.stanford.smi.protegex.owl.model.RDFResource;
 /**
  * @author Daniel Elenius
  */
-public class MatchPair{
+public class MatchPair {
 	OWLIndividual oldParameter;
 	RDFResource oldType;
 	String newParameter;
 	String newType;
 	int matchType;
-	
-	MatchPair(OWLIndividual oldParameter, RDFResource oldType, String newParameter, 
-			  String newType, int matchType){
+
+	MatchPair(OWLIndividual oldParameter, RDFResource oldType,
+			String newParameter, String newType, int matchType) {
 		this.oldParameter = oldParameter;
 		this.oldType = oldType;
 		this.newParameter = newParameter;
 		this.newType = newType;
 		this.matchType = matchType;
 	}
-	
-	private String matchTypeString(int matchType){
-		switch(matchType){
-		case 0: return "EQUIVALENT";
-		case 1: return "SUBSUMES";
-		case 2: return "SUBSUMED";
-		case 3: return "FAIL";
-		case 4: return "EXTRA";
+
+	private String matchTypeString(int matchType) {
+		switch (matchType) {
+		case 0:
+			return "EQUIVALENT";
+		case 1:
+			return "SUBSUMES";
+		case 2:
+			return "SUBSUMED";
+		case 3:
+			return "FAIL";
+		case 4:
+			return "EXTRA";
 		}
 		return null;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		if (oldParameter != null)
-			return "\n  Original parameter " + oldParameter.getName() +
-				   "\n  New parameter " + newParameter +
-				   "\n  Match type " + matchTypeString(matchType);
+			return "\n  Original parameter " + oldParameter.getName()
+					+ "\n  New parameter " + newParameter + "\n  Match type "
+					+ matchTypeString(matchType);
 		else
-			return "\n  Original parameter NULL" +
-			   "\n  New parameter " + newParameter +
-			   "\n  Match type " + matchTypeString(matchType);
+			return "\n  Original parameter NULL" + "\n  New parameter "
+					+ newParameter + "\n  Match type "
+					+ matchTypeString(matchType);
 	}
-	
-	public OWLIndividual getOriginalParameter(){
+
+	public OWLIndividual getOriginalParameter() {
 		return oldParameter;
 	}
-	
-	public RDFResource getOldType(){
+
+	public RDFResource getOldType() {
 		return oldType;
 	}
-	
-	public String getNewParameter(){
+
+	public String getNewParameter() {
 		return newParameter;
 	}
-	
-	public String getNewType(){
+
+	public String getNewType() {
 		return newType;
 	}
-	
-	public int getMatchType(){
+
+	public int getMatchType() {
 		return matchType;
 	}
 }

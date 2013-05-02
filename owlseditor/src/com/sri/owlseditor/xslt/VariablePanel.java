@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt;
 
 import java.awt.event.ActionListener;
@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
  */
 public class VariablePanel extends XSLTComboPanel {
 
-	public VariablePanel(ActionListener listener){
+	public VariablePanel(ActionListener listener) {
 		super(listener);
 		nameField.setText(VariableNode.DEFAULT_VARIABLE_NAME);
 	}

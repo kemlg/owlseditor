@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt;
 
 import java.awt.BorderLayout;
@@ -46,7 +46,7 @@ public class XSLTComboPanel extends XSLTPanel implements ActionListener {
 	private JPanel paramcontainer;
 	private JButton addparam, delparam;
 	private ActionListener parent;
-	
+
 	public XSLTComboPanel(ActionListener par) {
 		parent = par;
 
@@ -55,20 +55,20 @@ public class XSLTComboPanel extends XSLTPanel implements ActionListener {
 
 		setupGUI();
 	}
-	
+
 	/** Separated out because RDFAttributePanel needs to override this. */
-	protected Box getTopBox(){
+	protected Box getTopBox() {
 		Box box = Box.createHorizontalBox();
 		JLabel label = new JLabel("Name: ");
 		box.add(label);
 		nameField = new JTextField("");
 		nameField.addActionListener(parent);
 		box.add(nameField);
-		box.setMaximumSize(new Dimension(1000,25));
+		box.setMaximumSize(new Dimension(1000, 25));
 		return box;
 	}
-	
-	protected void setupGUI(){
+
+	protected void setupGUI() {
 		setLayout(new BorderLayout());
 
 		Box mainbox = Box.createVerticalBox();
@@ -78,43 +78,44 @@ public class XSLTComboPanel extends XSLTPanel implements ActionListener {
 		mainbox.add(Box.createRigidArea(new Dimension(10, 30)));
 
 		Box functionlist = Box.createHorizontalBox();
-	    functionlist.add(new JLabel("XSLT Function: "));
-	    xsltFunctions = new JComboBox(transFunc);
-	    xsltFunctions.setEditable(false);
-	    functionlist.add(xsltFunctions);
-	    functionlist.setMaximumSize(new Dimension(1000,25));
-	    mainbox.add(Box.createRigidArea(new Dimension(10, 10)));
-	    mainbox.add(functionlist);
-	    mainbox.add(Box.createRigidArea(new Dimension(10, 10)));
-	    xsltFunctions.addActionListener(this);
-	    JToolBar toolbar = new JToolBar();
-	    addparam = new JButton(OWLIcons.getAddIcon());
-	    addparam.setActionCommand("add_parameter");
-	    addparam.setBorderPainted(false);
-	    addparam.addActionListener(this);
-	    addparam.setToolTipText("Add More Paramater");
+		functionlist.add(new JLabel("XSLT Function: "));
+		xsltFunctions = new JComboBox(transFunc);
+		xsltFunctions.setEditable(false);
+		functionlist.add(xsltFunctions);
+		functionlist.setMaximumSize(new Dimension(1000, 25));
+		mainbox.add(Box.createRigidArea(new Dimension(10, 10)));
+		mainbox.add(functionlist);
+		mainbox.add(Box.createRigidArea(new Dimension(10, 10)));
+		xsltFunctions.addActionListener(this);
+		JToolBar toolbar = new JToolBar();
+		addparam = new JButton(OWLIcons.getAddIcon());
+		addparam.setActionCommand("add_parameter");
+		addparam.setBorderPainted(false);
+		addparam.addActionListener(this);
+		addparam.setToolTipText("Add More Paramater");
 		addparam.setEnabled(false);
 		delparam = new JButton(OWLIcons.getRemoveIcon());
 		delparam.setActionCommand("remove_parameter");
 		delparam.setBorderPainted(false);
 		delparam.addActionListener(this);
-	    delparam.setToolTipText("Remove Extra Paramater");
-	    delparam.setEnabled(false);
-	    toolbar.setFloatable(false);
-	    toolbar.add(addparam);
-	    toolbar.add(delparam);
-	    mainbox.add(toolbar,BorderLayout.EAST);
-	    mainbox.add(Box.createRigidArea(new Dimension(10, 10)));
+		delparam.setToolTipText("Remove Extra Paramater");
+		delparam.setEnabled(false);
+		toolbar.setFloatable(false);
+		toolbar.add(addparam);
+		toolbar.add(delparam);
+		mainbox.add(toolbar, BorderLayout.EAST);
+		mainbox.add(Box.createRigidArea(new Dimension(10, 10)));
 
 		XSLTFunction defaultFunc = XSLTFunction.createDefaultFunction();
 		int requiredParameters = defaultFunc.getMinParameters();
 
 		parameterBox = new ArrayList();
 		paramcontainer = new JPanel();
-		paramcontainer.setLayout(new BoxLayout(paramcontainer, BoxLayout.PAGE_AXIS));
+		paramcontainer.setLayout(new BoxLayout(paramcontainer,
+				BoxLayout.PAGE_AXIS));
 		paramcontainer.add(Box.createRigidArea(new Dimension(10, 10)));
 		int i;
-		for (i=0;i<defaultFunc.getMinParameters();i++) {
+		for (i = 0; i < defaultFunc.getMinParameters(); i++) {
 			box = addParameterBox();
 			parameterBox.add(box);
 			paramcontainer.add(box);
@@ -123,7 +124,7 @@ public class XSLTComboPanel extends XSLTPanel implements ActionListener {
 		xsltFunctions.addActionListener(this);
 		add(mainbox);
 	}
-	
+
 	private Box addParameterBox() {
 		Box b = Box.createVerticalBox();
 		Box box = Box.createHorizontalBox();
@@ -132,103 +133,137 @@ public class XSLTComboPanel extends XSLTPanel implements ActionListener {
 		box.add(label);
 		JComboBox inputList = new JComboBox();
 		JComboBox firstone = getParameterJComboBox(0);
-		if ( firstone != null ) 
-			for (int i=0;i<firstone.getItemCount();i++) inputList.addItem(firstone.getItemAt(i));
+		if (firstone != null)
+			for (int i = 0; i < firstone.getItemCount(); i++)
+				inputList.addItem(firstone.getItemAt(i));
 		inputList.setEditable(true);
 		box.add(inputList);
 		box.add(Box.createRigidArea(new Dimension(5, 5)));
-		box.setMaximumSize(new Dimension(1000,25));
+		box.setMaximumSize(new Dimension(1000, 25));
 		b.add(box);
 		b.add(Box.createRigidArea(new Dimension(10, 10)));
 		return b;
 	}
+
 	public void addParameter(Object p) {
-		for (int j=0;j<getParameterNumbers();j++) 
+		for (int j = 0; j < getParameterNumbers(); j++)
 			getParameterJComboBox(j).addItem(p.toString());
 	}
+
 	public void removeParameter(Object p) {
-		for (int j=0;j<getParameterNumbers();j++)	
+		for (int j = 0; j < getParameterNumbers(); j++)
 			getParameterJComboBox(j).removeItem(p.toString());
 	}
+
 	public void actionPerformed(ActionEvent e) {
-		if ( e.getActionCommand().equals("comboBoxChanged") ) {
-			XSLTFunction func = (XSLTFunction)((JComboBox)e.getSource()).getSelectedItem();
+		if (e.getActionCommand().equals("comboBoxChanged")) {
+			XSLTFunction func = (XSLTFunction) ((JComboBox) e.getSource())
+					.getSelectedItem();
 			int RequiredParameters = func.getParameterNumbers();
-			if ( func.getParameterNumbers()>func.getMinParameters() ) delparam.setEnabled(true); else delparam.setEnabled(false);
-			if ( func.getParameterNumbers()<func.getMaxParameters() ) addparam.setEnabled(true); else addparam.setEnabled(false);
-			if ( RequiredParameters > getParameterNumbers() ) { // Add more Parameters.
-				for (int i = getParameterNumbers();i<RequiredParameters;i++) {
+			if (func.getParameterNumbers() > func.getMinParameters())
+				delparam.setEnabled(true);
+			else
+				delparam.setEnabled(false);
+			if (func.getParameterNumbers() < func.getMaxParameters())
+				addparam.setEnabled(true);
+			else
+				addparam.setEnabled(false);
+			if (RequiredParameters > getParameterNumbers()) { // Add more
+																// Parameters.
+				for (int i = getParameterNumbers(); i < RequiredParameters; i++) {
 					Box box = addParameterBox();
 					parameterBox.add(box);
 					paramcontainer.add(box);
 				}
 			}
-			if ( RequiredParameters < getParameterNumbers() ) { // Delete Extra Parameters
-				for (int i = getParameterNumbers();i>RequiredParameters;i--) {
-					Box box = (Box)parameterBox.get(i-1);
+			if (RequiredParameters < getParameterNumbers()) { // Delete Extra
+																// Parameters
+				for (int i = getParameterNumbers(); i > RequiredParameters; i--) {
+					Box box = (Box) parameterBox.get(i - 1);
 					parameterBox.remove(box);
 					paramcontainer.remove(box);
 				}
 			}
-			for (int i=0;i<RequiredParameters;i++) getParameterJComboBox(i).setSelectedIndex(0);
-		} else if(e.getActionCommand().equals("add_parameter")) {
+			for (int i = 0; i < RequiredParameters; i++)
+				getParameterJComboBox(i).setSelectedIndex(0);
+		} else if (e.getActionCommand().equals("add_parameter")) {
 			Box box = addParameterBox();
 			parameterBox.add(box);
 			paramcontainer.add(box);
-		} else if(e.getActionCommand().equals("remove_parameter")) {
-			Box box = (Box)parameterBox.get(parameterBox.size()-1);
-			parameterBox.remove(box); //remove last one
+		} else if (e.getActionCommand().equals("remove_parameter")) {
+			Box box = (Box) parameterBox.get(parameterBox.size() - 1);
+			parameterBox.remove(box); // remove last one
 			paramcontainer.remove(box);
 		}
-		XSLTFunction func = (XSLTFunction)xsltFunctions.getSelectedItem();
-		if ( getParameterNumbers()>func.getMinParameters() ) delparam.setEnabled(true); else delparam.setEnabled(false);
-		if ( getParameterNumbers()<func.getMaxParameters() ) addparam.setEnabled(true); else addparam.setEnabled(false);
+		XSLTFunction func = (XSLTFunction) xsltFunctions.getSelectedItem();
+		if (getParameterNumbers() > func.getMinParameters())
+			delparam.setEnabled(true);
+		else
+			delparam.setEnabled(false);
+		if (getParameterNumbers() < func.getMaxParameters())
+			addparam.setEnabled(true);
+		else
+			addparam.setEnabled(false);
 		updateUI();
 	}
-	/** These parameters can be Inputs/Locals or WSDL message part, depending on
-	 * what this XSLTPanel is for. */ 
+
+	/**
+	 * These parameters can be Inputs/Locals or WSDL message part, depending on
+	 * what this XSLTPanel is for.
+	 */
 	public void addParameters(Collection params) {
 		Iterator it = params.iterator();
-		while ( it.hasNext() ) addParameter(it.next());
+		while (it.hasNext())
+			addParameter(it.next());
 	}
+
 	public String getName() {
 		return nameField.getText();
 	}
+
 	public void setName(String s) {
 		nameField.setText(s);
 	}
+
 	public int getParameterNumbers() {
 		return parameterBox.size();
 	}
+
 	public JComboBox getParameterJComboBox(int j) {
-		if ( j<0 || j>=getParameterNumbers() ) return null;
-		Box b = (Box)parameterBox.get(j);
-		Box box = (Box)b.getComponent(0);
-		for (int i=0;i<box.getComponentCount();i++) {
-			if ( box.getComponent(i) instanceof JComboBox ) {
-				return ((JComboBox)box.getComponent(i));
+		if (j < 0 || j >= getParameterNumbers())
+			return null;
+		Box b = (Box) parameterBox.get(j);
+		Box box = (Box) b.getComponent(0);
+		for (int i = 0; i < box.getComponentCount(); i++) {
+			if (box.getComponent(i) instanceof JComboBox) {
+				return ((JComboBox) box.getComponent(i));
 			}
 		}
 		return null;
 	}
+
 	public XSLTFunction getXSLTFunction() {
-		XSLTFunction function = (XSLTFunction)xsltFunctions.getSelectedItem();
+		XSLTFunction function = (XSLTFunction) xsltFunctions.getSelectedItem();
 		function.resetParameters();
-		for (int i=0;i<getParameterNumbers();i++)
-			function.setParameter(i,getParameterJComboBox(i).getEditor().getItem().toString());
+		for (int i = 0; i < getParameterNumbers(); i++)
+			function.setParameter(i, getParameterJComboBox(i).getEditor()
+					.getItem().toString());
 		return function;
 	}
+
 	public void setXSLTFunction(XSLTFunction function) {
 		int i;
-		for (i=0;i<totalXSLTFunctions;i++) {
-			if ( function.getFunctionName().equals(((XSLTFunction)transFunc.elementAt(i)).getFunctionName()) ) {
+		for (i = 0; i < totalXSLTFunctions; i++) {
+			if (function.getFunctionName().equals(
+					((XSLTFunction) transFunc.elementAt(i)).getFunctionName())) {
 				xsltFunctions.setSelectedIndex(i);
 				break;
 			}
 		}
-		for (i=0;i<function.getParameterNumbers();i++)
+		for (i = 0; i < function.getParameterNumbers(); i++)
 			getParameterJComboBox(i).setSelectedItem(function.getParameter(i));
 	}
+
 	protected Collection generateInputList() {
 		return null;
 	}

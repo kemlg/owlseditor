@@ -12,46 +12,39 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor;
 
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protegex.owl.model.RDFIndividual;
 
-
 public class ProcessList extends BoldableOWLSInstanceList {
-	
-    public ProcessList(Project project){
-    	super(project, "process:Process");
-    }
 
-	public void update(RDFIndividual instance){
+	public ProcessList(Project project) {
+		super(project, "process:Process");
+	}
+
+	public void update(RDFIndividual instance) {
 		boldItems.clear();
-		if (instance == null){
+		if (instance == null) {
 			clearSelection();
-		}
-		else if (instance.hasRDFType(service, true)){
+		} else if (instance.hasRDFType(service, true)) {
 			clearSelection();
 			// describedBy: service -> process
 			boldItems.addAll(instance.getPropertyValues(describedBy));
-		}
-		else if (instance.hasRDFType(profile, true)){
+		} else if (instance.hasRDFType(profile, true)) {
 			clearSelection();
 			// has_process: profile -> process
 			boldItems.addAll(instance.getPropertyValues(has_process));
-		}
-		else if (instance.hasRDFType(process, true)){
+		} else if (instance.hasRDFType(process, true)) {
 			setSelectedInstance(instance);
 			boldItems.add(instance);
-		}
-		else if (instance.hasRDFType(grounding, true)){
+		} else if (instance.hasRDFType(grounding, true)) {
 			clearSelection();
 			// hasAtomicProcessGrounding: grounding -> process
-			boldItems.addAll(instance.getPropertyValues(hasAtomicProcessGrounding));
+			boldItems.addAll(instance
+					.getPropertyValues(hasAtomicProcessGrounding));
 		}
 	}
 
 }
-
-
-

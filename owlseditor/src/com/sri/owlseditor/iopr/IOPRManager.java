@@ -14,7 +14,6 @@
 // Portions created by the Initial Developer are Copyright (C) 2004 the
 // Initial Developer.  All Rights Reserved.
 
-
 package com.sri.owlseditor.iopr;
 
 import javax.swing.BoxLayout;
@@ -36,76 +35,72 @@ import edu.stanford.smi.protegex.owl.model.OWLModel;
 /**
  * We need to add the top (and bottom?) box to this class.
  * 
- *  A window containing an IOPRSelector and a PropertyEditor for the currently
- *  selected IOPR. See documentation in classes of member instances.
+ * A window containing an IOPRSelector and a PropertyEditor for the currently
+ * selected IOPR. See documentation in classes of member instances.
  */
 
 public class IOPRManager implements ServiceSelectorListener {
 
-    private OWLModel		_okb;
-    private Project			_project;
-    private OWLIndividual	_inst;
+	private OWLModel _okb;
+	private Project _project;
+	private OWLIndividual _inst;
 
-    private JFrame			frame;
-    private JTabbedPane		wholePane;
+	private JFrame frame;
+	private JTabbedPane wholePane;
 
-    private JPanel 			leftpanel;
-    private IOPRTopBox		topbox;
-    private IOPRSelector	m_ioprList;
-    private ResourceDisplayWrapper		propertyEditor;
-    private JSplitPane jsp;
+	private JPanel leftpanel;
+	private IOPRTopBox topbox;
+	private IOPRSelector m_ioprList;
+	private ResourceDisplayWrapper propertyEditor;
+	private JSplitPane jsp;
 
-    public IOPRManager (OWLModel okb) {
+	public IOPRManager(OWLModel okb) {
 
-	_okb = okb;
-	_project = _okb.getProject();
+		_okb = okb;
+		_project = _okb.getProject();
 
-	frame = ComponentFactory.createFrame();
-	frame.setTitle ("IOPR Manager");
-	frame.setSize (1000, 800);
-	frame.setDefaultCloseOperation (WindowConstants.HIDE_ON_CLOSE);
-	wholePane = ComponentFactory.createTabbedPane (true);
-	propertyEditor = new ResourceDisplayWrapper (_project);
-	m_ioprList = new IOPRSelector (_okb, _project, propertyEditor);
-	topbox = new IOPRTopBox (_okb, m_ioprList);
-	topbox.addComboListener (m_ioprList);
-		
-	leftpanel = new JPanel();
-	leftpanel.setLayout (new BoxLayout (leftpanel, BoxLayout.Y_AXIS));
-	leftpanel.add (topbox);
-	leftpanel.add (m_ioprList);
-	topbox.setMinimumSize (new Dimension (300, 90));
-	topbox.setMaximumSize (new Dimension (900, 90));
-		
-	jsp = new JSplitPane (JSplitPane.HORIZONTAL_SPLIT, leftpanel, propertyEditor);
-	jsp.setDividerLocation (Math.max (topbox.desiredWidth, 300));
-	leftpanel.setMinimumSize (new Dimension (300, 0));
-	propertyEditor.setMinimumSize (new Dimension (300, 0));
+		frame = ComponentFactory.createFrame();
+		frame.setTitle("IOPR Manager");
+		frame.setSize(1000, 800);
+		frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		wholePane = ComponentFactory.createTabbedPane(true);
+		propertyEditor = new ResourceDisplayWrapper(_project);
+		m_ioprList = new IOPRSelector(_okb, _project, propertyEditor);
+		topbox = new IOPRTopBox(_okb, m_ioprList);
+		topbox.addComboListener(m_ioprList);
 
-	frame.getContentPane().add (jsp);
-	frame.setVisible (false);
-    }
+		leftpanel = new JPanel();
+		leftpanel.setLayout(new BoxLayout(leftpanel, BoxLayout.Y_AXIS));
+		leftpanel.add(topbox);
+		leftpanel.add(m_ioprList);
+		topbox.setMinimumSize(new Dimension(300, 90));
+		topbox.setMaximumSize(new Dimension(900, 90));
 
+		jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftpanel,
+				propertyEditor);
+		jsp.setDividerLocation(Math.max(topbox.desiredWidth, 300));
+		leftpanel.setMinimumSize(new Dimension(300, 0));
+		propertyEditor.setMinimumSize(new Dimension(300, 0));
+
+		frame.getContentPane().add(jsp);
+		frame.setVisible(false);
+	}
 
 	/** Not sure why we need this -Daniel */
-    public void setInstance (OWLIndividual inst) {
-    	_inst = inst;
-    	//ioprList.updateAllLists (inst);
-    }
-    
+	public void setInstance(OWLIndividual inst) {
+		_inst = inst;
+		// ioprList.updateAllLists (inst);
+	}
 
-    public OWLIndividual getInstance() {
-    	return _inst;
-    }
+	public OWLIndividual getInstance() {
+		return _inst;
+	}
 
+	public IOPRSelector getIOPRList() {
+		return m_ioprList;
+	}
 
-    public IOPRSelector getIOPRList() {
-	return m_ioprList;
-    }
-
-
-    public void show () {
-    	frame.setVisible(true);
-    }
+	public void show() {
+		frame.setVisible(true);
+	}
 }
-

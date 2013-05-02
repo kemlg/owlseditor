@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.xslt.xml2owl;
 
 import java.awt.Dimension;
@@ -26,22 +26,23 @@ import com.sri.owlseditor.xslt.XSLTComboPanel;
 
 /**
  * @author Daniel Elenius
- *
+ * 
  */
 public class RDFNamePanel extends XSLTComboPanel {
 	private JComboBox rdfAttributeChooser;
-	
-	public RDFNamePanel(ActionListener listener){
+
+	public RDFNamePanel(ActionListener listener) {
 		super(listener);
 	}
 
-	protected Box getTopBox(){
+	protected Box getTopBox() {
 		Box box = Box.createHorizontalBox();
 		JLabel label = new JLabel("Attribute: ");
 		box.add(label);
-		rdfAttributeChooser = new JComboBox(new Object[]{"rdf:ID", "rdf:about"});
+		rdfAttributeChooser = new JComboBox(new Object[] { "rdf:ID",
+				"rdf:about" });
 		box.add(rdfAttributeChooser);
-		box.setMaximumSize(new Dimension(1000,25));
+		box.setMaximumSize(new Dimension(1000, 25));
 		return box;
 	}
 

@@ -11,7 +11,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.widgets.wsdl;
 
 import javax.swing.Action;
@@ -26,54 +26,55 @@ import edu.stanford.smi.protegex.owl.ui.widget.SingleResourceWidget;
 
 public class WSDLOwlSParamWidget extends SingleResourceWidget {
 
-    private JList _list;
-    private OWLLabeledComponent _olc;
-    private JButton _removeButton;
+	private JList _list;
+	private OWLLabeledComponent _olc;
+	private JButton _removeButton;
 
-    public WSDLOwlSParamWidget () {
-    }
+	public WSDLOwlSParamWidget() {
+	}
 
-    /** We need this here to stop super.dispose() from being called, because that
-     * causes a NullPointerException. Hopefully, this solution doesn't cause any
-     * memory leaks or other weirdness.
-     */
-    public void dispose(){
-    }
-    
-    public void initialize() {
-    	_list = createList();
-        _olc  = new OWLLabeledComponent ("", _list);
-        add (_olc);
+	/**
+	 * We need this here to stop super.dispose() from being called, because that
+	 * causes a NullPointerException. Hopefully, this solution doesn't cause any
+	 * memory leaks or other weirdness.
+	 */
+	public void dispose() {
+	}
 
-	setPreferredColumns(2);
-	setPreferredRows(1);
-    }
+	public void initialize() {
+		_list = createList();
+		_olc = new OWLLabeledComponent("", _list);
+		add(_olc);
 
+		setPreferredColumns(2);
+		setPreferredRows(1);
+	}
 
-    public JList getList () {
-	return _list;
-    }
+	public JList getList() {
+		return _list;
+	}
 
-    /* Copied from InstanceFieldWidget */
-    private JList createList() {
-        JList list = ComponentFactory.createSingleItemList(getDoubleClickAction());
-        list.setCellRenderer(FrameRenderer.createInstance());
-        return list;
-    }
-    
-    public void addAddHeaderButton (Action action) {
-	action.putValue (Action.SMALL_ICON, OWLIcons.getAddIcon (OWLIcons.RDF_INDIVIDUAL));
-	_olc.addHeaderButton (action);
-    }
+	/* Copied from InstanceFieldWidget */
+	private JList createList() {
+		JList list = ComponentFactory
+				.createSingleItemList(getDoubleClickAction());
+		list.setCellRenderer(FrameRenderer.createInstance());
+		return list;
+	}
 
+	public void addAddHeaderButton(Action action) {
+		action.putValue(Action.SMALL_ICON,
+				OWLIcons.getAddIcon(OWLIcons.RDF_INDIVIDUAL));
+		_olc.addHeaderButton(action);
+	}
 
-    public void addRemoveHeaderButton (Action action) {
-	action.putValue (Action.SMALL_ICON, OWLIcons.getRemoveIcon (OWLIcons.RDF_INDIVIDUAL));
-	_removeButton = _olc.addHeaderButton (action);
-    }
+	public void addRemoveHeaderButton(Action action) {
+		action.putValue(Action.SMALL_ICON,
+				OWLIcons.getRemoveIcon(OWLIcons.RDF_INDIVIDUAL));
+		_removeButton = _olc.addHeaderButton(action);
+	}
 
-    
-    public void enableRemoveButton (boolean enabled) {
-	_removeButton.setEnabled (enabled);
-    }
+	public void enableRemoveButton(boolean enabled) {
+		_removeButton.setEnabled(enabled);
+	}
 }

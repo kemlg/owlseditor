@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp;
 
 import java.awt.BorderLayout;
@@ -63,67 +63,65 @@ import edu.stanford.smi.protegex.owl.ui.resourcedisplay.ResourceDisplay;
  * and the control construct properties editor.
  * @author Daniel Elenius <elenius@csl.sri.com>
  */
-public class CompositionEditor extends JPanel implements TreeSelectionListener, 
-														 GraphUpdateManager {
+public class CompositionEditor extends JPanel implements TreeSelectionListener,
+		GraphUpdateManager {
 	private static CompositionEditor instance;
-	
+
 	private JSplitPane splitpane;
-	private ResourceDisplay ccinstance; 	// The control construct properties editor at the bottom
-	private CompositionTreePanel comptree;		// The tree view and its associated buttons
-    
-    private GraphPanel itsGraphPanel;
-    private JScrollPane graphScrollPane;
-    private JTabbedPane graphAndPropertiesPane;
-    
-    private OWLModel okb;
-    private OWLIndividual selectedProcess;
+	private ResourceDisplay ccinstance; // The control construct properties
+										// editor at the bottom
+	private CompositionTreePanel comptree; // The tree view and its associated
+											// buttons
 
-	private class GraphPropertyListener extends PropertyValueAdapter{
-		public void propertyValueChanged(RDFResource resource, RDFProperty property, 
-				 java.util.Collection oldValues){
-			if (property.getName().equals("process:process")){
+	private GraphPanel itsGraphPanel;
+	private JScrollPane graphScrollPane;
+	private JTabbedPane graphAndPropertiesPane;
+
+	private OWLModel okb;
+	private OWLIndividual selectedProcess;
+
+	private class GraphPropertyListener extends PropertyValueAdapter {
+		public void propertyValueChanged(RDFResource resource,
+				RDFProperty property, java.util.Collection oldValues) {
+			if (property.getName().equals("process:process")) {
 				recreateTree();
-			}
-			else if (property.getName().equals("process:theVar")){
+			} else if (property.getName().equals("process:theVar")) {
 				updateGraph();
-			}
-			else if (property.getName().equals("process:fromProcess")){
+			} else if (property.getName().equals("process:fromProcess")) {
 				updateGraph();
-			}
-			else if (resource.hasRDFType(conditionCls, true) &&
-					property.getName().equals("rdfs:label")){
+			} else if (resource.hasRDFType(conditionCls, true)
+					&& property.getName().equals("rdfs:label")) {
 				updateGraph();
 			}
 		}
 	}
 
-	private class RenameAdapter extends ModelAdapter{
+	private class RenameAdapter extends ModelAdapter {
 
-		public void resourceNameChanged(RDFResource resource, String oldName){
-			if (resource.hasRDFType(processCls, true) ||
-				resource.hasRDFType(produceCls, true) ||
-				resource.hasRDFType(performCls, true)){
-				//System.out.println("Process or Perform renamed, recreating tree and graph");
+		public void resourceNameChanged(RDFResource resource, String oldName) {
+			if (resource.hasRDFType(processCls, true)
+					|| resource.hasRDFType(produceCls, true)
+					|| resource.hasRDFType(performCls, true)) {
+				// System.out.println("Process or Perform renamed, recreating tree and graph");
 				recreateTree();
-			}
-			else if(resource.hasRDFType(conditionCls, true) ||
-					resource.hasRDFType(parameterCls, true)){
-				//System.out.println("Condition or Parameter renamed, redrawing graph");
+			} else if (resource.hasRDFType(conditionCls, true)
+					|| resource.hasRDFType(parameterCls, true)) {
+				// System.out.println("Condition or Parameter renamed, redrawing graph");
 				updateGraph();
 			}
 		}
 	}
-	
-    private GraphPropertyListener graphPropertyListener;
-    private RenameAdapter renameAdapter;
 
-    private OWLSTree currentTree;
-    
+	private GraphPropertyListener graphPropertyListener;
+	private RenameAdapter renameAdapter;
+
+	private OWLSTree currentTree;
+
 	private MouseListener ml;
 	private JPopupMenu rightClickMenu;
 	private JPopupMenu compositeRightClickMenu;
 	private OWLSTreeNode rightClickedNode;
-	
+
 	private OWLNamedClass performCls;
 	private OWLNamedClass produceCls;
 	private OWLNamedClass conditionCls;
@@ -147,12 +145,12 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 	private OWLObjectProperty hasOutput;
 	private OWLObjectProperty producedBinding;
 	private OWLObjectProperty toParam;
-	
+
 	private OWLIndividual theParentPerform;
-	
-	public CompositionEditor(Project project){
+
+	public CompositionEditor(Project project) {
 		super(new BorderLayout());
-		this.okb = (OWLModel)project.getKnowledgeBase();
+		this.okb = (OWLModel) project.getKnowledgeBase();
 		ccinstance = new ResourceDisplay(project);
 		comptree = new CompositionTreePanel(okb);
 		itsGraphPanel = new GraphPanel(project, this);
@@ -163,69 +161,77 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 		splitpane.setLeftComponent(comptree);
 		splitpane.setRightComponent(graphAndPropertiesPane);
 		add(splitpane, BorderLayout.CENTER);
-		
+
 		setupClassesAndProperties();
-		
+
 		graphPropertyListener = new GraphPropertyListener();
 		renameAdapter = new RenameAdapter();
-		
+
 		// Right-click menu (for all construct except composite Performs)
 		rightClickMenu = new JPopupMenu();
-		JMenuItem wrapAsCompositeItem = new JMenuItem("Wrap as Composite Process"); 
-		wrapAsCompositeItem.addActionListener(new ActionListener(){
-		 	public void actionPerformed(ActionEvent ae) {
-		 		wrapAsComposite();
-		 	}
+		JMenuItem wrapAsCompositeItem = new JMenuItem(
+				"Wrap as Composite Process");
+		wrapAsCompositeItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				wrapAsComposite();
+			}
 		});
-		rightClickMenu.add(wrapAsCompositeItem); 
+		rightClickMenu.add(wrapAsCompositeItem);
 
 		// Right-click menu for composite Performs
 		compositeRightClickMenu = new JPopupMenu();
-		JMenuItem unwrapCompositeItem = new JMenuItem("Unwrap Composite Process"); 
-		unwrapCompositeItem.addActionListener(new ActionListener(){
-		 	public void actionPerformed(ActionEvent ae) {
-		 		unwrapComposite();
-		 	}
+		JMenuItem unwrapCompositeItem = new JMenuItem(
+				"Unwrap Composite Process");
+		unwrapCompositeItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				unwrapComposite();
+			}
 		});
-		compositeRightClickMenu.add(unwrapCompositeItem); 
+		compositeRightClickMenu.add(unwrapCompositeItem);
 
-		ml = new MouseAdapter(){
+		ml = new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				int selRow = currentTree.getRowForLocation(e.getX(), e.getY());
-				TreePath selPath = currentTree.getPathForLocation(e.getX(), e.getY());
-				if(selRow != -1) {
-					if(e.getClickCount() == 1 &&
-					   e.getButton() == MouseEvent.BUTTON3) {
-						rightClickedNode = (OWLSTreeNode)selPath.getLastPathComponent();
-						OWLIndividual construct = rightClickedNode.getInstance();
-						if (construct.hasRDFType(performCls, true)){
-							OWLIndividual process = (OWLIndividual)construct.
-														getPropertyValue(processProperty);
+				TreePath selPath = currentTree.getPathForLocation(e.getX(),
+						e.getY());
+				if (selRow != -1) {
+					if (e.getClickCount() == 1
+							&& e.getButton() == MouseEvent.BUTTON3) {
+						rightClickedNode = (OWLSTreeNode) selPath
+								.getLastPathComponent();
+						OWLIndividual construct = rightClickedNode
+								.getInstance();
+						if (construct.hasRDFType(performCls, true)) {
+							OWLIndividual process = (OWLIndividual) construct
+									.getPropertyValue(processProperty);
 							if (process != null)
-								if (process.hasRDFType(compositeProcessCls, true)){
-									compositeRightClickMenu.show(currentTree, (int)e.getX(), (int)e.getY());
+								if (process.hasRDFType(compositeProcessCls,
+										true)) {
+									compositeRightClickMenu.show(currentTree,
+											(int) e.getX(), (int) e.getY());
 									return;
 								}
 						}
-						rightClickMenu.show(currentTree, (int)e.getX(), (int)e.getY());
-					}	
+						rightClickMenu.show(currentTree, (int) e.getX(),
+								(int) e.getY());
+					}
 				}
 			}
 		};
 
-		//addListeners();
+		// addListeners();
 	}
-	
-	private void setupClassesAndProperties(){
-//		Iterator it = okb.getClses().iterator();
-//		while(it.hasNext())
-//		{
-//			System.out.println("Class: " + it.next());
-//		}
-//		Iterator it = okb.getRDFSClasses().iterator();
-//		while(it.hasNext()) {
-//			System.out.println("Class: " + it.next());
-//		}
+
+	private void setupClassesAndProperties() {
+		// Iterator it = okb.getClses().iterator();
+		// while(it.hasNext())
+		// {
+		// System.out.println("Class: " + it.next());
+		// }
+		// Iterator it = okb.getRDFSClasses().iterator();
+		// while(it.hasNext()) {
+		// System.out.println("Class: " + it.next());
+		// }
 		performCls = okb.getOWLNamedClass("process:Perform");
 		System.out.println(performCls);
 		processCls = okb.getOWLNamedClass("process:Process");
@@ -239,7 +245,7 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 		inputBindingCls = okb.getOWLNamedClass("process:InputBinding");
 		outputBindingCls = okb.getOWLNamedClass("process:OutputBinding");
 		sequenceCls = okb.getOWLNamedClass("process:Sequence");
-		
+
 		processProperty = okb.getOWLObjectProperty("process:process");
 		composedOfProperty = okb.getOWLObjectProperty("process:composedOf");
 		hasDataFrom = okb.getOWLObjectProperty("process:hasDataFrom");
@@ -250,20 +256,20 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 		hasOutput = okb.getOWLObjectProperty("process:hasOutput");
 		producedBinding = okb.getOWLObjectProperty("process:producedBinding");
 		toParam = okb.getOWLObjectProperty("process:toParam");
-		
+
 		theParentPerform = okb.getOWLIndividual("process:TheParentPerform");
 	}
-	
-	private OWLSTreeNode getNodeForPerform(OWLSTreeNode root, OWLIndividual perform){
-		if (root instanceof PerformNode){
+
+	private OWLSTreeNode getNodeForPerform(OWLSTreeNode root,
+			OWLIndividual perform) {
+		if (root instanceof PerformNode) {
 			OWLIndividual construct = root.getInstance();
 			if (construct == perform)
 				return root;
-		}
-		else{
+		} else {
 			int c = root.getChildCount();
-			for (int i=0; i<c; i++){
-				OWLSTreeNode child = (OWLSTreeNode)root.getChildAt(i);
+			for (int i = 0; i < c; i++) {
+				OWLSTreeNode child = (OWLSTreeNode) root.getChildAt(i);
 				OWLSTreeNode foundPerform = getNodeForPerform(child, perform);
 				if (foundPerform != null)
 					return foundPerform;
@@ -272,16 +278,16 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 		return null;
 	}
 
-	private OWLSTreeNode getNodeForProduce(OWLSTreeNode root, OWLIndividual produce){
-		if (root instanceof ProduceNode){
+	private OWLSTreeNode getNodeForProduce(OWLSTreeNode root,
+			OWLIndividual produce) {
+		if (root instanceof ProduceNode) {
 			OWLIndividual construct = root.getInstance();
 			if (construct == produce)
 				return root;
-		}
-		else{
+		} else {
 			int c = root.getChildCount();
-			for (int i=0; i<c; i++){
-				OWLSTreeNode child = (OWLSTreeNode)root.getChildAt(i);
+			for (int i = 0; i < c; i++) {
+				OWLSTreeNode child = (OWLSTreeNode) root.getChildAt(i);
 				OWLSTreeNode foundProduce = getNodeForProduce(child, produce);
 				if (foundProduce != null)
 					return foundProduce;
@@ -289,95 +295,101 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 		}
 		return null;
 	}
-	
-	/* Populates the set with all the performs in the tree
-	 * below the node.
+
+	/*
+	 * Populates the set with all the performs in the tree below the node.
 	 */
-	private Set getPerformsInSubtree(OWLSTreeNode node){
+	private Set getPerformsInSubtree(OWLSTreeNode node) {
 		HashSet returnSet = new HashSet();
-		
+
 		int c = node.getChildCount();
-		for (int i=0; i<c; i++){
-			OWLSTreeNode child = (OWLSTreeNode)node.getChildAt(i);
+		for (int i = 0; i < c; i++) {
+			OWLSTreeNode child = (OWLSTreeNode) node.getChildAt(i);
 			returnSet.addAll(getPerformsInSubtree(child));
 		}
 
-		if (node instanceof PerformNode){
+		if (node instanceof PerformNode) {
 			OWLIndividual perform = node.getInstance();
 			returnSet.add(perform);
 		}
-		
+
 		return returnSet;
 	}
 
-	/* Populates the set with all the produces in the tree
-	 * below the node.
+	/*
+	 * Populates the set with all the produces in the tree below the node.
 	 */
-	private Set getProducesInSubtree(OWLSTreeNode node){
+	private Set getProducesInSubtree(OWLSTreeNode node) {
 		HashSet returnSet = new HashSet();
-		
+
 		int c = node.getChildCount();
-		for (int i=0; i<c; i++){
-			OWLSTreeNode child = (OWLSTreeNode)node.getChildAt(i);
+		for (int i = 0; i < c; i++) {
+			OWLSTreeNode child = (OWLSTreeNode) node.getChildAt(i);
 			returnSet.addAll(getProducesInSubtree(child));
 		}
 
-		if (node instanceof ProduceNode){
+		if (node instanceof ProduceNode) {
 			OWLIndividual produce = node.getInstance();
 			returnSet.add(produce);
 		}
-		
+
 		return returnSet;
 	}
 
-	private void wrapFixIncomingDataflow(OWLIndividual valueOf, 
-									 OWLIndividual originalSourcePerform,
-									 OWLIndividual originalSourceParam,
-									 OWLIndividual compositeProcess, 
-									 OWLIndividual compositePerform){
-		// Create a new input and add it to the composite process		
-		OWLIndividual newInput = (OWLIndividual)inputCls.createInstance(null);
+	private void wrapFixIncomingDataflow(OWLIndividual valueOf,
+			OWLIndividual originalSourcePerform,
+			OWLIndividual originalSourceParam, OWLIndividual compositeProcess,
+			OWLIndividual compositePerform) {
+		// Create a new input and add it to the composite process
+		OWLIndividual newInput = (OWLIndividual) inputCls.createInstance(null);
 		compositeProcess.addPropertyValue(hasInput, newInput);
-		
+
 		// Change the dataflow to point to the parent perform input
 		valueOf.setPropertyValue(fromProcess, theParentPerform);
 		valueOf.setPropertyValue(theVar, newInput);
-		
-		// Add a new dataflow from the original source perform to the new composite perform
-		OWLIndividual newInputBinding = (OWLIndividual)inputBindingCls.createInstance(null);
+
+		// Add a new dataflow from the original source perform to the new
+		// composite perform
+		OWLIndividual newInputBinding = (OWLIndividual) inputBindingCls
+				.createInstance(null);
 		newInputBinding.setPropertyValue(toParam, newInput);
-		OWLIndividual newValueOf = (OWLIndividual)valueOfCls.createInstance(null);
+		OWLIndividual newValueOf = (OWLIndividual) valueOfCls
+				.createInstance(null);
 		newValueOf.setPropertyValue(fromProcess, originalSourcePerform);
 		newValueOf.setPropertyValue(theVar, originalSourceParam);
 		newInputBinding.setPropertyValue(valueSource, newValueOf);
 		compositePerform.addPropertyValue(hasDataFrom, newInputBinding);
 	}
-	
-	/* Checks all dataflow going *to* nodes in the tree below the node. If the source is now
-	 * no longer a valid predecessor (i.e. outside the subtree), the following happens:
-	 * 1) A corresponding Input is added to the new compositeProcess.
-	 * 2) Dataflow is added from the original source to the new Input on compositeProcess
-	 * 3) Dataflow is added from the new Input on the compositeProcess to the original target. 
+
+	/*
+	 * Checks all dataflow going *to* nodes in the tree below the node. If the
+	 * source is now no longer a valid predecessor (i.e. outside the subtree),
+	 * the following happens: 1) A corresponding Input is added to the new
+	 * compositeProcess. 2) Dataflow is added from the original source to the
+	 * new Input on compositeProcess 3) Dataflow is added from the new Input on
+	 * the compositeProcess to the original target.
 	 */
-	private void wrapUpdateIncomingDataflow(OWLSTreeNode node, 
-										OWLIndividual compositeProcess,
-										OWLIndividual compositePerform,
-										Set subtreePerforms,
-										Set outsidePerforms){
+	private void wrapUpdateIncomingDataflow(OWLSTreeNode node,
+			OWLIndividual compositeProcess, OWLIndividual compositePerform,
+			Set subtreePerforms, Set outsidePerforms) {
 		Iterator it = subtreePerforms.iterator();
-		while (it.hasNext()){
-			OWLIndividual subtreePerform = (OWLIndividual)it.next();
-			Collection inputBindings = subtreePerform.getPropertyValues(hasDataFrom);
+		while (it.hasNext()) {
+			OWLIndividual subtreePerform = (OWLIndividual) it.next();
+			Collection inputBindings = subtreePerform
+					.getPropertyValues(hasDataFrom);
 			Iterator it2 = inputBindings.iterator();
-			while (it2.hasNext()){
-				OWLIndividual inputBinding = (OWLIndividual)it2.next();
-				OWLIndividual valueOf = (OWLIndividual)inputBinding.getPropertyValue(valueSource);
-				if (valueOf != null){
-					OWLIndividual fromPerform = (OWLIndividual)valueOf.getPropertyValue(fromProcess);
-					if (outsidePerforms.contains(fromPerform)){
-						OWLIndividual fromParam = (OWLIndividual)valueOf.getPropertyValue(theVar);
-						wrapFixIncomingDataflow(valueOf, fromPerform, fromParam, 
-											compositeProcess, compositePerform);
+			while (it2.hasNext()) {
+				OWLIndividual inputBinding = (OWLIndividual) it2.next();
+				OWLIndividual valueOf = (OWLIndividual) inputBinding
+						.getPropertyValue(valueSource);
+				if (valueOf != null) {
+					OWLIndividual fromPerform = (OWLIndividual) valueOf
+							.getPropertyValue(fromProcess);
+					if (outsidePerforms.contains(fromPerform)) {
+						OWLIndividual fromParam = (OWLIndividual) valueOf
+								.getPropertyValue(theVar);
+						wrapFixIncomingDataflow(valueOf, fromPerform,
+								fromParam, compositeProcess, compositePerform);
 					}
 				}
 			}
@@ -385,47 +397,51 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 	}
 
 	/* Fix a specific dataflow coming out of the subtree */
-	private void wrapFixOutgoingDataflow(OWLIndividual valueOf, 
-			 					     OWLIndividual originalSourcePerform,
-									 OWLIndividual originalSourceParam,
-									 OWLIndividual compositeProcess, 
-									 OWLIndividual compositePerform,
-									 OWLSTreeNode node){
-		// Create a new output and add it to the composite process		
-		OWLIndividual newOutput = (OWLIndividual)outputCls.createInstance(null);
+	private void wrapFixOutgoingDataflow(OWLIndividual valueOf,
+			OWLIndividual originalSourcePerform,
+			OWLIndividual originalSourceParam, OWLIndividual compositeProcess,
+			OWLIndividual compositePerform, OWLSTreeNode node) {
+		// Create a new output and add it to the composite process
+		OWLIndividual newOutput = (OWLIndividual) outputCls
+				.createInstance(null);
 		compositeProcess.addPropertyValue(hasOutput, newOutput);
-		
-		// Change the dataflow source to point to the new composite perform output
+
+		// Change the dataflow source to point to the new composite perform
+		// output
 		valueOf.setPropertyValue(fromProcess, compositePerform);
 		valueOf.setPropertyValue(theVar, newOutput);
-		
-		// Add a new dataflow from the original source perform to the new composite perform,
+
+		// Add a new dataflow from the original source perform to the new
+		// composite perform,
 		// using Produce
-		OWLIndividual newOutputBinding = (OWLIndividual)outputBindingCls.createInstance(null);
+		OWLIndividual newOutputBinding = (OWLIndividual) outputBindingCls
+				.createInstance(null);
 		newOutputBinding.setPropertyValue(toParam, newOutput);
-		OWLIndividual newValueOf = (OWLIndividual)valueOfCls.createInstance(null);
+		OWLIndividual newValueOf = (OWLIndividual) valueOfCls
+				.createInstance(null);
 		newOutputBinding.setPropertyValue(valueSource, newValueOf);
 		newValueOf.setPropertyValue(fromProcess, originalSourcePerform);
 		newValueOf.setPropertyValue(theVar, originalSourceParam);
-		
-		OWLIndividual produce = (OWLIndividual)produceCls.createInstance(null);
+
+		OWLIndividual produce = (OWLIndividual) produceCls.createInstance(null);
 		produce.setPropertyValue(producedBinding, newOutputBinding);
-		
+
 		// Add the Produce to the (subtree) composite process
-		OWLSTree subtree = OWLSTreeMapper.getInstance(okb).getTree(compositeProcess, this);
+		OWLSTree subtree = OWLSTreeMapper.getInstance(okb).getTree(
+				compositeProcess, this);
 		OWLSTreeNode sourceNode = getNodeForPerform(node, originalSourcePerform);
-		OWLSTreeNode parent = (OWLSTreeNode)sourceNode.getParent();
+		OWLSTreeNode parent = (OWLSTreeNode) sourceNode.getParent();
 		OWLIndividual parentConstruct = parent.getInstance();
 		int index = parent.getIndex(sourceNode);
 		OWLSList parentList = new OWLSList(parentConstruct, okb);
 
-		if (parent instanceof SequenceNode){
-			parentList.insertAtIndex(produce, index+1);
-		}
-		else{
+		if (parent instanceof SequenceNode) {
+			parentList.insertAtIndex(produce, index + 1);
+		} else {
 			// If the parent is not a sequence, one will be added
 			parentList.removeAtIndex(index, false);
-			OWLIndividual sequence = (OWLIndividual)sequenceCls.createInstance(null);
+			OWLIndividual sequence = (OWLIndividual) sequenceCls
+					.createInstance(null);
 			OWLSList sequenceList = new OWLSList(sequence, okb);
 			sequenceList.insertAtIndex(originalSourcePerform, 0);
 			sequenceList.insertAtIndex(produce, 1);
@@ -433,97 +449,103 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 		}
 	}
 
-	/* Checks all dataflow going *from* nodes in the tree below the node. The following things
-	 * happen for such bindings:
-	 * 1) A corresponding Output is added to the new compositeProcess
-	 * 2) The source of the dataflow is changed to the new output on the composite process
-	 * 3) A Produce construct is added to the compositeProcess to bind data to the new output.
+	/*
+	 * Checks all dataflow going *from* nodes in the tree below the node. The
+	 * following things happen for such bindings: 1) A corresponding Output is
+	 * added to the new compositeProcess 2) The source of the dataflow is
+	 * changed to the new output on the composite process 3) A Produce construct
+	 * is added to the compositeProcess to bind data to the new output.
 	 */
-	private void wrapUpdateOutgoingDataflow(OWLSTreeNode node, 
-										OWLIndividual compositeProcess,
-										OWLIndividual compositePerform,
-										Set subtreePerforms,
-										Set outsidePerforms){
+	private void wrapUpdateOutgoingDataflow(OWLSTreeNode node,
+			OWLIndividual compositeProcess, OWLIndividual compositePerform,
+			Set subtreePerforms, Set outsidePerforms) {
 		Iterator it = outsidePerforms.iterator();
-		while (it.hasNext()){
-			OWLIndividual outsidePerform = (OWLIndividual)it.next();
-			Collection inputBindings = outsidePerform.getPropertyValues(hasDataFrom);
+		while (it.hasNext()) {
+			OWLIndividual outsidePerform = (OWLIndividual) it.next();
+			Collection inputBindings = outsidePerform
+					.getPropertyValues(hasDataFrom);
 			Iterator it2 = inputBindings.iterator();
-			while (it2.hasNext()){
-				OWLIndividual inputBinding = (OWLIndividual)it2.next();
-				OWLIndividual valueOf = (OWLIndividual)inputBinding.getPropertyValue(valueSource);
-				if (valueOf != null){
-					OWLIndividual fromPerform = (OWLIndividual)valueOf.getPropertyValue(fromProcess);
-					if (subtreePerforms.contains(fromPerform)){
-						OWLIndividual fromParam = (OWLIndividual)valueOf.getPropertyValue(theVar);
-						wrapFixOutgoingDataflow(valueOf, fromPerform, fromParam,
-											compositeProcess, compositePerform, node);
+			while (it2.hasNext()) {
+				OWLIndividual inputBinding = (OWLIndividual) it2.next();
+				OWLIndividual valueOf = (OWLIndividual) inputBinding
+						.getPropertyValue(valueSource);
+				if (valueOf != null) {
+					OWLIndividual fromPerform = (OWLIndividual) valueOf
+							.getPropertyValue(fromProcess);
+					if (subtreePerforms.contains(fromPerform)) {
+						OWLIndividual fromParam = (OWLIndividual) valueOf
+								.getPropertyValue(theVar);
+						wrapFixOutgoingDataflow(valueOf, fromPerform,
+								fromParam, compositeProcess, compositePerform,
+								node);
 					}
 				}
 			}
 		}
 	}
 
-	private void unwrapFixIncomingDataflow(OWLIndividual valueOf, 
-										   OWLIndividual originalSourceParam,
-										   OWLIndividual compositeProcess, 
-										   OWLIndividual compositePerform){
+	private void unwrapFixIncomingDataflow(OWLIndividual valueOf,
+			OWLIndividual originalSourceParam, OWLIndividual compositeProcess,
+			OWLIndividual compositePerform) {
 		Collection compositeInputs = inputCls.getInstances(true);
 		Iterator it = compositeInputs.iterator();
-		while (it.hasNext()){
-			OWLIndividual input = (OWLIndividual)it.next();
-			if (input == originalSourceParam){
-				Collection inputBindings = compositePerform.getPropertyValues(hasDataFrom);
+		while (it.hasNext()) {
+			OWLIndividual input = (OWLIndividual) it.next();
+			if (input == originalSourceParam) {
+				Collection inputBindings = compositePerform
+						.getPropertyValues(hasDataFrom);
 				Iterator it2 = inputBindings.iterator();
-				while (it2.hasNext()){
-					OWLIndividual inputBinding = (OWLIndividual)it2.next();
-					OWLIndividual compositeValueOf = (OWLIndividual)inputBinding.
-														getPropertyValue(valueSource);
-					OWLIndividual fromPerform = (OWLIndividual)compositeValueOf.
-													getPropertyValue(fromProcess);
-					OWLIndividual fromParam = (OWLIndividual)compositeValueOf.
-												getPropertyValue(theVar);
-					
+				while (it2.hasNext()) {
+					OWLIndividual inputBinding = (OWLIndividual) it2.next();
+					OWLIndividual compositeValueOf = (OWLIndividual) inputBinding
+							.getPropertyValue(valueSource);
+					OWLIndividual fromPerform = (OWLIndividual) compositeValueOf
+							.getPropertyValue(fromProcess);
+					OWLIndividual fromParam = (OWLIndividual) compositeValueOf
+							.getPropertyValue(theVar);
+
 					// Change the original valueOf to point to the source
 					// of this dataflow
 					valueOf.setPropertyValue(fromProcess, fromPerform);
 					valueOf.setPropertyValue(theVar, fromParam);
-					
+
 					// Delete the composite Input, ValueOf, and InputBinding
 					compositeValueOf.delete();
 					input.delete();
 					inputBinding.delete();
-					
+
 					return;
 				}
 			}
 		}
 
-		// No input binding found, so we reset the ValueOf 
+		// No input binding found, so we reset the ValueOf
 		// TODO: Ideally, we should remove the input binding
 		valueOf.setPropertyValue(fromProcess, null);
 		valueOf.setPropertyValue(theVar, null);
 	}
 
-	private void unwrapUpdateIncomingDataflow(OWLSTreeNode node, 
-											  OWLIndividual compositeProcess,
-											  OWLIndividual compositePerform,
-											  Set subtreePerforms,
-											  Set outsidePerforms){
+	private void unwrapUpdateIncomingDataflow(OWLSTreeNode node,
+			OWLIndividual compositeProcess, OWLIndividual compositePerform,
+			Set subtreePerforms, Set outsidePerforms) {
 		Iterator it = subtreePerforms.iterator();
-		while (it.hasNext()){
-			OWLIndividual subtreePerform = (OWLIndividual)it.next();
-			Collection inputBindings = subtreePerform.getPropertyValues(hasDataFrom);
+		while (it.hasNext()) {
+			OWLIndividual subtreePerform = (OWLIndividual) it.next();
+			Collection inputBindings = subtreePerform
+					.getPropertyValues(hasDataFrom);
 			Iterator it2 = inputBindings.iterator();
-			while (it2.hasNext()){
-				OWLIndividual inputBinding = (OWLIndividual)it2.next();
-				OWLIndividual valueOf = (OWLIndividual)inputBinding.getPropertyValue(valueSource);
-				if (valueOf != null){
-					OWLIndividual fromPerform = (OWLIndividual)valueOf.getPropertyValue(fromProcess);
-					if (fromPerform == theParentPerform){
-						OWLIndividual fromParam = (OWLIndividual)valueOf.getPropertyValue(theVar);
-						unwrapFixIncomingDataflow(valueOf, fromParam, 
-												  compositeProcess, compositePerform);
+			while (it2.hasNext()) {
+				OWLIndividual inputBinding = (OWLIndividual) it2.next();
+				OWLIndividual valueOf = (OWLIndividual) inputBinding
+						.getPropertyValue(valueSource);
+				if (valueOf != null) {
+					OWLIndividual fromPerform = (OWLIndividual) valueOf
+							.getPropertyValue(fromProcess);
+					if (fromPerform == theParentPerform) {
+						OWLIndividual fromParam = (OWLIndividual) valueOf
+								.getPropertyValue(theVar);
+						unwrapFixIncomingDataflow(valueOf, fromParam,
+								compositeProcess, compositePerform);
 					}
 				}
 			}
@@ -531,202 +553,199 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 	}
 
 	/* Fix a specific dataflow coming out of the subtree */
-	private void unwrapFixOutgoingDataflow(OWLIndividual valueOf, 
-									 	   OWLIndividual compositeParam,
-										   OWLSTreeNode node,
-										   Collection produces){
+	private void unwrapFixOutgoingDataflow(OWLIndividual valueOf,
+			OWLIndividual compositeParam, OWLSTreeNode node, Collection produces) {
 		// We have to find the OutputBinding that generates this Output
 		Iterator it = produces.iterator();
-		while (it.hasNext()){
-			OWLIndividual produce = (OWLIndividual)it.next();
-			OWLIndividual outputBinding = (OWLIndividual)produce.getPropertyValue(producedBinding);
-			OWLIndividual produceToParam = (OWLIndividual)outputBinding.getPropertyValue(toParam);
-			if (produceToParam == compositeParam){
-				// This Produce binds to the composite Output that we're looking at
-				OWLIndividual produceValueOf = (OWLIndividual)outputBinding.getPropertyValue(valueSource);
-				OWLIndividual produceFromParam = (OWLIndividual)produceValueOf.getPropertyValue(theVar);
-				OWLIndividual produceFromPerform = (OWLIndividual)produceValueOf.getPropertyValue(fromProcess);
-				
+		while (it.hasNext()) {
+			OWLIndividual produce = (OWLIndividual) it.next();
+			OWLIndividual outputBinding = (OWLIndividual) produce
+					.getPropertyValue(producedBinding);
+			OWLIndividual produceToParam = (OWLIndividual) outputBinding
+					.getPropertyValue(toParam);
+			if (produceToParam == compositeParam) {
+				// This Produce binds to the composite Output that we're looking
+				// at
+				OWLIndividual produceValueOf = (OWLIndividual) outputBinding
+						.getPropertyValue(valueSource);
+				OWLIndividual produceFromParam = (OWLIndividual) produceValueOf
+						.getPropertyValue(theVar);
+				OWLIndividual produceFromPerform = (OWLIndividual) produceValueOf
+						.getPropertyValue(fromProcess);
+
 				// Change the source of the binding to the source of the Produce
 				valueOf.setPropertyValue(fromProcess, produceFromPerform);
 				valueOf.setPropertyValue(theVar, produceFromParam);
-				
-				// Delete the composite Output, the Produce, and the Produce's OutputBinding
+
+				// Delete the composite Output, the Produce, and the Produce's
+				// OutputBinding
 				// and ValueOf
 				OWLSTreeNode produceNode = getNodeForProduce(node, produce);
-				OWLSTreeNode parent = (OWLSTreeNode)produceNode.getParent();
+				OWLSTreeNode parent = (OWLSTreeNode) produceNode.getParent();
 				OWLIndividual parentConstruct = parent.getInstance();
 				int index = parent.getIndex(produceNode);
 				OWLSList parentList = new OWLSList(parentConstruct, okb);
 				parentList.removeAtIndex(index, true);
-				
+
 				outputBinding.delete();
 				produceValueOf.delete();
 				produceToParam.delete();
-				
+
 				return;
 			}
 		}
-		
-		// No Produce found, so we reset the ValueOf 
+
+		// No Produce found, so we reset the ValueOf
 		// TODO: Ideally, we should remove the input binding
 		valueOf.setPropertyValue(fromProcess, null);
 		valueOf.setPropertyValue(theVar, null);
 	}
 
-	private void unwrapUpdateOutgoingDataflow(OWLSTreeNode node, 
-											  OWLIndividual compositeProcess,
-											  OWLIndividual compositePerform,
-											  Set subtreePerforms,
-											  Set outsidePerforms){
+	private void unwrapUpdateOutgoingDataflow(OWLSTreeNode node,
+			OWLIndividual compositeProcess, OWLIndividual compositePerform,
+			Set subtreePerforms, Set outsidePerforms) {
 		Collection produces = getProducesInSubtree(node);
 		Iterator it = outsidePerforms.iterator();
-		while (it.hasNext()){
-			OWLIndividual outsidePerform = (OWLIndividual)it.next();
-			Collection inputBindings = outsidePerform.getPropertyValues(hasDataFrom);
+		while (it.hasNext()) {
+			OWLIndividual outsidePerform = (OWLIndividual) it.next();
+			Collection inputBindings = outsidePerform
+					.getPropertyValues(hasDataFrom);
 			Iterator it2 = inputBindings.iterator();
-			while (it2.hasNext()){
-				OWLIndividual inputBinding = (OWLIndividual)it2.next();
-				OWLIndividual valueOf = (OWLIndividual)inputBinding.getPropertyValue(valueSource);
-				if (valueOf != null){
-					OWLIndividual fromPerform = (OWLIndividual)valueOf.getPropertyValue(fromProcess);
-					if (fromPerform == compositePerform){
-						OWLIndividual fromParam = (OWLIndividual)valueOf.getPropertyValue(theVar);
-						unwrapFixOutgoingDataflow(valueOf, fromParam, node, produces);
+			while (it2.hasNext()) {
+				OWLIndividual inputBinding = (OWLIndividual) it2.next();
+				OWLIndividual valueOf = (OWLIndividual) inputBinding
+						.getPropertyValue(valueSource);
+				if (valueOf != null) {
+					OWLIndividual fromPerform = (OWLIndividual) valueOf
+							.getPropertyValue(fromProcess);
+					if (fromPerform == compositePerform) {
+						OWLIndividual fromParam = (OWLIndividual) valueOf
+								.getPropertyValue(theVar);
+						unwrapFixOutgoingDataflow(valueOf, fromParam, node,
+								produces);
 					}
 				}
 			}
 		}
 	}
 
-	private void wrapAsComposite(){
- 		removeListeners();
- 		
- 		OWLIndividual newPerform = (OWLIndividual)performCls.createInstance(null);
- 		OWLIndividual newComposite = (OWLIndividual)compositeProcessCls.createInstance(null);
- 		newPerform.setPropertyValue(processProperty, newComposite);
- 		OWLIndividual clickedConstruct = rightClickedNode.getInstance();
- 		newComposite.setPropertyValue(composedOfProperty, clickedConstruct);
-
- 		OWLSTreeNode parent = (OWLSTreeNode)rightClickedNode.getParent();
- 		if (parent instanceof RootNode){
- 			selectedProcess.setPropertyValue(composedOfProperty, newPerform);
- 		}
- 		else{
- 	 		OWLIndividual parentConstruct = parent.getInstance();
- 	 		OWLSList parentList = new OWLSList(parentConstruct, okb);
- 	 		int index = parent.getIndex(rightClickedNode);
- 	 		parentList.removeAtIndex(index, false);
- 	 		parentList.insertAtIndex(newPerform, index);
-
- 	 		Set subtreePerforms = getPerformsInSubtree(rightClickedNode);
- 	 		OWLSTreeNode rootNode = (OWLSTreeNode)rightClickedNode.getRoot();
- 	 		Set outsidePerforms = getPerformsInSubtree(rootNode);
- 	 		outsidePerforms.removeAll(subtreePerforms);
- 	 		wrapUpdateIncomingDataflow(rightClickedNode,
- 	 							   newComposite,
-								   newPerform,
-								   subtreePerforms,
-								   outsidePerforms);
- 	 		OWLSTreeMapper.getInstance(okb).removeTree(newComposite);
- 	 		wrapUpdateOutgoingDataflow(rightClickedNode,
-					   			   newComposite,
-								   newPerform,
-								   subtreePerforms,
-								   outsidePerforms);
- 	 		OWLSTreeMapper.getInstance(okb).removeTree(newComposite);
- 		}
- 		addListeners();
- 		recreateTree();
-	}
-
-	/* Note: this deletes the composite sub-process. */
-	private void unwrapComposite(){
+	private void wrapAsComposite() {
 		removeListeners();
-		
-		OWLIndividual clickedPerform = rightClickedNode.getInstance();
-		OWLIndividual clickedComposite = (OWLIndividual)clickedPerform.
-											getPropertyValue(processProperty);
-		OWLIndividual compositeConstruct = (OWLIndividual)clickedComposite.
-											getPropertyValue(composedOfProperty);
-		OWLSTree subTree = OWLSTreeMapper.getInstance(okb).getTree(clickedComposite, this);
 
-		OWLSTreeNode parent = (OWLSTreeNode)rightClickedNode.getParent();
- 		if (parent instanceof RootNode){
- 			selectedProcess.setPropertyValue(composedOfProperty, compositeConstruct);
- 		}
- 		else{
- 	 		OWLIndividual parentConstruct = parent.getInstance();
- 	 		OWLSList parentList = new OWLSList(parentConstruct, okb);
- 	 		int index = parent.getIndex(rightClickedNode);
- 	 		parentList.removeAtIndex(index, false);
- 	 		parentList.insertAtIndex(compositeConstruct, index);
+		OWLIndividual newPerform = (OWLIndividual) performCls
+				.createInstance(null);
+		OWLIndividual newComposite = (OWLIndividual) compositeProcessCls
+				.createInstance(null);
+		newPerform.setPropertyValue(processProperty, newComposite);
+		OWLIndividual clickedConstruct = rightClickedNode.getInstance();
+		newComposite.setPropertyValue(composedOfProperty, clickedConstruct);
 
- 	 		OWLSTreeNode rootNode = (OWLSTreeNode)rightClickedNode.getRoot();
- 	 		OWLSTreeNode subtreeRoot = (OWLSTreeNode)subTree.getRoot();
- 	 		Set subtreePerforms = getPerformsInSubtree(subtreeRoot);
- 	 		Set outsidePerforms = getPerformsInSubtree(rootNode);
- 	 		outsidePerforms.removeAll(subtreePerforms);
- 	 		unwrapUpdateIncomingDataflow(subtreeRoot,
- 	 							         clickedComposite,
-										 clickedPerform,
-										 subtreePerforms,
-										 outsidePerforms);
- 	 		OWLSTreeMapper.getInstance(okb).removeTree(clickedComposite);
- 	 		unwrapUpdateOutgoingDataflow(subtreeRoot,
-					   			       	 clickedComposite,
-										 clickedPerform,
-										 subtreePerforms,
-										 outsidePerforms);
- 	 		OWLSTreeMapper.getInstance(okb).removeTree(clickedComposite);
- 		}
-		
- 		clickedComposite.delete();
-		
+		OWLSTreeNode parent = (OWLSTreeNode) rightClickedNode.getParent();
+		if (parent instanceof RootNode) {
+			selectedProcess.setPropertyValue(composedOfProperty, newPerform);
+		} else {
+			OWLIndividual parentConstruct = parent.getInstance();
+			OWLSList parentList = new OWLSList(parentConstruct, okb);
+			int index = parent.getIndex(rightClickedNode);
+			parentList.removeAtIndex(index, false);
+			parentList.insertAtIndex(newPerform, index);
+
+			Set subtreePerforms = getPerformsInSubtree(rightClickedNode);
+			OWLSTreeNode rootNode = (OWLSTreeNode) rightClickedNode.getRoot();
+			Set outsidePerforms = getPerformsInSubtree(rootNode);
+			outsidePerforms.removeAll(subtreePerforms);
+			wrapUpdateIncomingDataflow(rightClickedNode, newComposite,
+					newPerform, subtreePerforms, outsidePerforms);
+			OWLSTreeMapper.getInstance(okb).removeTree(newComposite);
+			wrapUpdateOutgoingDataflow(rightClickedNode, newComposite,
+					newPerform, subtreePerforms, outsidePerforms);
+			OWLSTreeMapper.getInstance(okb).removeTree(newComposite);
+		}
 		addListeners();
 		recreateTree();
 	}
-	
-	
+
+	/* Note: this deletes the composite sub-process. */
+	private void unwrapComposite() {
+		removeListeners();
+
+		OWLIndividual clickedPerform = rightClickedNode.getInstance();
+		OWLIndividual clickedComposite = (OWLIndividual) clickedPerform
+				.getPropertyValue(processProperty);
+		OWLIndividual compositeConstruct = (OWLIndividual) clickedComposite
+				.getPropertyValue(composedOfProperty);
+		OWLSTree subTree = OWLSTreeMapper.getInstance(okb).getTree(
+				clickedComposite, this);
+
+		OWLSTreeNode parent = (OWLSTreeNode) rightClickedNode.getParent();
+		if (parent instanceof RootNode) {
+			selectedProcess.setPropertyValue(composedOfProperty,
+					compositeConstruct);
+		} else {
+			OWLIndividual parentConstruct = parent.getInstance();
+			OWLSList parentList = new OWLSList(parentConstruct, okb);
+			int index = parent.getIndex(rightClickedNode);
+			parentList.removeAtIndex(index, false);
+			parentList.insertAtIndex(compositeConstruct, index);
+
+			OWLSTreeNode rootNode = (OWLSTreeNode) rightClickedNode.getRoot();
+			OWLSTreeNode subtreeRoot = (OWLSTreeNode) subTree.getRoot();
+			Set subtreePerforms = getPerformsInSubtree(subtreeRoot);
+			Set outsidePerforms = getPerformsInSubtree(rootNode);
+			outsidePerforms.removeAll(subtreePerforms);
+			unwrapUpdateIncomingDataflow(subtreeRoot, clickedComposite,
+					clickedPerform, subtreePerforms, outsidePerforms);
+			OWLSTreeMapper.getInstance(okb).removeTree(clickedComposite);
+			unwrapUpdateOutgoingDataflow(subtreeRoot, clickedComposite,
+					clickedPerform, subtreePerforms, outsidePerforms);
+			OWLSTreeMapper.getInstance(okb).removeTree(clickedComposite);
+		}
+
+		clickedComposite.delete();
+
+		addListeners();
+		recreateTree();
+	}
+
 	/** Called when the selected composite process changes */
-	public void setInstance(OWLIndividual inst){
+	public void setInstance(OWLIndividual inst) {
 		selectedProcess = inst;
-		
+
 		OWLSTree newTree = OWLSTreeMapper.getInstance(okb).getTree(inst, this);
 		removeListeners();
 		comptree.setTree(newTree);
 		currentTree = newTree;
 		addListeners();
-		
+
 		itsGraphPanel.setSelectedProcess(inst);
 		// When the composite process selection is changed, the root is
 		// selected. Ideally, we should remember node selection for each
 		// composite process.
-		itsGraphPanel.viewSelectedCompositeProcess((OWLSTreeNode)currentTree.getModel().getRoot());
+		itsGraphPanel.viewSelectedCompositeProcess((OWLSTreeNode) currentTree
+				.getModel().getRoot());
 	}
-	
-	/** This is called whenever the tree selection changes. We need to
-	 * update the ccinstance pane, and gray out buttons in some cases. */ 
-	public void valueChanged(TreeSelectionEvent e){
+
+	/**
+	 * This is called whenever the tree selection changes. We need to update the
+	 * ccinstance pane, and gray out buttons in some cases.
+	 */
+	public void valueChanged(TreeSelectionEvent e) {
 		TreePath path = e.getNewLeadSelectionPath();
-		if (path == null){
+		if (path == null) {
 			// No selection
-			//System.out.println("No Selection");
+			// System.out.println("No Selection");
 			ccinstance.clearSelection();
-		}
-		else{
-			OWLSTreeNode o = (OWLSTreeNode)path.getLastPathComponent();
-			if (o instanceof RootNode){
+		} else {
+			OWLSTreeNode o = (OWLSTreeNode) path.getLastPathComponent();
+			if (o instanceof RootNode) {
 				ccinstance.clearSelection();
 				comptree.enableCreateButtons();
 				comptree.disableDeleteButton();
-			}
-			else{
+			} else {
 				ccinstance.setInstance(o.getInstance());
-				if (!o.acceptsChild()){
+				if (!o.acceptsChild()) {
 					comptree.disableCreateButtons();
-				}
-				else{
+				} else {
 					comptree.enableCreateButtons();
 				}
 				comptree.enableDeleteButton();
@@ -735,28 +754,30 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 			itsGraphPanel.viewSelectedCompositeProcess(o);
 		}
 	}
-	
-	/** This should be called after the tree has been changed, to make sure the
+
+	/**
+	 * This should be called after the tree has been changed, to make sure the
 	 * graph gets updated.
 	 */
-	public void updateGraph(){
+	public void updateGraph() {
 		// For some reason, we get one event with tree = null, and one correct
 		// event.
-		if (currentTree != null){
+		if (currentTree != null) {
 			OWLSTreeNode root = currentTree.getRoot();
 			// Similarly, we (sometimes?) get two events, one of which returns a
 			// DefaultMutableTreeNode as root(!), and the other (correctly) the
 			// RootNode.
 			if (root instanceof RootNode)
-				itsGraphPanel.viewSelectedCompositeProcess((OWLSTreeNode)root);
+				itsGraphPanel.viewSelectedCompositeProcess((OWLSTreeNode) root);
 		}
 		currentTree.repaint();
 	}
-	
-	/* This is needed when the processes of performs change, in order to make
+
+	/*
+	 * This is needed when the processes of performs change, in order to make
 	 * the width of the tree cells adjust.
 	 */
-	public void recreateTree(){
+	public void recreateTree() {
 		// First remove the old tree
 		OWLSTreeMapper.getInstance(okb).removeTree(selectedProcess);
 		// Then make sure a new one gets created
@@ -764,29 +785,30 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 		// Now update the graph normally
 		updateGraph();
 	}
-	
-	/* These listeners make sure the graph is redrawn when something that
-	 * it depends on changes.
+
+	/*
+	 * These listeners make sure the graph is redrawn when something that it
+	 * depends on changes.
 	 */
-	public void addListeners(){
-		// This needs to be disabled during  node deletion...
+	public void addListeners() {
+		// This needs to be disabled during node deletion...
 		okb.addPropertyValueListener(graphPropertyListener);
 		okb.addModelListener(renameAdapter);
-		
-		if (currentTree != null){
+
+		if (currentTree != null) {
 			currentTree.addTreeSelectionListener(this);
 			currentTree.addMouseListener(ml);
 		}
 	}
-	
-	public void removeListeners(){
+
+	public void removeListeners() {
 		okb.removePropertyValueListener(graphPropertyListener);
 		okb.removeModelListener(renameAdapter);
 
-		if (currentTree != null){
+		if (currentTree != null) {
 			currentTree.removeTreeSelectionListener(this);
 			currentTree.removeMouseListener(ml);
 		}
 	}
-	
+
 }

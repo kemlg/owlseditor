@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp.tree;
 
 import java.io.PrintWriter;
@@ -30,55 +30,60 @@ import edu.stanford.smi.protegex.owl.model.RDFResource;
 
 /**
  * @author Daniel Elenius
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ *         TODO To change the template for this generated type comment go to
+ *         Window - Preferences - Java - Code Style - Code Templates
  */
 public abstract class ConditionalNode extends OWLSTreeNode {
 	private OWLProperty conditionSlot;
-	
-	public ConditionalNode(OWLSTreeNodeInfo ni, boolean childrenAllowed, String slottype){
-		super (ni, childrenAllowed);
+
+	public ConditionalNode(OWLSTreeNodeInfo ni, boolean childrenAllowed,
+			String slottype) {
+		super(ni, childrenAllowed);
 		conditionSlot = getOWLModel().getOWLProperty(slottype);
 	}
 
 	// This creates a new Condition if there is none.
-	public OWLIndividual getCondition(){
+	public OWLIndividual getCondition() {
 		OWLModel okb = getOWLModel();
-		OWLNamedClass condCls = okb.getOWLNamedClass("expr:Condition"); 
+		OWLNamedClass condCls = okb.getOWLNamedClass("expr:Condition");
 
 		OWLIndividual thisInst = getInstance();
-		OWLIndividual cond = (OWLIndividual)thisInst.getPropertyValue(conditionSlot);
-		if (cond == null){
-			cond = (OWLIndividual)condCls.createInstance(null);
-			//System.out.println("ConditionalNode.getCondition() created new Condition: " +
-			//					cond.getName() + cond);
+		OWLIndividual cond = (OWLIndividual) thisInst
+				.getPropertyValue(conditionSlot);
+		if (cond == null) {
+			cond = (OWLIndividual) condCls.createInstance(null);
+			// System.out.println("ConditionalNode.getCondition() created new Condition: "
+			// +
+			// cond.getName() + cond);
 			thisInst.addPropertyValue(conditionSlot, cond);
 		}
 		return cond;
 	}
-	
-	/* If there is an rdfs:label on the Condition, we use that as the node
+
+	/*
+	 * If there is an rdfs:label on the Condition, we use that as the node
 	 * label, otherwise we use the local part of the instance name.
 	 */
-	public String getConditionLabel(){
+	public String getConditionLabel() {
 		OWLModel okb = getOWLModel();
 		RDFProperty label = okb.getRDFProperty("rdfs:label");
-		
-		RDFResource cond = (RDFResource)getCondition();
-		String labelString = (String)cond.getPropertyValue(label);
+
+		RDFResource cond = (RDFResource) getCondition();
+		String labelString = (String) cond.getPropertyValue(label);
 		if (labelString == null)
 			return cond.getLocalName();
 		return labelString;
 	}
 
 	/* Creates the condition node, and returns the UniqueName for it */
-	public UniqueName printCondNode(PrintWriter pw, HashSet nameSet){
-        Instance condition = getCondition();
-        UniqueName condNodeName = new UniqueName(condition.getName(), nameSet);
-        pw.println(condNodeName.getUniqueName() + 
-        		" [shape=diamond, fixedsize=\"true\", label=\"" + getConditionLabel() + "\"];");
-        return condNodeName;
+	public UniqueName printCondNode(PrintWriter pw, HashSet nameSet) {
+		Instance condition = getCondition();
+		UniqueName condNodeName = new UniqueName(condition.getName(), nameSet);
+		pw.println(condNodeName.getUniqueName()
+				+ " [shape=diamond, fixedsize=\"true\", label=\""
+				+ getConditionLabel() + "\"];");
+		return condNodeName;
 	}
 
 }

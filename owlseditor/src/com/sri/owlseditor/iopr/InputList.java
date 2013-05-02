@@ -20,10 +20,10 @@ import edu.stanford.smi.protege.model.Project;
 
 public class InputList extends IOPRInstancesList {
 
-    public static final String INPUT = "process:Input";
-    public static final String INPUT_PROPERTY = ":hasInput";
+	public static final String INPUT = "process:Input";
+	public static final String INPUT_PROPERTY = ":hasInput";
 
-    public InputList (Project project) {
-    	super (project, INPUT, INPUT_PROPERTY);
-    }
+	public InputList(Project project) {
+		super(project, INPUT, INPUT_PROPERTY);
+	}
 }

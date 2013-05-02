@@ -12,7 +12,7 @@ The Original Code is OWL-S Editor for Protege.
 The Initial Developer of the Original Code is SRI International. 
 Portions created by the Initial Developer are Copyright (C) 2004 the Initial Developer.  
 All Rights Reserved.
-******************************************************************************************/
+ ******************************************************************************************/
 package com.sri.owlseditor.cmp.tree;
 
 import java.io.PrintWriter;
@@ -24,62 +24,68 @@ import com.sri.owlseditor.cmp.graph.GraphProcessModel;
 import com.sri.owlseditor.cmp.graph.UniqueName;
 import com.sri.owlseditor.util.OWLSList;
 
-public class ChoiceNode extends BagOrTreeNode{
-	
-	public ChoiceNode(OWLSTreeNodeInfo ni){
+public class ChoiceNode extends BagOrTreeNode {
+
+	public ChoiceNode(OWLSTreeNodeInfo ni) {
 		super(ni, OWLSList.CC_BAG);
 	}
-	
-	public GraphNodeInfo graph(HashSet nameSet, PrintWriter pw, int clusterNumber,
-							   OWLSTreeNode selectedNode){
-		UniqueName controlConstructName = new UniqueName(getInstance().getName(), nameSet);
+
+	public GraphNodeInfo graph(HashSet nameSet, PrintWriter pw,
+			int clusterNumber, OWLSTreeNode selectedNode) {
+		UniqueName controlConstructName = new UniqueName(getInstance()
+				.getName(), nameSet);
 		int newClusterNumber = clusterNumber;
-		Integer clusterInt= new Integer(newClusterNumber++);
-        
+		Integer clusterInt = new Integer(newClusterNumber++);
+
 		pw.println("subgraph " + clusterInt.toString() + " {");
-        
-        // If this node is the selected one, 'highlight' it.
-        if (this.equals(selectedNode)){
- 			pw.println("node [fillcolor=" + GraphProcessModel.SELECTED_NODE_FILL_COLOR + 
- 					   ", color=" + GraphProcessModel.SELECTED_NODE_EDGE_COLOR +"];");
- 			pw.println("edge [color=" + GraphProcessModel.SELECTED_EDGE_COLOR + "];");
-        }
+
+		// If this node is the selected one, 'highlight' it.
+		if (this.equals(selectedNode)) {
+			pw.println("node [fillcolor="
+					+ GraphProcessModel.SELECTED_NODE_FILL_COLOR + ", color="
+					+ GraphProcessModel.SELECTED_NODE_EDGE_COLOR + "];");
+			pw.println("edge [color=" + GraphProcessModel.SELECTED_EDGE_COLOR
+					+ "];");
+		}
 
 		// Create the choice start node
 		UniqueName startNodeName = new UniqueName("choiceStartNode", nameSet);
-		pw.println(startNodeName.getUniqueName() + " [shape=point, label=\"\"];");
+		pw.println(startNodeName.getUniqueName()
+				+ " [shape=point, label=\"\"];");
 
 		Enumeration e = children();
-		if (!e.hasMoreElements()){
+		if (!e.hasMoreElements()) {
 			// nothing inside this construct
 			pw.println("}");
-	        return new GraphNodeInfo(startNodeName.getUniqueName(), startNodeName.getUniqueName(), 
-	        						 "", "", newClusterNumber);
+			return new GraphNodeInfo(startNodeName.getUniqueName(),
+					startNodeName.getUniqueName(), "", "", newClusterNumber);
 		}
-		
+
 		// Create the choice end node
 		UniqueName endNodeName = new UniqueName("choiceEndNode", nameSet);
 		pw.println(endNodeName.getUniqueName() + " [shape=point, label=\"\"];");
-		
+
 		String newNodeName;
 		GraphNodeInfo thisPair = null;
 		while (e.hasMoreElements()) {
-			OWLSTreeNode child = (OWLSTreeNode)e.nextElement();
-			thisPair = child.graph(nameSet, pw, newClusterNumber++, selectedNode);
+			OWLSTreeNode child = (OWLSTreeNode) e.nextElement();
+			thisPair = child.graph(nameSet, pw, newClusterNumber++,
+					selectedNode);
 			newClusterNumber = thisPair.clusterNumber;
-			// connect new node to the split and join nodes			
-			pw.println(startNodeName.getUniqueName() + "->" + thisPair.firstNode + 
-						thisPair.createInEdgeAttr("style=dashed"));
-			pw.println(thisPair.lastNode + "->" + endNodeName.getUniqueName() + 
-						thisPair.createOutEdgeAttr("style=dashed"));
+			// connect new node to the split and join nodes
+			pw.println(startNodeName.getUniqueName() + "->"
+					+ thisPair.firstNode
+					+ thisPair.createInEdgeAttr("style=dashed"));
+			pw.println(thisPair.lastNode + "->" + endNodeName.getUniqueName()
+					+ thisPair.createOutEdgeAttr("style=dashed"));
 		}
 
 		pw.println("}");
-        return new GraphNodeInfo(startNodeName.getUniqueName(), endNodeName.getUniqueName(), 
-        						 "", "", newClusterNumber);
+		return new GraphNodeInfo(startNodeName.getUniqueName(),
+				endNodeName.getUniqueName(), "", "", newClusterNumber);
 	}
 
-	public String toString(){
+	public String toString() {
 		return "Choice";
 	}
 
