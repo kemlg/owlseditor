@@ -9,21 +9,23 @@
 	More materials about OWL-Time:
 	http://www.isi.edu/~pan/OWL-Time.html
 
+	http://www.w3.org/TR/owl-time
+
 -->
  
 <!DOCTYPE owl [
-     <!ENTITY time-entry  "http://www.isi.edu/~pan/damltime/time-entry.owl#" >
-     <!ENTITY tzont  "http://www.isi.edu/~pan/damltime/timezone-ont.owl#" >
+     <!ENTITY time-entry  "http://www.w3.org/2006/time-entry#" >
+     <!ENTITY tzont  "http://www.w3.org/2006/timezone#" >
      <!ENTITY owl  "http://www.w3.org/2002/07/owl#" >
      <!ENTITY xsd  "http://www.w3.org/2001/XMLSchema#" >
      <!ENTITY rdf  "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
    ]>
 
 <rdf:RDF
-  xmlns     = "http://www.isi.edu/~pan/damltime/time-entry.owl#"
-  xmlns:time-entry = "http://www.isi.edu/~pan/damltime/time-entry.owl#"
-  xml:base  = "http://www.isi.edu/~pan/damltime/time-entry.owl"
-  xmlns:tzont = "http://www.isi.edu/~pan/damltime/timezone-ont.owl#"
+  xmlns     = "http://www.w3.org/2006/time-entry#"
+  xmlns:time-entry = "http://www.w3.org/2006/time-entry#"
+  xml:base  = "http://www.w3.org/2006/time-entry"
+  xmlns:tzont = "http://www.w3.org/2006/timezone#"
   xmlns:owl = "http://www.w3.org/2002/07/owl#"
   xmlns:rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:rdfs = "http://www.w3.org/2000/01/rdf-schema#"
@@ -33,6 +35,7 @@
     <rdfs:comment>
       An entry sub-ontology of time (OWL-Time).
     </rdfs:comment>
+    <rdfs:seeAlso rdf:resource="http://www.w3.org/TR/owl-time" />
   </owl:Ontology>
 
 <!-- Temporal Concepts -->

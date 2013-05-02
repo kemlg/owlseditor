@@ -59,11 +59,11 @@ public class MultipleInstanceSelector extends JPanel {
 
     public void setClasses(Collection classes){
     		this.classes = new ArrayList(classes);
-    		Iterator it = classes.iterator();
-    		while(it.hasNext())
-    		{
-    			System.out.println(it.next());
-    		}
+//    		Iterator it = classes.iterator();
+//    		while(it.hasNext())
+//    		{
+//    			System.out.println(it.next());
+//    		}
 		instancePanes = new ArrayList();
 		
 		createInstancePanes();
