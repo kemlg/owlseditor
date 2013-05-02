@@ -2,18 +2,19 @@
 
 <!DOCTYPE uridef[
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
-  <!ENTITY shadow-rdf "http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl">
-  <!ENTITY expr "http://www.daml.org/services/owl-s/1.1/generic/Expression.owl">
+  <!ENTITY shadow-rdf "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl">
+  <!ENTITY expr "http://www.daml.org/services/owl-s/1.2/generic/Expression.owl">
   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
   <!ENTITY owl "http://www.w3.org/2002/07/owl">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY time "http://www.isi.edu/~pan/damltime/time-entry.owl">
+  <!ENTITY time "http://www.isi.edu/~hobbs/damltime/time-entry.owl">
   <!ENTITY swrl "http://www.w3.org/2003/11/swrl">
-  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl">
-  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl">
-  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl">
-  <!ENTITY DEFAULT "http://www.daml.org/services/owl-s/1.1/Process.owl">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.2/Service.owl">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.2/Grounding.owl">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.2/Process.owl">
+  <!ENTITY DEFAULT "http://www.daml.org/services/owl-s/1.2/Process.owl">
 ]>
+
 
 <rdf:RDF
   xmlns:rdf=	"&rdf;#"
@@ -31,7 +32,7 @@
 
 <owl:Ontology rdf:about="">
   <owl:versionInfo>
-    $Id: Process.owl,v 1.134 2005/02/03 20:04:54 martin Exp $
+    $Id: Process.owl,v 1.148 2007/01/18 23:17:02 martin Exp $
   </owl:versionInfo>
   <rdfs:comment>
     Upper-level OWL ontology for Processes.
@@ -58,27 +59,52 @@
 
 <!--
     ######################################################
-            OWL-S Version 1.1 Ontology Structure
+            OWL-S Version 1.2 Ontology Structure
     ######################################################
 
-Proposed New Structure of Processes - substantially revised for 1.1 (MB)
+Proposed New Structure of Processes - substantially revised for 1.2 (DVM)
 
-Parameter is subclass of swrl:Variable with a type description and an
+ProcessVar is subclass of swrl:Variable with a type description and an
 optional value expression.
 
-Parameter
+ProcessVar
   parameterType (an XMLLiteral)
   parameterValue - when the parameter is a constant, its value can be
     stated here.
 
-Input, Output, Local are subclasses of Parameter.
+Subtypes of ProcessVar:
 
-Local Parameters may only be used with Atomic Processes.  Their
-function is to identify variables whose scope is the process as a
-whole, so that when they are bound in preconditions, they can be
-referenced in outputs and effects.  To describe data sharing between
-steps in composite processes, use the Data flow mechanisms described
-below (classes Binding, ValueOf).
+Parameter: union of
+   Input
+   Output
+Existential: For use in preconditions and effects
+Participant:
+   theClient and theServer (and possibly others; theAttorney?)
+ResultVar:
+   For use as implicitly universally quantified variables in
+   effects with 'when' conditions as filters.
+LocalVar: union of
+   Loc: Traditional variables
+   Link: Write-once variables
+
+The function of Existential ProcessVars is to identify variables whose
+scope is the process as a whole, so that when they are bound in
+preconditions, they can be referenced in outputs and effects.
+(Technically, their meaning is that "If there exist a set of values
+for these variables that satisfy the preconditions, then for that set
+of values the following effects are imposed."  So "existential" is,
+technically, a half-truth.)  Existentials can be used in composite
+processes, but their values, once set in preconditions, cannot be
+altered.
+
+Participant process variables are a fixed set, including theClient and
+theServer, that are bound by the execution engine to URIs that name
+the entities whose joint and separate ends are the reason why this
+process is being enacted.
+
+LocalVars are the transmission medium for the Data flow mechanism that
+allows communication between steps in composite processes.  The
+classes Binding and ValueOf are also implicated.  See below.
 
 Preconditions, Effects, and Result conditions are Logical Expressions
 represented in DRS or SWRL or perhaps KIF (see
@@ -119,14 +145,15 @@ referenced in these outputs and effects.
 
 
 Process 
-  hasInput (an Input) {subprop of hasParameter)
-  hasLocal (a Parameter)
-  hasOutput (a Parameter)
+  hasInput (an Input) {subprop of hasVar)
+  hasOutput (an Output)
+  hasParticipant (a Participant)
+  hasLocal (a LocalVar)
   hasPrecondition (a Condition)
   hasResult (a Result)
   
 Result 
-  hasResultVar (a Variable) - A variable scoped to the Result block,
+  hasResultVar (a ResultVar) - A variable scoped to the Result block,
     bound by the result condition.
   inCondition (a Condition)
   withOutput (an OutputBinding of an Output Parameter of the process
@@ -134,10 +161,9 @@ Result
   hasEffect (an Effect)
 
 Binding
-  toParam (a parameter reference)
+  toVar (a Variable reference)
 
-  plus one of the following two forms of value expression can be used
-(but not both):
+  plus one of the following forms of value expression can be used:
 
   valueForm - (an XMLLiteral) an OWL description pattern containing
   ValueOf's or (this) process' variables where property values would
@@ -166,10 +192,10 @@ Binding
   from other process outputs.
 
 OutputBinding is a Binding with
-  toParam (an Output)
+  toVar an Output
   
 InputBinding is a Binding with
-  toParam (an Input)
+  toVar an Input
   (in description patterns, parameter references are by Perform ID 
    and parameter ID)
 
@@ -177,7 +203,7 @@ ValueOf is a class used to describe the source of a value that is a
 parameter of another process within a composite process.
 
 ValueOf
-  theVar (a Parameter)
+  theParam (a Parameter)
   fromProcess (a Perform)
 
 -->
@@ -186,17 +212,24 @@ ValueOf
                   Parameters
     ######################################################-->
 
-<owl:Class rdf:ID="Parameter">
+<owl:Class rdf:ID="ProcessVar">
  <rdfs:subClassOf>
    <owl:Restriction>
      <owl:onProperty rdf:resource="#parameterType" />
-     <owl:minCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:minCardinality>
+     <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
    </owl:Restriction>
  </rdfs:subClassOf>
-
+ <owl:unionOf rdf:parseType="Collection">
+   <owl:Class rdf:about="#Parameter"/>
+   <owl:Class rdf:about="#Existential"/>
+   <owl:Class rdf:about="#Participant"/>
+   <owl:Class rdf:about="#ResultVar"/>
+   <owl:Class rdf:about="#Local"/>
+ </owl:unionOf>
 </owl:Class>
 
-<owl:Class rdf:about="#Parameter">
+<owl:Class rdf:about="#ProcessVar">
+
   <rdfs:comment> 
     This is the simplest way to relate parameters to 
     SWRL (and DRS) variables.
@@ -205,7 +238,7 @@ ValueOf
 </owl:Class>
 
 <owl:DatatypeProperty rdf:ID="parameterType">
-  <rdfs:domain rdf:resource="#Parameter"/>
+  <rdfs:domain rdf:resource="#ProcessVar"/>
   <rdfs:range rdf:resource="&xsd;#anyURI"/>
 </owl:DatatypeProperty>
 
@@ -215,52 +248,48 @@ ValueOf
     Output) is a description in terms of of some other process parameters,
     then supply it here. Note that it must be interpreted after reading it
     as an XMLLiteral.
-
-    In future, the interpretation of this literal may be extended to allow
-    more flexibility, such as functional expressions.
   </rdfs:comment>
-  <rdfs:domain rdf:resource="#Parameter"/>
+  <rdfs:domain rdf:resource="#ProcessVar"/>
   <rdfs:range rdf:resource="&rdf;#XMLLiteral"/>
 
 </owl:DatatypeProperty>
 
 
-<!-- ................... Input, Output, Local Parameters  .................. -->
+<!-- ................... Input and Output Parameters  .................. -->
+
+<owl:Class rdf:ID="Parameter">
+  <rdfs:comment>
+      Parameter is the disjoint union of Input and Output
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#ProcessVar"/>
+  <owl:unionOf rdf:parseType="Collection">
+    <owl:Class rdf:about="#Input"/>
+    <owl:Class rdf:about="#Output"/>
+  </owl:unionOf>
+</owl:Class>
 
 <owl:Class rdf:ID="Input">
   <rdfs:subClassOf rdf:resource="#Parameter"/>
+  <owl:disjointWith rdf:resource="#Output"/>
 </owl:Class>
-
-<!-- Outputs should be descriptions in terms of other process parameters -->  
 
 <owl:Class rdf:ID="Output">
   <rdfs:subClassOf rdf:resource="#Parameter"/>
 </owl:Class>
 
-<owl:Class rdf:ID="Local">
-  <rdfs:comment>
-     A Local parameter is a variable other than an input that is bound 
-    in a precondition of an Atomic Process for use in a result condition
-    or effect expression (or output expression) 
-  
-    THEY CANNOT BE USED IN COMPOSITE PROCESSES AT ALL. 
-    This avoids problems associated with state sharing among
-    asynchronously related sub processes. 
-  </rdfs:comment>
-  <rdfs:subClassOf rdf:resource="#Parameter"/>
+<owl:Class rdf:ID="Existential">
+   <rdfs:comment>
+      An Existential is a variable that can occur in a precondition and
+      a Result.  We presuppose that there is (just) one binding of
+      all the existentials that, combined with the bindings of input
+      parameters, makes the precondition true.  If there is such a binding,
+      then the Process is feasible.  The values of the existentials
+      so obtained can appear in the effects of Results, and, if the Process
+      is composite, can be referred to in its body.
+   </rdfs:comment>
+   <rdfs:subClassOf rdf:resource="#ProcessVar"/>
+   <owl:disjointWith rdf:resource="#Parameter"/>
 </owl:Class>
-
-<!--Inputs and Outputs and Locals are disjoint  -->
-
-<rdf:Description rdf:about="#Input">
-  <owl:disjointWith rdf:resource="#Output"/>
-  <owl:disjointWith rdf:resource="#Local"/>
-
-</rdf:Description>
-
-<rdf:Description rdf:about="#Output">
-  <owl:disjointWith rdf:resource="#Local"/>
-</rdf:Description>
 
 <!-- .......... Conditional Effects and Outputs bundled in Results ...........-->
 
@@ -280,23 +309,22 @@ in an output it must first be bound by a result condition.
     Process Buy
       -> BuyOutput
       Result (?transID - xsd:Number) 
-        When (confirmedTrans ?transID TheParentPerform)
+        When (confirmedTrans ?transID ThisPerform)
         Output BuyOutput = (ConfirmedSale :trans ?transID)
   -->
 
 <owl:Class rdf:ID="ResultVar">
-  <rdfs:subClassOf rdf:resource="#Parameter"/>
-  <owl:disjointWith rdf:resource="#Input"/>
-  <owl:disjointWith rdf:resource="#Output"/>
-  <owl:disjointWith rdf:resource="#Local"/>
+  <rdfs:subClassOf rdf:resource="#ProcessVar"/>
+  <owl:disjointWith rdf:resource="#Parameter"/>
+  <owl:disjointWith rdf:resource="#Existential"/>
 </owl:Class>
-
 
 <owl:ObjectProperty rdf:ID="hasResultVar">
   <rdfs:label>hasResultVar</rdfs:label>
+  <!-- This is _not_ a subproperty of hasVar, because the domain is
+       not a subclass of Process -->
   <rdfs:domain rdf:resource="#Result"/>
   <rdfs:range rdf:resource="#ResultVar"/>
-
 </owl:ObjectProperty>
 
 
@@ -349,26 +377,18 @@ particular output values of the process.
   <rdfs:range rdf:resource="#OutputBinding"/>
 </owl:ObjectProperty>
 
-<owl:Class rdf:ID="ConditionalEffect">
-  <rdfs:comment> Deprecated as of version 1.1 </rdfs:comment>
-</owl:Class>
-
-<owl:Class rdf:ID="ConditionalOutput">
-  <rdfs:comment> Deprecated as of version 1.1 </rdfs:comment>
-</owl:Class>
-
 <!-- ...................  Bindings (DataFlow specifications) ................ 
 
-Bindings are used in two ways in this process modeling ontology. They
-are used to specify how output parameters are specified in different
-result conditions for Atomic Processes, and they are used to specify
-how input parameters acquire values when invoked by Perform's in
-composite process descriptions. In each case, a binding takes a
-reference to a parameter being 'set' - the #toParam, and one of
+Bindings are used in several ways in this process modeling ontology. E.g.,
+they are used to specify how output parameters are computed in
+different result conditions for Atomic Processes; and they are used to
+specify how input parameters acquire values when invoked by Perform's
+in composite process descriptions. In each case, a binding takes a
+reference to a parameter being 'set' - the 'toVar', and one of
 several ways of describing a value.
 
 Binding
-  toParam   - the parameter being set
+  toVar   - the variable being set
   .. and then EXACTLY ONE of these value descriptors .. 
   valueData | valueForm | valueSource | valueType | valueFunction
   .. where ..  
@@ -379,7 +399,7 @@ Binding
     value of this parameter comes from the value of a parameter in another
     process reference (Perform) in the same composite process.
   valueType is a URI refering to a class, and asserts that the value of
-    toParam will belong to that class.  The specified class must be a subclass
+    toVar will belong to that class.  The specified class must be a subclass
     of the parameter's type that's been declared using parameterType.
   valueFunction is a similar XMLLiteral representing a local (client)
     function call with parameters that are variables (mostly for future
@@ -390,7 +410,7 @@ Binding
 <owl:Class rdf:ID="Binding">
   <rdfs:subClassOf>
     <owl:Restriction>
-      <owl:onProperty rdf:resource="#toParam"/>
+      <owl:onProperty rdf:resource="#toVar"/>
       <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
@@ -413,12 +433,11 @@ Binding
       <owl:maxCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:maxCardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
-
 </owl:Class>
 
-<owl:ObjectProperty rdf:ID="toParam">
+<owl:ObjectProperty rdf:ID="toVar">
   <rdfs:domain rdf:resource="#Binding"/>
-  <rdfs:range rdf:resource="#Parameter"/>
+  <rdfs:range rdf:resource="#ProcessVar"/>
 </owl:ObjectProperty>
 
 
@@ -430,25 +449,25 @@ Binding
 <owl:DatatypeProperty rdf:ID="valueForm">
   <rdfs:label>valueForm</rdfs:label>
   <rdfs:comment>
-    valueForm is to be used to specify an pseudo-OWL description that is
+    valueForm is to be used to specify a pseudo-OWL description that is
     legal OWL except that variables (including process parameters) and
     ValueOf forms can appear as the object of properties where those
     things violate the range of the property. The intent is that this be
     interpreted as a pattern indicating the actual value of the binding
     after the variables have been substituted for.
-    
-    A similar notation is used with valueFunction to indicate the
-    application of a locally (to the client) available function to convert
-    data (specified by variables or ValueOf) to a correct form.
   </rdfs:comment>
   <rdfs:subPropertyOf rdf:resource="#valueSpecifier"/>
   <rdfs:domain rdf:resource="#Binding"/>
   <rdfs:range rdf:resource="&rdf;#XMLLiteral"/> 
-
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:ID="valueFunction">
   <rdfs:label>valueFunction</rdfs:label>
+  <rdfs:comment>
+    As with valueForm, a pseudo-OWL description is used to indicate the
+    application of a locally (to the client) available function to convert
+    data (specified by variables or ValueOf) to a correct form.
+  </rdfs:comment>
   <rdfs:subPropertyOf rdf:resource="#valueSpecifier"/>
   <rdfs:domain rdf:resource="#Binding"/>
   <rdfs:range rdf:resource="&rdf;#XMLLiteral"/> 
@@ -476,13 +495,14 @@ Binding
 <owl:DatatypeProperty rdf:ID="valueData">
   <rdfs:label>valueData</rdfs:label>
   <rdfs:comment>
-    valueData is for specifying constant (XML) data to be bound to a parameter. 
+    valueData is for specifying constant (XML) data to be bound to a
+    parameter.
   
     Ideally, the valueData property would also be a subproperty of
     valueSpecifier so that it would be one of the three possible
-    properties used to specify a value for a Binding. But as we cannot do
-    that, we treat it separately, but note that if it is used, the others
-    should not be.
+    properties used to specify a value for a Binding. But as we cannot
+    do that, we treat it separately, but note that if it is used, the
+    others should not be.
 
     For now, its range is any XML datatype. 
   </rdfs:comment>
@@ -493,12 +513,12 @@ Binding
   <rdfs:label>ValueOf</rdfs:label>
   <rdfs:comment>
     Within a value form, or when using valueSource, references to
-    parameters of other processes require a tuple of (perform-ref,
+    I/O parameters of processes require a tuple of (perform-ref,
     param-ref, which we represent with ValueOf
   </rdfs:comment>
   <rdfs:subClassOf>
     <owl:Restriction>
-      <owl:onProperty rdf:resource="#theVar"/>
+      <owl:onProperty rdf:resource="#theParam"/>
       <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
@@ -509,16 +529,18 @@ Binding
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#fromProcess"/>
-      <owl:maxCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:maxCardinality>
+      <owl:maxCardinality rdf:datatype="&xsd;#nonNegativeInteger">
+          1</owl:maxCardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
-
 </owl:Class>
 
-<owl:ObjectProperty rdf:ID="theVar">
+<owl:ObjectProperty rdf:ID="theParam">
   <rdfs:domain rdf:resource="#ValueOf"/>
-  <rdfs:range rdf:resource="#Parameter"/> <!-- more generally a variable? -->
+  <rdfs:range rdf:resource="#Parameter"/> 
 </owl:ObjectProperty>
+<!-- This is _not_ a historical artifact; we really do mean to restrict
+     these to parameters, not apply them to variables generally. -->
 
 <owl:ObjectProperty rdf:ID="fromProcess">
   <rdfs:domain rdf:resource="#ValueOf"/>
@@ -529,7 +551,7 @@ Binding
   <owl:intersectionOf rdf:parseType="Collection">
      <owl:Class rdf:about="#Binding"/>
      <owl:Restriction>
-       <owl:onProperty rdf:resource="#toParam"/>
+       <owl:onProperty rdf:resource="#toVar"/>
        <owl:allValuesFrom rdf:resource="#Output"/>
      </owl:Restriction>
   </owl:intersectionOf> 
@@ -538,14 +560,13 @@ Binding
     helpful to some tools
   </rdfs:comment>
   <rdfs:subClassOf rdf:resource="#Binding"/>
-
 </owl:Class>
 
 <owl:Class rdf:ID="InputBinding">
   <owl:intersectionOf rdf:parseType="Collection">
      <owl:Class rdf:about="#Binding"/>
      <owl:Restriction>
-       <owl:onProperty rdf:resource="#toParam"/>
+       <owl:onProperty rdf:resource="#toVar"/>
        <owl:allValuesFrom rdf:resource="#Input"/>
      </owl:Restriction>
   </owl:intersectionOf> 
@@ -597,14 +618,22 @@ and results.  Input and output are parameters.
 </owl:Class>
 
 <!-- 
-A process can have parameters (inputs and outputs, locals), preconditions, 
-  and (revised in 1.1) Results that include both effects and outputs 
-  with a corresponding condition under which they occur. 
+A process can have parameters (inputs and outputs), other variables
+  (existentials, participants), preconditions, and Results that
+  include both effects and outputs with a corresponding condition
+  under which they occur.  Composite processes have other properties
+  described later.
 -->
+
+<owl:ObjectProperty rdf:ID="hasVar">
+  <rdfs:domain rdf:resource="#Process"/>
+  <rdfs:range rdf:resource="#ProcessVar"/>
+</owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:ID="hasParameter">
   <rdfs:domain rdf:resource="#Process"/>
   <rdfs:range rdf:resource="#Parameter"/>
+  <rdfs:subPropertyOf rdf:resource="#hasVar"/>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:ID="hasInput">
@@ -619,11 +648,10 @@ A process can have parameters (inputs and outputs, locals), preconditions,
   <rdfs:range rdf:resource="#Output"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:ID="hasLocal">
-  <rdfs:subPropertyOf rdf:resource="#hasParameter"/>
+<owl:ObjectProperty rdf:ID="hasExistential">
+  <rdfs:subPropertyOf rdf:resource="#hasVar"/>
   <rdfs:domain rdf:resource="#Process"/>
-  <rdfs:range rdf:resource="#Local"/>
-
+  <rdfs:range rdf:resource="#Existential"/>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:ID="hasResult">
@@ -636,11 +664,16 @@ A process can have parameters (inputs and outputs, locals), preconditions,
 -->
 
 <owl:Class rdf:ID="Participant">
+  <rdfs:subClassOf rdf:resource="#ProcessVar"/>
+  <owl:disjointWith rdf:resource="#Parameter"/>
+  <owl:disjointWith rdf:resource="#Existential"/>
+  <owl:disjointWith rdf:resource="#ResultVar"/>
 </owl:Class>
 
 <owl:ObjectProperty rdf:ID="hasParticipant">  
   <rdfs:domain rdf:resource="#Process"/>
   <rdfs:range rdf:resource="#Participant"/>
+  <rdfs:subPropertyOf rdf:resource="#hasVar"/>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:ID="hasClient">
@@ -784,16 +817,6 @@ corresponds to "collapsing" a composite process into a simple process
   <owl:inverseOf rdf:resource="#expandsTo"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:ID="expand">
-  <rdfs:comment>This is a deprecated usage; expandsTo is preferred.</rdfs:comment>
-  <owl:equivalentProperty rdf:resource="#expandsTo"/>
-</owl:ObjectProperty>
-
-<owl:ObjectProperty rdf:ID="collapse">
-  <rdfs:comment>This is a deprecated usage; collapsesTo is preferred.</rdfs:comment>
-  <owl:equivalentProperty rdf:resource="#collapsesTo"/>
-</owl:ObjectProperty>
-
 <!--######################################################
     Composite Processes and Control Constructs
     ######################################################-->
@@ -815,6 +838,8 @@ Perform's are composed using other ControlConstructs. The minimal initial set
 includes Sequence, Split,
 Split + Join, Any-Order, Condition, If-Then-Else,Iterate, Repeat-While
 and Repeat-Until.
+
+Plus AsProcess, which is both a ControlConstruct and a Process.
 
 -->
 
@@ -850,31 +875,25 @@ and Repeat-Until.
     outputs) of other performs in the SAME COMPOSITE PROCESS.
   </rdfs:comment>
   <rdfs:domain rdf:resource="#Perform"/>
-  <rdfs:range rdf:resource="#Binding"/>
+  <rdfs:range rdf:resource="#InputBinding"/>
 </owl:ObjectProperty>
 
+<!-- I have taken the initiative and committed parricide on this guy:
 <Perform rdf:ID="TheParentPerform">
   <rdfs:comment>
     A special-purpose object, used to refer, at runtime, to the execution
     instance of the enclosing composite process definition.
   </rdfs:comment>
 </Perform>
+The parent is dead, long live ThisPerform! DVM
+-->
 
 <Perform rdf:ID="ThisPerform">
   <rdfs:comment>
     A special-purpose object, used to refer, at runtime, to the execution
-    instance of the enclosing atomic process definition.
+    instance of the process whose definition it occurs in.
   </rdfs:comment>
 </Perform>
-
-<owl:Class rdf:ID="Produce">
-  <rdfs:subClassOf rdf:resource="#ControlConstruct"/>
-</owl:Class>
-
-<owl:ObjectProperty rdf:ID="producedBinding">
-   <rdfs:domain rdf:resource="#Produce"/>
-   <rdfs:range rdf:resource="#OutputBinding"/>
-</owl:ObjectProperty>
 
 <!-- ................. Composite Processes ........................... -->
 
@@ -886,14 +905,80 @@ and Repeat-Until.
   <rdfs:comment>
     A CompositeProcess must have exactly 1 composedOf property.
   </rdfs:comment>
-  <owl:intersectionOf rdf:parseType="Collection">
-    <owl:Class rdf:about="#Process"/>
+  <rdfs:subClassOf> 
     <owl:Restriction>
       <owl:onProperty rdf:resource="#composedOf"/>
       <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
     </owl:Restriction>
-  </owl:intersectionOf>
+  </rdfs:subClassOf> 
+</owl:Class>
 
+<owl:Class rdf:ID="Local">
+  <rdfs:comment>
+     A Local is a distinct type of variable used for intermediate results
+     in a CompositeProcess.
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#ProcessVar"/>
+  <owl:disjointWith rdf:resource="#Participant"/>
+  <owl:disjointWith rdf:resource="#Existential"/>
+  <owl:disjointWith rdf:resource="#ResultVar"/>
+  <owl:disjointWith rdf:resource="#Participant"/> 
+  <owl:unionOf rdf:parseType="Collection">
+    <owl:Class rdf:about="#Loc"/>
+    <owl:Class rdf:about="#Link"/>
+  </owl:unionOf>
+</owl:Class>
+
+<owl:ObjectProperty rdf:ID="hasLocal">
+  <rdfs:subPropertyOf rdf:resource="#hasVar"/>
+  <rdfs:domain rdf:resource="#CompositeProcess"/>
+  <rdfs:range rdf:resource="#Local"/>
+</owl:ObjectProperty>
+
+<owl:Class rdf:ID="Loc">
+   <rdfs:comment>
+      A Loc is a variable that may be written and overwritten as
+      often as one pleases.
+   </rdfs:comment>
+   <rdfs:subClassOf rdf:resource="#Local"/>
+</owl:Class>
+
+<owl:DatatypeProperty rdf:ID="initialValue">
+   <rdfs:domain rdf:resource="#Loc"/>
+   <rdfs:comment>
+      The value should be an object belonging to the parameterType of the Loc.
+      There is zero probability of being able to say this in Owl.
+   </rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:ID="Link">
+   <rdfs:comment>
+      A Link is a communication channel that may be written exactly once.
+   </rdfs:comment>
+   <rdfs:subClassOf rdf:resource="#Local"/>
+   <owl:disjointWith rdf:resource="#Loc"/>
+</owl:Class>
+
+<owl:Class rdf:ID="LocBinding">
+  <owl:intersectionOf rdf:parseType="Collection">
+     <owl:Class rdf:about="#Binding"/>
+     <owl:Restriction>
+       <owl:onProperty rdf:resource="#toVar"/>
+       <owl:allValuesFrom rdf:resource="#Loc"/>
+     </owl:Restriction>
+  </owl:intersectionOf> 
+  <rdfs:subClassOf rdf:resource="#Binding"/>
+</owl:Class>
+
+<owl:Class rdf:ID="LinkBinding">
+  <owl:intersectionOf rdf:parseType="Collection">
+     <owl:Class rdf:about="#Binding"/>
+     <owl:Restriction>
+       <owl:onProperty rdf:resource="#toVar"/>
+       <owl:allValuesFrom rdf:resource="#Link"/>
+     </owl:Restriction>
+  </owl:intersectionOf> 
+  <rdfs:subClassOf rdf:resource="#Binding"/>
 </owl:Class>
 
 <owl:ObjectProperty rdf:ID="composedOf">
@@ -933,7 +1018,7 @@ and Repeat-Until.
     OWL.
   </rdfs:comment>
   <rdfs:domain rdf:resource="#CompositeProcess"/>
-  <rdfs:range  rdf:resource="&owl;#Thing"/>
+  <rdfs:range  rdf:resource="&expr;#Expression"/>
 
 </owl:ObjectProperty>
 
@@ -944,7 +1029,7 @@ and Repeat-Until.
     which they are required.  See comment for computedInput.
   </rdfs:comment>
   <rdfs:domain rdf:resource="#CompositeProcess"/>
-  <rdfs:range  rdf:resource="&owl;#Thing"/>
+  <rdfs:range  rdf:resource="&expr;#Expression"/>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:ID="computedPrecondition">  
@@ -954,7 +1039,7 @@ and Repeat-Until.
     of its sub processes.
   </rdfs:comment>
   <rdfs:domain rdf:resource="#CompositeProcess"/>
-  <rdfs:range  rdf:resource="&owl;#Thing"/>
+  <rdfs:range  rdf:resource="&expr;#Expression"/>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:ID="computedEffect">  
@@ -964,7 +1049,7 @@ and Repeat-Until.
     of its sub processes. This is not well defined for conditional effects at present. 
   </rdfs:comment>
   <rdfs:domain rdf:resource="#CompositeProcess"/>
-  <rdfs:range  rdf:resource="&owl;#Thing"/>
+  <rdfs:range  rdf:resource="&expr;#Expression"/>
 
 </owl:ObjectProperty>
 
@@ -1034,17 +1119,6 @@ and Repeat-Until.
     </owl:Class>
   </rdfs:domain>
 </owl:ObjectProperty>
-
-<owl:Class rdf:ID="ProcessComponent">
-  <owl:equivalentClass rdf:resource="#ControlConstruct"/>
-  <rdfs:comment> 
-    Deprecated as of v. 1.1.
-    Note: the old concept ProcessComponent is no longer needed. ControlConstruct
-    which includes Perform as a subclass should be used anywhere that 
-    ProcessComponent might have been used (which in the OWL-S 1.0 ontology 
-    was only in describing the relationship to temporal aspects)
-  </rdfs:comment> 
-</owl:Class>
 
 <!-- Collections of Control Constructs -->
 
@@ -1210,13 +1284,6 @@ Any-Order.
 
 </owl:Class>
 
-<owl:Class rdf:ID="Unordered">
-  <rdfs:comment>
-     Deprecated.  As of version 1.1, renamed to Any-Order.
-  </rdfs:comment>
-  <owl:equivalentClass rdf:resource="#Any-Order"/>
-</owl:Class>
-
 <!-- 
 
 Choice.
@@ -1242,7 +1309,6 @@ Choice.
       <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
-
 </owl:Class>
 
 <!-- 
@@ -1275,7 +1341,6 @@ If-Then-Else.
       <owl:maxCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:maxCardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
-
 </owl:Class>
 
 <owl:ObjectProperty rdf:ID="ifCondition">
@@ -1293,6 +1358,93 @@ If-Then-Else.
   <rdfs:domain rdf:resource="#If-Then-Else"/>
   <rdfs:range rdf:resource="#ControlConstruct"/> 
 </owl:ObjectProperty>
+
+<!-- 
+
+AsProcess
+
+-->
+
+<owl:Class rdf:ID="AsProcess">
+   <rdfs:comment>
+      AsProcess turns an arbitrary control construct into a "local
+      process" that is called at the point it is defined.
+      One could accomplish (almost) the same thing by replacing any
+      instance of AsProcess by a Perform of a process with the same
+      properties defined for this one use.  But AsProcess spares one
+      the trouble, thus allowing one to associate outputs, effects,
+      and even preconditions with an arbitrary subtree of a
+      composite-process definition.
+
+      (The "almost" above has to do with the fact that the variables
+      of the enclosing process definition may be referred to within an
+      AsProcess; that ThisPerform, used within an AsProcess, refers to
+      the _enclosing_ process; and that an AsProcess may not have
+      explicitly declared participants, because it is meaningless for
+      them to differ from those of ThisPerform.)
+   </rdfs:comment>
+   <rdfs:subClassOf rdf:resource="#ControlConstruct"/>
+   <rdfs:subClassOf rdf:resource="#Process"/>
+   <owl:disjointWith rdf:resource="#SimpleProcess"/>
+   <rdfs:comment>
+      AsProcess's may be Atomic or Composite, but not Simple;
+      they are used purely as syntactic devices.
+   </rdfs:comment>
+   <rdfs:comment>
+       Considered as a ControlConstruct, AsProcess has no
+       components.  However, if it is a CompositeProcess it
+       may have a body.
+   </rdfs:comment>
+   <rdfs:subClassOf>
+      <owl:Restriction>
+         <owl:onProperty rdf:resource="#components"/>
+         <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">
+            0</owl:cardinality>
+       </owl:Restriction>
+   </rdfs:subClassOf>
+</owl:Class>
+
+
+<!-- 
+
+Assignment-like ControlConstructs
+
+-->
+
+
+<owl:Class rdf:ID="Set">
+   <rdfs:comment>
+      Assignment to a Loc.  Free-form.
+   </rdfs:comment>
+   <rdfs:subClassOf rdf:resource="#ControlConstruct"/>
+</owl:Class>
+
+<owl:ObjectProperty rdf:ID="setBinding">
+   <rdfs:domain rdf:resource="#Set"/>
+   <rdfs:range rdf:resource="#LocBinding"/>
+</owl:ObjectProperty>
+   
+<owl:Class rdf:ID="Produce">
+  <rdfs:subClassOf rdf:resource="#ControlConstruct"/>
+  <rdfs:comment>
+     Write to an output or a  link.  This can happen only once for a
+     given output or link.
+  </rdfs:comment>
+</owl:Class>
+
+<owl:ObjectProperty rdf:ID="producedBinding">
+   <rdfs:domain rdf:resource="#Produce"/>
+   <rdfs:range>
+      <owl:Class>
+         <owl:unionOf rdf:parseType="Collection">
+            <owl:Class rdf:about="#OutputBinding"/>
+            <owl:Class rdf:about="#LinkBinding"/>
+         </owl:unionOf>
+      </owl:Class>
+   </rdfs:range>
+</owl:ObjectProperty>
+
+
 
 <!-- 
 
@@ -1419,5 +1571,4 @@ Repeat-Until.
 </owl:Class>
 
 </rdf:RDF>
-
 

@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import edu.stanford.smi.protege.util.ModalDialog;
-import edu.stanford.smi.protegex.owl.compactparser.OWLCompactParser;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
+import edu.stanford.smi.protegex.owl.model.classparser.compact.*;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLAtomList;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLImp;
 import edu.stanford.smi.protegex.owl.swrl.parser.SWRLParseException;
@@ -68,7 +68,7 @@ public class OWLS_SWRLTextAreaPanel extends JPanel implements ModalDialog.CloseC
         symbolPanel = new OWLS_SWRLSymbolPanel(okb, false, false);
         textArea = new SWRLTextArea(okb, symbolPanel) {
             protected void checkExpression(String text) throws Throwable {
-                OWLCompactParser.checkClass(OWLS_SWRLTextAreaPanel.this.okb, text);
+                (new CompactOWLClassParser()).checkClass(OWLS_SWRLTextAreaPanel.this.okb, text);
             }
         };
         

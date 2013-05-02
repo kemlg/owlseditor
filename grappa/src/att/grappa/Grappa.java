@@ -95,10 +95,10 @@ public abstract class Grappa
 	keyToShape.put("Mrecord", new Integer(MRECORD_SHAPE));
 	keyToShape.put("Msquare", new Integer(MSQUARE_SHAPE));
 
-	java.util.Enumeration enum = keyToShape.keys();
+	java.util.Enumeration enum1 = keyToShape.keys();
 	String key = null;
-	while(enum.hasMoreElements()) {
-	    key = (String)enum.nextElement();
+	while(enum1.hasMoreElements()) {
+	    key = (String)enum1.nextElement();
 	    shapeToKey.put(keyToShape.get(key),key);
 	}
 

@@ -217,7 +217,17 @@ public class CompositionEditor extends JPanel implements TreeSelectionListener,
 	}
 	
 	private void setupClassesAndProperties(){
+//		Iterator it = okb.getClses().iterator();
+//		while(it.hasNext())
+//		{
+//			System.out.println("Class: " + it.next());
+//		}
+		Iterator it = okb.getRDFSClasses().iterator();
+		while(it.hasNext()) {
+			System.out.println("Class: " + it.next());
+		}
 		performCls = okb.getOWLNamedClass("process:Perform");
+		System.out.println(performCls);
 		processCls = okb.getOWLNamedClass("process:Process");
 		conditionCls = okb.getOWLNamedClass("expr:Condition");
 		compositeProcessCls = okb.getOWLNamedClass("process:CompositeProcess");

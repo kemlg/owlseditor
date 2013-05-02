@@ -421,10 +421,10 @@ public class Instrumenter
    public void setUseDefaultKeyboardShortcuts(boolean b)
    {
       InputMap map = m_tree.getInputMap();
-      Enumeration enum = m_hashDefaultInputMap.keys();
-      while (enum.hasMoreElements())
+      Enumeration enum1 = m_hashDefaultInputMap.keys();
+      while (enum1.hasMoreElements())
       {
-         Object key = enum.nextElement();
+         Object key = enum1.nextElement();
          if (b)
             map.put((KeyStroke)key, m_hashDefaultInputMap.get(key));
          else
@@ -450,10 +450,10 @@ public class Instrumenter
    public void setUseDefaultActionMap(boolean b)
    {
       ActionMap map = m_tree.getActionMap();
-      Enumeration enum = m_hashDefaultActionMap.keys();
-      while (enum.hasMoreElements())
+      Enumeration enum1 = m_hashDefaultActionMap.keys();
+      while (enum1.hasMoreElements())
       {
-         Object key = enum.nextElement();
+         Object key = enum1.nextElement();
          if (b)
             map.put(key, (Action)m_hashDefaultActionMap.get(key));
          else
@@ -1188,14 +1188,14 @@ public class Instrumenter
                getLastPathComponent();
 
          retarr = new TreePath[root.getChildCount()];
-         Enumeration enum = root.children();
+         Enumeration enum1 = root.children();
          int i = 0;
-         while (enum.hasMoreElements())
+         while (enum1.hasMoreElements())
          {
             TreePath path = new TreePath( new TreeNode[]
                {
                   root,
-                  (TreeNode) enum.nextElement()
+                  (TreeNode) enum1.nextElement()
                }
             );
             retarr[i++] = path;

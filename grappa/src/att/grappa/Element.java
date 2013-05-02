@@ -566,28 +566,28 @@ public abstract class Element
 	Hashtable pairs = null;
 	Attribute attr = null;
 
-	Enumeration enum = getLocalAttributePairs();
-	if(enum.hasMoreElements()) pairs = new Hashtable(32);
-	while(enum.hasMoreElements()) {
-	    attr = (Attribute)enum.nextElement();
+	Enumeration enum1 = getLocalAttributePairs();
+	if(enum1.hasMoreElements()) pairs = new Hashtable(32);
+	while(enum1.hasMoreElements()) {
+	    attr = (Attribute)enum1.nextElement();
 	    pairs.put(attr.getName(),attr);
 	}
 
 	switch(getType()) {
 	case Grappa.NODE:
-	    enum = getSubgraph().getNodeAttributePairs();
+	    enum1 = getSubgraph().getNodeAttributePairs();
 	    break;
 	case Grappa.EDGE:
-	    enum = getSubgraph().getEdgeAttributePairs();
+	    enum1 = getSubgraph().getEdgeAttributePairs();
 	    break;
 	case Grappa.SUBGRAPH:
-	    enum = getLocalAttributePairs();
+	    enum1 = getLocalAttributePairs();
 	    break;
 	}
 
 	if(pairs != null) {
-	    while(enum.hasMoreElements()) {
-		attr = (Attribute)enum.nextElement();
+	    while(enum1.hasMoreElements()) {
+		attr = (Attribute)enum1.nextElement();
 		if(!pairs.containsKey(attr.getName())) {
 		    pairs.put(attr.getName(),attr);
 		}
@@ -595,7 +595,7 @@ public abstract class Element
 	    return pairs.elements();
 	}
 
-	return enum;
+	return enum1;
     }
 
     /**
@@ -1043,11 +1043,11 @@ public abstract class Element
     public final boolean delete() {
 	if(!setDelete(true)) return(false);
 	String name = getName();
-	Enumeration enum = null;
+	Enumeration enum1 = null;
 	if(attributes != null && grappaNexus != null) {
-	    enum = attributes.elements();
-	    while(enum.hasMoreElements()) {
-		((Attribute)enum.nextElement()).deleteObserver(grappaNexus);
+	    enum1 = attributes.elements();
+	    while(enum1.hasMoreElements()) {
+		((Attribute)enum1.nextElement()).deleteObserver(grappaNexus);
 	    }
 	}
 	Element elem = null;
@@ -1061,9 +1061,9 @@ public abstract class Element
 	}
 	switch(getType()) {
 	case Grappa.NODE:
-	    enum = ((Node)this).edgeElements();
-	    while(enum.hasMoreElements()) {
-		elem = (Element)(enum.nextElement());
+	    enum1 = ((Node)this).edgeElements();
+	    while(enum1.hasMoreElements()) {
+		elem = (Element)(enum1.nextElement());
 		prnt = elem.getSubgraph();
 		while(prnt != null) {
 		    if(prnt.grappaNexus != null) prnt.grappaNexus.bbox = null;
@@ -1079,22 +1079,22 @@ public abstract class Element
 	    getSubgraph().removeEdge(name);
 	    break;
 	case Grappa.SUBGRAPH:
-	    enum = ((Subgraph)this).nodeElements();
+	    enum1 = ((Subgraph)this).nodeElements();
 	    elem = null;
-	    while(enum.hasMoreElements()) {
-		elem = (Element)enum.nextElement();
+	    while(enum1.hasMoreElements()) {
+		elem = (Element)enum1.nextElement();
 		elem.delete();
 	    }
-	    enum = ((Subgraph)this).edgeElements();
+	    enum1 = ((Subgraph)this).edgeElements();
 	    elem = null;
-	    while(enum.hasMoreElements()) {
-		elem = (Element)enum.nextElement();
+	    while(enum1.hasMoreElements()) {
+		elem = (Element)enum1.nextElement();
 		elem.delete();
 	    }
-	    enum = ((Subgraph)this).subgraphElements();
+	    enum1 = ((Subgraph)this).subgraphElements();
 	    elem = null;
-	    while(enum.hasMoreElements()) {
-		elem = (Element)enum.nextElement();
+	    while(enum1.hasMoreElements()) {
+		elem = (Element)enum1.nextElement();
 		elem.delete();
 	    }
 	    if(getSubgraph() != null) getSubgraph().removeSubgraph(name);
@@ -1389,9 +1389,9 @@ public abstract class Element
 	if(grappaNexus == null) {
 	    grappaNexus = new GrappaNexus(this);
 	    Attribute attr = null;
-	    Enumeration enum = listAttrsOfInterest();
-	    while(enum.hasMoreElements()) {
-		attr = getAttribute((String)enum.nextElement());
+	    Enumeration enum1 = listAttrsOfInterest();
+	    while(enum1.hasMoreElements()) {
+		attr = getAttribute((String)enum1.nextElement());
 		if(attr != null) {
 		    attr.addObserver(grappaNexus);
 		}
@@ -1444,7 +1444,7 @@ public abstract class Element
 	Edge edge;
 	Node node;
 	int sz, szz;
-	Enumeration enum;
+	Enumeration enum1;
 	Vector input;
 
 	if((sz = inbox.size()) == 0)
@@ -1468,9 +1468,9 @@ public abstract class Element
 		//stack.addElement(elem);
 
 		if(depth < 0 || level <= depth) {
-		    enum = ((Subgraph)elem).subgraphElements();
-		    while(enum.hasMoreElements()) {
-			subg = (Subgraph)(enum.nextElement());
+		    enum1 = ((Subgraph)elem).subgraphElements();
+		    while(enum1.hasMoreElements()) {
+			subg = (Subgraph)(enum1.nextElement());
 			if (subg.visastamp != stamp) {
 			    input.addElement(subg);
 			    subg.visastamp = stamp;
@@ -1484,9 +1484,9 @@ public abstract class Element
 		//stack.addElement(elem);
 
 		if(depth < 0 || level <= depth) {
-		    enum = ((Node)elem).outEdgeElements();
-		    while(enum.hasMoreElements()) {
-			edge = (Edge)(enum.nextElement());
+		    enum1 = ((Node)elem).outEdgeElements();
+		    while(enum1.hasMoreElements()) {
+			edge = (Edge)(enum1.nextElement());
 			if (edge.goesForward()) {
 			    if (edge.getHead().visastamp != stamp) {
 				input.addElement(edge.getHead());
@@ -1494,9 +1494,9 @@ public abstract class Element
 			    }
 			}
 		    }
-		    enum = ((Node)elem).inEdgeElements();
-		    while(enum.hasMoreElements()) {
-			edge = (Edge)(enum.nextElement());
+		    enum1 = ((Node)elem).inEdgeElements();
+		    while(enum1.hasMoreElements()) {
+			edge = (Edge)(enum1.nextElement());
 			if (edge.goesReverse()) {
 			    if (edge.getTail().visastamp != stamp) {
 				input.addElement(edge.getTail());
@@ -1512,9 +1512,9 @@ public abstract class Element
 
 		if(depth < 0 || level <= depth) {
 		    if (((Edge)elem).goesForward()) {
-			enum = ((Edge)elem).getHead().outEdgeElements();
-			while(enum.hasMoreElements()) {
-			    edge = (Edge)(enum.nextElement());
+			enum1 = ((Edge)elem).getHead().outEdgeElements();
+			while(enum1.hasMoreElements()) {
+			    edge = (Edge)(enum1.nextElement());
 			    if (edge.goesForward()) {
 				if (edge.visastamp != stamp) {
 				    input.addElement(edge);
@@ -1522,9 +1522,9 @@ public abstract class Element
 				}
 			    }
 			}
-			enum = ((Edge)elem).getHead().inEdgeElements();
-			while(enum.hasMoreElements()) {
-			    edge = (Edge)(enum.nextElement());
+			enum1 = ((Edge)elem).getHead().inEdgeElements();
+			while(enum1.hasMoreElements()) {
+			    edge = (Edge)(enum1.nextElement());
 			    if (edge.goesReverse()) {
 				if (edge.visastamp != stamp) {
 				    input.addElement(edge);
@@ -1534,9 +1534,9 @@ public abstract class Element
 			}
 		    }
 		    if (((Edge)elem).goesReverse()) {
-			enum = ((Edge)elem).getTail().outEdgeElements();
-			while(enum.hasMoreElements()) {
-			    edge = (Edge)(enum.nextElement());
+			enum1 = ((Edge)elem).getTail().outEdgeElements();
+			while(enum1.hasMoreElements()) {
+			    edge = (Edge)(enum1.nextElement());
 			    if (edge.goesForward()) {
 				if (edge.visastamp != stamp) {
 				    input.addElement(edge);
@@ -1544,9 +1544,9 @@ public abstract class Element
 				}
 			    }
 			}
-			enum = ((Edge)elem).getTail().inEdgeElements();
-			while(enum.hasMoreElements()) {
-			    edge = (Edge)(enum.nextElement());
+			enum1 = ((Edge)elem).getTail().inEdgeElements();
+			while(enum1.hasMoreElements()) {
+			    edge = (Edge)(enum1.nextElement());
 			    if (edge.goesReverse()) {
 				if (edge.visastamp != stamp) {
 				    input.addElement(edge);

@@ -19,6 +19,7 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,15 +41,17 @@ import com.sri.owlseditor.wsdl.GenerateFromWSDLAction;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.util.ComponentFactory;
 import edu.stanford.smi.protege.widget.AbstractTabWidget;
+import edu.stanford.smi.protege.widget.WidgetMapper;
 import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
-import edu.stanford.smi.protegex.owl.jena.URIResolver;
 import edu.stanford.smi.protegex.owl.jena.parser.ProtegeOWLParser;
 import edu.stanford.smi.protegex.owl.model.NamespaceManager;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLOntology;
+import edu.stanford.smi.protegex.owl.model.triplestore.Triple;
 import edu.stanford.smi.protegex.owl.model.triplestore.TripleStore;
 import edu.stanford.smi.protegex.owl.model.triplestore.TripleStoreModel;
-import edu.stanford.smi.protegex.owl.ui.jena.OntPolicyManager;
+//import edu.stanford.smi.protegex.owl.jena.URIResolver;
+//import edu.stanford.smi.protegex.owl.ui.jena.OntPolicyManager;
 
 /** This is the main class of the OWL-S Editor. */
 public class Owlstab extends AbstractTabWidget {
@@ -58,21 +61,21 @@ public class Owlstab extends AbstractTabWidget {
     public static final String SWRLB_URI = "http://www.w3.org/2003/11/swrlb";
     public static final String SWRLBIMPORT_URI = "http://www.daml.org/rules/proposal/swrlb.owl";
 
+    /*
 	public static final String GROUNDING_URI = "http://www.daml.org/services/owl-s/1.1/Grounding.owl";
     public static final String PROFILE_URI = "http://www.daml.org/services/owl-s/1.1/Profile.owl";
     public static final String PROCESS_URI = "http://www.daml.org/services/owl-s/1.1/Process.owl";
     public static final String SERVICE_URI = "http://www.daml.org/services/owl-s/1.1/Service.owl";
     public static final String LIST_URI = "http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl";
     public static final String EXPR_URI = "http://www.daml.org/services/owl-s/1.1/generic/Expression.owl";
-	
-    /*
+	*/
+    
     public static final String GROUNDING_URI = "http://www.daml.org/services/owl-s/1.2/Grounding.owl";
     public static final String PROFILE_URI = "http://www.daml.org/services/owl-s/1.2/Profile.owl";
     public static final String PROCESS_URI = "http://www.daml.org/services/owl-s/1.2/Process.owl";
     public static final String SERVICE_URI = "http://www.daml.org/services/owl-s/1.2/Service.owl";
     public static final String LIST_URI = "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl";
     public static final String EXPR_URI = "http://www.daml.org/services/owl-s/1.2/generic/Expression.owl";
-    */
 
     public URI groundingURI;
     public URI profileURI;
@@ -117,6 +120,8 @@ public class Owlstab extends AbstractTabWidget {
     private OWLOntology oi;
     private NamespaceManager nm;
     
+    private WidgetMapper	wm;
+    
     // startup code
     public void initialize() {	
     	    setLabel("OWL-S Editor");
@@ -124,6 +129,9 @@ public class Owlstab extends AbstractTabWidget {
         oi = okb.getDefaultOWLOntology();
         nm = okb.getNamespaceManager();
         project = getProject();
+        
+        wm = new OWLSEditorWidgetMapper(project, okb);
+        project.setWidgetMapper(wm);
         
         // We need to be in the "main" ontology when adding imports.
         TripleStoreModel tsm = okb.getTripleStoreModel();
@@ -190,6 +198,10 @@ public class Owlstab extends AbstractTabWidget {
      * @return true if a reload is required
      */
     private void setupImports(){
+    	ProtegeOWLParser pop;
+    	
+    	pop = new ProtegeOWLParser(okb);
+    	
     	try{
     		groundingURI = new URI(GROUNDING_URI);
     		profileURI = new URI(PROFILE_URI);
@@ -204,91 +216,113 @@ public class Owlstab extends AbstractTabWidget {
     		e.printStackTrace();
     	}
     	
-    	URIResolver resolver = okb.getURIResolver();
-    	resolver.setPhysicalURL(groundingURI, getLocalURL("Grounding.owl"));
-    	resolver.setPhysicalURL(profileURI, getLocalURL("Profile.owl"));
-    	resolver.setPhysicalURL(processURI, getLocalURL("Process.owl"));
-    	resolver.setPhysicalURL(serviceURI, getLocalURL("Service.owl"));
-    	resolver.setPhysicalURL(listURI, getLocalURL("ObjectList.owl"));
-    	resolver.setPhysicalURL(exprURI, getLocalURL("Expression.owl"));
-    	resolver.setPhysicalURL(timeURI, getLocalURL("time-entry.owl"));
-    	resolver.setPhysicalURL(swrlimportURI, getLocalURL("swrl.owl"));
-    	resolver.setPhysicalURL(swrlbimportURI, getLocalURL("swrlb.owl"));
+//    	URIResolver resolver = okb.getURIResolver();
+//    	resolver.setPhysicalURL(groundingURI, getLocalURL("Grounding.owl"));
+//    	resolver.setPhysicalURL(profileURI, getLocalURL("Profile.owl"));
+//    	resolver.setPhysicalURL(processURI, getLocalURL("Process.owl"));
+//    	resolver.setPhysicalURL(serviceURI, getLocalURL("Service.owl"));
+//    	resolver.setPhysicalURL(listURI, getLocalURL("ObjectList.owl"));
+//    	resolver.setPhysicalURL(exprURI, getLocalURL("Expression.owl"));
+//    	resolver.setPhysicalURL(timeURI, getLocalURL("time-entry.owl"));
+//    	resolver.setPhysicalURL(swrlimportURI, getLocalURL("swrl.owl"));
+//    	resolver.setPhysicalURL(swrlbimportURI, getLocalURL("swrlb.owl"));
     	
     	try{
-    		OntPolicyManager.saveCurrentModel(project);
+//    		OntPolicyManager.saveCurrentModel(project);
     	}
     	catch(Exception e){
     		e.printStackTrace();
     	}
 
-		//java.util.Collection imports = oi.getImports();
+		java.util.Collection imports = oi.getImports();
+		Iterator i = imports.iterator();
+		
+		while(i.hasNext())
+		{
+			System.out.println(i.next());
+		}
+		
+		i = okb.getAllImports().iterator();
+		while(i.hasNext())
+		{
+			System.out.println(i.next());
+		}
         
     	try{
     		
-    		if(!(okb.getAllImports().contains(GROUNDING_URI))){
-    			//System.out.println("Importing Grounding...");
-    			oi.addImports(GROUNDING_URI);
-    			ProtegeOWLParser.addImport(okb, groundingURI);
-    			//System.out.println("...done");
-    		}
-	        if(!(okb.getAllImports().contains(PROFILE_URI))){
-    			//System.out.println("Importing Profile...");
-	        	oi.addImports(PROFILE_URI);
-	        	ProtegeOWLParser.addImport(okb, profileURI);
-    			//System.out.println("...done");
-	        }
-	        /*
-	        if(!(oi.getImports().contains(PROCESS_URI))){
-    			System.out.println("Importing Process...");
-	        	oi.addImports(PROCESS_URI);
-	        	ProtegeOWLParser.addImport(okb, processURI);
-    			System.out.println("...done");
-	        }
-	        if(!(oi.getImports().contains(SERVICE_URI))){
-    			System.out.println("Importing Service...");
-	        	oi.addImports(SERVICE_URI);
-	        	ProtegeOWLParser.addImport(okb, serviceURI);
-    			System.out.println("...done");
-	        }
-	        if(!(imports.contains(LIST_URI))){
-    			System.out.println("Importing List...");
-	        	oi.addImports(LIST_URI);
-	        	ProtegeOWLParser.addImport(okb, listURI);
-    			System.out.println("...done");
-	        }
-	        */
-	        if(!(oi.getImports().contains(SWRLIMPORT_URI))){
-    			//System.out.println("Importing SWRL...");
-	        	oi.addImports(SWRLIMPORT_URI);
-	        	ProtegeOWLParser.addImport(okb, swrlimportURI);
-    			//System.out.println("...done");
-	        }
-	        if(!(oi.getImports().contains(SWRLBIMPORT_URI))){
-    			//System.out.println("Importing SWRL builtins...");
-	        	oi.addImports(SWRLBIMPORT_URI);
-	        	ProtegeOWLParser.addImport(okb, swrlbimportURI);
-    			//System.out.println("...done");
-	        }
-	        /*
-	        if(!(imports.contains(EXPR_URI))){
-    			System.out.println("Importing Expression...");
+//	        if(!(okb.getAllImports().contains(EXPR_URI))){
+    			System.out.println("Importing Expression... " + getLocalURL("Expression.owl").toURI());
 	        	oi.addImports(EXPR_URI);
-	        	ProtegeOWLParser.addImport(okb, exprURI);
+    			pop.run(getLocalURL("Expression.owl").toURI());
+//	        	ProtegeOWLParser.addImport(okb, exprURI);
     			System.out.println("...done");
-	        }
-	        if(!(imports.contains(TIME_URI))){
-    			System.out.println("Importing Time...");
+//	        }
+//	        if(!(okb.getAllImports().contains(PROCESS_URI))){
+    			System.out.println("Importing Process... " + getLocalURL("Process.owl").toURI());
+	        	oi.addImports(PROCESS_URI);
+    			pop.run(getLocalURL("Process.owl").toURI());
+//	        	ProtegeOWLParser.addImport(okb, processURI);
+    			System.out.println("...done");
+//	        }
+//    		if(!(okb.getAllImports().contains(GROUNDING_URI))){
+    			System.out.println("Importing Grounding... " + getLocalURL("Grounding.owl").toURI());
+    			oi.addImports(GROUNDING_URI);
+    			pop.run(getLocalURL("Grounding.owl").toURI());
+//    			ProtegeOWLParser.addImport(okb, groundingURI);
+    			System.out.println("...done");
+//    		}
+//	        if(!(okb.getAllImports().contains(PROFILE_URI))){
+    			System.out.println("Importing Profile... " + getLocalURL("Profile.owl").toURI());
+	        	oi.addImports(PROFILE_URI);
+    			pop.run(getLocalURL("Profile.owl").toURI());
+//	        	ProtegeOWLParser.addImport(okb, profileURI);
+    			System.out.println("...done");
+//	        }
+//	        if(!(okb.getAllImports().contains(SERVICE_URI))){
+    			System.out.println("Importing Service... " + getLocalURL("Service.owl").toURI());
+	        	oi.addImports(SERVICE_URI);
+    			pop.run(getLocalURL("Service.owl").toURI());
+//	        	ProtegeOWLParser.addImport(okb, serviceURI);
+    			System.out.println("...done");
+//	        }
+//	        if(!(okb.getAllImports().contains(LIST_URI))){
+    			System.out.println("Importing List... " + getLocalURL("ObjectList.owl").toURI());
+	        	oi.addImports(LIST_URI);
+    			pop.run(getLocalURL("ObjectList.owl").toURI());
+//	        	ProtegeOWLParser.addImport(okb, listURI);
+    			System.out.println("...done");
+//	        }
+//	        if(!(okb.getAllImports().contains(SWRLIMPORT_URI))){
+    			System.out.println("Importing SWRL... " + getLocalURL("swrl.owl").toURI());
+	        	oi.addImports(SWRLIMPORT_URI);
+    			pop.run(getLocalURL("swrl.owl").toURI());
+//	        	ProtegeOWLParser.addImport(okb, swrlimportURI);
+    			System.out.println("...done");
+//	        }
+//	        if(!(okb.getAllImports().contains(SWRLBIMPORT_URI))){
+    			System.out.println("Importing SWRL builtins... " + getLocalURL("swrlb.owl").toURI());
+	        	oi.addImports(SWRLBIMPORT_URI);
+    			pop.run(getLocalURL("swrlb.owl").toURI());
+//	        	ProtegeOWLParser.addImport(okb, swrlbimportURI);
+    			System.out.println("...done");
+//	        }
+//	        if(!(okb.getAllImports().contains(TIME_URI))){
+    			System.out.println("Importing Time... " + getLocalURL("time-entry.owl").toURI());
 	        	oi.addImports(TIME_URI);
-	        	ProtegeOWLParser.addImport(okb, timeURI);
+    			pop.run(getLocalURL("time-entry.owl").toURI());
+//	        	ProtegeOWLParser.addImport(okb, timeURI);
     			System.out.println("...done");
-	        }
-	        */
+//	        }
     	} catch(Exception e){
     		e.printStackTrace();
     	}
     	TripleStoreModel tsm = okb.getTripleStoreModel();
     	tsm.updateEditableResourceState();
+//    	Iterator<Triple> it = tsm.getActiveTripleStore().listTriples();
+//    	while(it.hasNext())
+//    	{
+//    		System.out.println(it.next());
+//    	}
     	//tsm.endTripleStoreChanges();
     }
     
@@ -339,6 +373,13 @@ public class Owlstab extends AbstractTabWidget {
     	if (prefix != null && !TIME_PREFIX.equals(prefix))
     		nm.setModifiable(prefix, true);
         nm.setPrefix(TIME_URI + "#", TIME_PREFIX);
+        
+        Iterator it = nm.getPrefixes().iterator();
+        while(it.hasNext())
+        {
+        	String p = (String) it.next();
+        	System.out.println(p + " : " + nm.getNamespaceForPrefix(p));
+        }
     }
     
     /** We need to kill all the event handlers here. */

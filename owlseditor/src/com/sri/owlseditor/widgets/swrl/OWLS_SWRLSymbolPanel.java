@@ -28,6 +28,7 @@ import edu.stanford.smi.protegex.owl.swrl.model.SWRLNames;
 import edu.stanford.smi.protegex.owl.swrl.model.SWRLVariable;
 import edu.stanford.smi.protegex.owl.swrl.parser.SWRLParseException;
 import edu.stanford.smi.protegex.owl.swrl.parser.SWRLParser;
+import edu.stanford.smi.protegex.owl.swrl.ui.code.SWRLSymbolPanel;
 import edu.stanford.smi.protegex.owl.swrl.ui.icons.SWRLIcons;
 import edu.stanford.smi.protegex.owl.ui.code.SymbolPanel;
 import edu.stanford.smi.protegex.owl.ui.icons.OWLIcons;
@@ -36,7 +37,7 @@ import edu.stanford.smi.protegex.owl.ui.resourceselection.ResourceSelectionActio
 /**
  * @author Holger Knublauch  <holger@smi.stanford.edu>
  */
-public class OWLS_SWRLSymbolPanel extends SymbolPanel {
+public class OWLS_SWRLSymbolPanel extends SWRLSymbolPanel {
 
     private Action andAction;
 
@@ -66,7 +67,7 @@ public class OWLS_SWRLSymbolPanel extends SymbolPanel {
 
 
     public OWLS_SWRLSymbolPanel(OWLModel owlModel, boolean closeable, boolean draggable) {
-        super(owlModel, closeable, draggable, true);
+        super(owlModel, closeable, draggable);
     }
 
 
@@ -242,7 +243,7 @@ public class OWLS_SWRLSymbolPanel extends SymbolPanel {
             super("Insert builtin...", SWRLIcons.getBuiltinIcon());
         }
 
-		public Collection getSelectableResoures() {
+		public Collection getSelectableResources() {
             java.util.List result = new ArrayList(new SWRLFactory(getOWLModel()).getBuiltins());
             Collections.sort(result, new FrameComparator());
             return result;
@@ -254,7 +255,7 @@ public class OWLS_SWRLSymbolPanel extends SymbolPanel {
 		}
 
 		public RDFResource pickResource() {
-            Collection frames = getSelectableResoures();
+            Collection frames = getSelectableResources();
             return (RDFResource) DisplayUtilities.pickInstanceFromCollection(OWLS_SWRLSymbolPanel.this, frames, 0,
                     "Select the builtin to insert");
         }

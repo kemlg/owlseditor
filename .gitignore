@@ -1,1 +1,17 @@
+logs
+logs/
+*/logs/*
+logs/*
+
+.DS_Store
+
+target
 target/
+*/target/*
+target/*
+
+bin
+bin/
+*/bin/*
+bin/*
+

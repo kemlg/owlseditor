@@ -3,11 +3,11 @@
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
   <!ENTITY owl "http://www.w3.org/2002/07/owl">
-  <!ENTITY expr "http://www.daml.org/services/owl-s/1.1/generic/Expression.owl">
+  <!ENTITY expr "http://www.daml.org/services/owl-s/1.2/generic/Expression.owl">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl">
-  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl">
-  <!ENTITY DEFAULT "http://www.daml.org/services/owl-s/1.1/Profile.owl">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.2/Service.owl">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.2/Process.owl">
+  <!ENTITY DEFAULT "http://www.daml.org/services/owl-s/1.2/Profile.owl">
 ]>
 
 <!--
@@ -27,7 +27,7 @@ into Internet Explorer.
 
   <owl:Ontology rdf:about="">
     <owl:versionInfo>
-      $Id: Profile.owl,v 1.51 2004/11/03 03:27:20 martin Exp $
+      $Id: Profile.owl,v 1.55 2006/12/15 01:39:55 martin Exp $
     </owl:versionInfo> 
     <rdfs:comment>
       OWL ontology for Advertisements (i.e. Profiles).
@@ -37,9 +37,11 @@ into Internet Explorer.
       Modified by David Martin and other members of the OWL-S Coalition.
 
     </rdfs:comment> 
-    <rdfs:seeAlso rdf:resource="http://www.daml.org/services/owl-s/1.1/ProfileAdditionalParameters.owl" /> 
-    <rdfs:seeAlso rdf:resource="http://www.daml.org/services/owl-s/1.1/ProfileDeprecatedElements.owl" /> 
-    <rdfs:seeAlso rdf:resource="http://www.daml.org/services/owl-s/1.1/ActorDefault.owl" /> 
+    <rdfs:seeAlso rdf:resource="http://www.daml.org/services/owl-s/1.2/ServiceCategory.owl" /> 
+    <rdfs:seeAlso rdf:resource="http://www.daml.org/services/owl-s/1.2/ServiceParameter.owl" /> 
+    <rdfs:seeAlso rdf:resource="http://www.daml.org/services/owl-s/1.2/ProfileAdditionalParameters.owl" /> 
+    <rdfs:seeAlso rdf:resource="http://www.daml.org/services/owl-s/1.2/ProfileDeprecatedElements.owl" /> 
+    <rdfs:seeAlso rdf:resource="http://www.daml.org/services/owl-s/1.2/ActorDefault.owl" /> 
 <!--  
   -->
     <owl:imports>
@@ -65,18 +67,27 @@ into Internet Explorer.
   4. Functional Properties
      Input/Output/Precondition/Effects that help with the
      specification of what the service provides
-  5. Additional Classes
-     These are classes that are needed to specify details of the
-     Profile
-     - Service Category
-     - Service Parameters
-     - Quality Rating
-  6. Deprecated 
+  5. Deprecated 
      Classes and properties that were of relevance in the previous
      versions of the profile, but they are no longer relevant as of
      version 0.7.  They are maintained here as deprecated, but will be
      removed removed in following versions of the service profile
   --> 
+
+<!--  ############ ########### ############ ############ ########### --> 
+<!--  ############                                       ########### --> 
+<!--  ############    LOG OF CHANGES from 1.1 to 1.2     ########### --> 
+<!--  ############                                       ########### --> 
+<!--  ############ ########### ############ ############ ########### --> 
+
+  <!--
+    * Moved ServiceCategory (and related elements) to
+      ServiceCategory.owl.
+
+    * Moved ServiceParameter to ServiceParameter.owl.
+
+    * Moved ServiceProduct to ProfileDeprecatedElements.owl.
+  -->
 
 <!--  ############ ########### ############ ############ ########### --> 
 <!--  ############                                       ########### --> 
@@ -264,54 +275,7 @@ into Internet Explorer.
     <rdfs:range rdf:resource="&process;#Process"/>
   </owl:ObjectProperty>
   <owl:FunctionalProperty rdf:about="#has_process"/>
-  
-  
-  <!--
-	serviceCategory refers to an ontology of services that
-	may be on offer.  High level services could include
-	classification on the bases of industry taxonomies such as
-	NAICS or UNSPCP or DandB or others that may be used.
     
-        Additionally, it can be used to specify other classification
-        systems such as
-		* Products
-		* Problem Solving Capabilities
-		* Commercial Services
-		* Information
-		etc
-	No range restrictions are placed on this property at present.
-	Specific service descriptions will specialise this by
-	restricting the range appropriately using subPropertyOf.
-    
-        Examples of usage of serviceCategory are given in
-        ProfileAdditionalParameters.owl.
-
-	QualityRating has been deprecated, as it can be constructed
-	from the ServiceParameter class.
-    -->
-
-  <owl:ObjectProperty rdf:ID="serviceCategory">
-    <rdfs:domain rdf:resource="#Profile"/>
-    <rdfs:range rdf:resource="#ServiceCategory"/>
-  </owl:ObjectProperty>
-  
-  
-  
-  <!-- 
-	serviceParameters - An expandable list of properties that
-	may accompany a profile description.
-
-	The range of each property is unconstrained, i.e. no range restrictions
-	are placed on the service parameters at present. Specific service
-	parameters will specialise this property by restricting the range
-	appropriately and using subPropertyOf.
-    -->
-
-  <owl:ObjectProperty rdf:ID="serviceParameter">
-    <rdfs:domain rdf:resource="#Profile"/>
-    <rdfs:range rdf:resource="#ServiceParameter"/>
-  </owl:ObjectProperty>
-
   
 <!--  ############ ########### ############ ############ ########### --> 
 <!--  #######                                                 ###### --> 
@@ -367,210 +331,27 @@ into Internet Explorer.
   
   
   
-  <!-- 
-    ServiceCategory describes categories of services on the bases of
-    some classification that may be outside OWL-S and possibly
-    outside OWL. In the latter case, they may require some
-    specialized reasoner if any inference has to be done with it
-    -->
-
-  <owl:Class rdf:ID="ServiceCategory"/>  
-
-
-  <!-- categoryName is the name of the actual category, which could be just a literal,
-       or perhaps the uri of the process parameter (a property)
-    -->
-  <owl:DatatypeProperty rdf:ID="categoryName">
-    <rdfs:domain rdf:resource="#ServiceCategory"/>
-  </owl:DatatypeProperty>
-  
-  
-  
-  <!-- each serviceCategory can refer to only one categoryName -->
-
-  <owl:Class rdf:about="#ServiceCategory">
-    <rdfs:comment>
-    a ServiceCategory is restricted to refer to only onename
-    </rdfs:comment>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-	<owl:onProperty rdf:resource="#categoryName"/>
-        <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-  </owl:Class>
-
-
-  
-  <!-- taxonomy stores a reference to the taxonomy scheme.  It can be
-  either the URL of the taxonomy, or the name of the taxonomy or
-  anything else.  -->
-
-  <owl:DatatypeProperty rdf:ID="taxonomy">
-    <rdfs:domain rdf:resource="#ServiceCategory"/>
-  </owl:DatatypeProperty>
-  
-  
-  <!-- each serviceCategory can refer to only one taxonomy, to limit
-  the possibility of confusion. -->
-
-  <owl:Class rdf:about="#ServiceCategory">
-    <rdfs:comment>
-    a ServiceCategory is restricted to refer to only one taxonomy
-    </rdfs:comment>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-	<owl:onProperty rdf:resource="#taxonomy"/>
-        <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-  </owl:Class>
-
-
-  <!-- value points to the value in a specific taxonomy
-    There may be more than one value for each taxonomy, so no
-    restriction is added here.
-    -->
-
-  <owl:DatatypeProperty rdf:ID="value">
-    <rdfs:domain rdf:resource="#ServiceCategory"/>
-  </owl:DatatypeProperty>
-  
-  
-  <!-- each serviceCategory can refer to only one value, 
-    if more then one value applies, then they have to be added as a
-    string with space separators -->
-
-  <owl:Class rdf:about="#ServiceCategory">
-    <rdfs:comment>
-    a ServiceCategory is restricted to refer to only one taxonomy
-    </rdfs:comment>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-	<owl:onProperty rdf:resource="#value"/>
-        <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-  </owl:Class>
-  
-  
-  <!-- Often taxonomies associate a code to each type of service.
-    The following property stores the code -->
-  <owl:DatatypeProperty rdf:ID="code">
-    <rdfs:domain rdf:resource="#ServiceCategory"/>    
-  </owl:DatatypeProperty>
-  
-  
-  <!-- each serviceCategory can refer to only one code, 
-    if more then one value applies, then they have to be added as a
-    string with space separators 
-    There may be of course a problem of synchronization with the value -->
-
-  <owl:Class rdf:about="#ServiceCategory">
-    <rdfs:comment>
-    a ServiceCategory is restricted to refer to only one taxonomy
-    </rdfs:comment>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-	<owl:onProperty rdf:resource="#code"/>
-        <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-  </owl:Class>
-  
-  
-  
 <!--  ############ ########### ############ ############ ########### --> 
 <!--  ############ ########### ############ ############ ########### --> 
 <!--  ############ ########### ############ ############ ########### --> 
   
-  
-  
-  <!-- 
-    ServiceParameter describes service parameters.
-    In general we can think this class as the root of an ontology of
-    Service Parameters of different types.  Other types of
-    ServiceParameters may expand this definition by adding other
-    properties.
-    -->
-
-  <owl:Class rdf:ID="ServiceParameter"/> 
-
-
-  <!-- serviceParameterName is the name of the actual parameter, which could be just a literal,
-       or perhaps the uri of the process parameter (a property)
-    -->
-  <owl:DatatypeProperty rdf:ID="serviceParameterName">
-    <rdfs:domain rdf:resource="#ServiceParameter"/>
-  </owl:DatatypeProperty>
-
-  <owl:Class rdf:about="#ServiceParameter">
-    <rdfs:comment>
-    A ServiceParameter should have at most 1 name (more precisely only
-      one serviceParameterName)
-    </rdfs:comment>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-	<owl:onProperty rdf:resource="#serviceParameterName"/>
-        <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-  </owl:Class>
-
-
-  <!-- sParameter points to the value of the parameter within some
-    OWL ontology -->
-
-  <owl:ObjectProperty rdf:ID="sParameter">
-    <rdfs:domain rdf:resource="#ServiceParameter"/>
-    <rdfs:range  rdf:resource="&owl;#Thing"/> 
-  </owl:ObjectProperty>
-
-  <owl:Class rdf:about="#ServiceParameter">
-    <rdfs:comment>
-    a Parameter is restricted to refer to only one concept in some
-    ontology
-    </rdfs:comment>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-	<owl:onProperty rdf:resource="#sParameter"/>
-        <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-  </owl:Class>
-  
-   <!-- Taxononomies of businesses and products (such as NAICS and
-  UNSPSC) are already available and they may be translated in OWL in
-  the near future.  Here we offer the possibility to specify the type
-  of service that is provided as well as the type of product.  In
-  addition, we provide the bases for a retrieval of services on the
-  bases of these two features.
-    -->
-  
-  <!-- Map the Profile to a Service Type -->
-
-  <owl:DatatypeProperty rdf:ID="serviceClassification">
-    <rdfs:domain rdf:resource="#Profile"/> 
-    <rdfs:range rdf:resource="&xsd;#anyURI"/>
-  </owl:DatatypeProperty>
-
-  <!-- Map the Profile to a product Type -->
-  
-  <owl:DatatypeProperty rdf:ID="serviceProduct">
-    <rdfs:domain rdf:resource="#Profile"/>
-    <rdfs:range rdf:resource="&xsd;#anyURI"/>
-  </owl:DatatypeProperty>
-
+ 
   
 <!--   ############ ########### ############ ############ ########### --> 
 <!--   ############                                       ########### --> 
-<!--   ############                Actor                  ########### --> 
+<!--   ############           Related Ontologies          ########### --> 
 <!--   ############                                       ########### --> 
 <!--   ############ ########### ############ ############ ########### --> 
 
 
-<!-- The Actor concept has now migrated to
-       rdf:resource="ActorDefault.owl" 
+<!-- 
+      The Actor concept has been moved to ActorDefault.owl.
+
+      ServiceCategory and related elements have been moved to
+      ServiceCategory.owl.
+
+      ServiceParameter and related elements have been moved to
+      ServiceParameter.owl.
   -->
 
 <!--   ############ ########### ############ ############ ########### --> 
@@ -580,8 +361,8 @@ into Internet Explorer.
 <!--   ############ ########### ############ ############ ########### --> 
 
 
-  <!-- Deprecated concepts have now migrated to
-       rdf:resource="ProfileDeprecatedElements.owl" 
+  <!-- 
+       Deprecated concepts have been moved to ProfileDeprecatedElements.owl.
   -->
 
 </rdf:RDF>

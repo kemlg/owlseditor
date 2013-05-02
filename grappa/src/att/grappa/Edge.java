@@ -117,14 +117,14 @@ public class Edge extends Element
 	    if(tail == head) {
 		throw new RuntimeException("cannot create self-looping edge in a strict graph (" + tail.getName() + (directed?"->":"--") + head.getName() + ")");
 	    } else {
-		Enumeration enum = Edge.findEdgesByEnds(tail,head);
-		if(enum.hasMoreElements()) {
+		Enumeration enum1 = Edge.findEdgesByEnds(tail,head);
+		if(enum1.hasMoreElements()) {
 		    if(!directed) {
 			throw new RuntimeException("cannot create multiple edges between the same nodes in a strict graph");
 		    } else {
 			Edge tmpedge = null;
-			while(enum.hasMoreElements()) {
-			    tmpedge = (Edge)enum.nextElement();
+			while(enum1.hasMoreElements()) {
+			    tmpedge = (Edge)enum1.nextElement();
 			    if(tmpedge.getHead() == head && tmpedge.getTail() == tail) {
 				throw new RuntimeException("cannot create multiple edges between the same nodes in the same direction in a strict directed graph");
 			    }

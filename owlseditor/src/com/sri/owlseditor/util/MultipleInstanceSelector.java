@@ -59,6 +59,11 @@ public class MultipleInstanceSelector extends JPanel {
 
     public void setClasses(Collection classes){
     		this.classes = new ArrayList(classes);
+    		Iterator it = classes.iterator();
+    		while(it.hasNext())
+    		{
+    			System.out.println(it.next());
+    		}
 		instancePanes = new ArrayList();
 		
 		createInstancePanes();
@@ -91,6 +96,7 @@ public class MultipleInstanceSelector extends JPanel {
     	while (it.hasNext()){
     		OWLNamedClass cls = (OWLNamedClass)it.next();
     		OWLSInstanceList list = OWLSInstanceListFactory.create(_project, cls);
+    		System.out.println(list);
     		instancePanes.add(list);
             
     		class OWLSInstanceListListener implements SelectionListener{

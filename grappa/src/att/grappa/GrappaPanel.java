@@ -195,7 +195,7 @@ public class GrappaPanel extends javax.swing.JPanel
 	if(subgraph == null || !subgraph.reserve()) return(null);
 	Graphics2D g2d = (Graphics2D)g;
 	int i;
-	Enumeration enum;
+	Enumeration enum1;
 	long thisPaint = System.currentTimeMillis();
 	Container prnt;
 	Container tprnt;
@@ -691,7 +691,7 @@ public class GrappaPanel extends javax.swing.JPanel
 
 	if(bbox != null && grappaNexus != null && subg.visible && !grappaNexus.style.invis && clipper.intersects(bbox)) {
 
-	    Enumeration enum = null;
+	    Enumeration enum1 = null;
 
 	    int i;
 
@@ -753,16 +753,16 @@ public class GrappaPanel extends javax.swing.JPanel
 		}
 	    }
 
-	    enum = subg.subgraphElements();
+	    enum1 = subg.subgraphElements();
 	    Subgraph subsubg = null;
-	    while(enum.hasMoreElements()) {
-		subsubg = (Subgraph)(enum.nextElement());
+	    while(enum1.hasMoreElements()) {
+		subsubg = (Subgraph)(enum1.nextElement());
 		if(subsubg != null) paintSubgraph(g2d, subsubg, clipper, bkgdColor);
 	    }
 	    Node node;
-	    enum = subg.nodeElements();
-	    while(enum.hasMoreElements()) {
-		node = (Node)(enum.nextElement());
+	    enum1 = subg.nodeElements();
+	    while(enum1.hasMoreElements()) {
+		node = (Node)(enum1.nextElement());
 		if(node == null || !node.reserve()) continue;
 		if((grappaNexus = node.grappaNexus) != null && node.visible && !grappaNexus.style.invis && clipper.intersects(grappaNexus.rawBounds2D())) {
 		    if(grappaNexus.style.filled) {
@@ -821,9 +821,9 @@ public class GrappaPanel extends javax.swing.JPanel
 	    }
 
 	    Edge edge;
-	    enum = subg.edgeElements();
-	    while(enum.hasMoreElements()) {
-		edge = (Edge)(enum.nextElement());
+	    enum1 = subg.edgeElements();
+	    while(enum1.hasMoreElements()) {
+		edge = (Edge)(enum1.nextElement());
 		if(edge == null || !edge.reserve()) continue;
 		if((grappaNexus = edge.grappaNexus) != null && edge.visible && !grappaNexus.style.invis && clipper.intersects(grappaNexus.rawBounds2D())) {
 		    grappaNexus.drawImage(g2d);
@@ -891,7 +891,7 @@ public class GrappaPanel extends javax.swing.JPanel
 
     private Element reallyFindContainingElement(Subgraph subg, Point2D pt, Element[] stash) {
 
-	Enumeration enum;
+	Enumeration enum1;
 
 	Rectangle2D bb = subg.getBoundingBox();
 
@@ -901,10 +901,10 @@ public class GrappaPanel extends javax.swing.JPanel
 	if(bb.contains(pt)) {
 
 	    if((Grappa.elementSelection&EDGE) == EDGE) {
-		enum = subg.edgeElements();
+		enum1 = subg.edgeElements();
 		Edge edge;
-		while(enum.hasMoreElements()) {
-		    edge = (Edge)enum.nextElement();
+		while(enum1.hasMoreElements()) {
+		    edge = (Edge)enum1.nextElement();
 		    if((grappaNexus = edge.grappaNexus) == null || !edge.selectable) continue;
 		    if(grappaNexus.rawBounds2D().contains(pt)) {
 			if(grappaNexus.contains(pt.getX(),pt.getY())) {
@@ -920,10 +920,10 @@ public class GrappaPanel extends javax.swing.JPanel
 	    }
 
 	    if((Grappa.elementSelection&NODE) == NODE) {
-		enum = subg.nodeElements();
+		enum1 = subg.nodeElements();
 		Node node;
-		while(enum.hasMoreElements()) {
-		    node = (Node)enum.nextElement();
+		while(enum1.hasMoreElements()) {
+		    node = (Node)enum1.nextElement();
 		    if((grappaNexus = node.grappaNexus) == null || !node.selectable) continue;
 		    if(grappaNexus.rawBounds2D().contains(pt)) {
 			if(grappaNexus.contains(pt)) {
@@ -940,9 +940,9 @@ public class GrappaPanel extends javax.swing.JPanel
 
 	    Element subelem = null;
 
-	    enum = subg.subgraphElements();
-	    while(enum.hasMoreElements()) {
-		if((subelem = reallyFindContainingElement((Subgraph)(enum.nextElement()), pt, stash)) != null && subelem.selectable) {
+	    enum1 = subg.subgraphElements();
+	    while(enum1.hasMoreElements()) {
+		if((subelem = reallyFindContainingElement((Subgraph)(enum1.nextElement()), pt, stash)) != null && subelem.selectable) {
 		    if(stash[0] == null)
 			return(subelem);
 		    if(stash[1] == null)

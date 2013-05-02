@@ -18,6 +18,7 @@ package com.sri.owlseditor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.sri.owlseditor.util.MultipleInstanceSelector;
@@ -73,9 +74,13 @@ public class ServiceSelector extends MultipleInstanceSelector{
     	ArrayList classes = new ArrayList();
 
 		OWLNamedClass service = model.getOWLNamedClass("service:Service");
+		System.out.println("service:Service " + service + " : " + service.getPrefixedName());
 		OWLNamedClass profile = model.getOWLNamedClass("profile:Profile");
+		System.out.println("profile:Profile " + profile);
 		OWLNamedClass process = model.getOWLNamedClass("process:Process");
+		System.out.println("process:Process " + process);
 		OWLNamedClass grounding = model.getOWLNamedClass("grounding:WsdlGrounding");
+		System.out.println("grounding:WsdlGrounding " + grounding);
     	
     	classes.add(service);
     	classes.add(profile);
@@ -83,6 +88,12 @@ public class ServiceSelector extends MultipleInstanceSelector{
     	classes.add(grounding);
 
     	owlsClasses = classes;
+    	
+    	Iterator it = owlsClasses.iterator();
+    	while(it.hasNext())
+    	{
+    		System.out.println(it.next());
+    	}
 
 		ArrayList properties = new ArrayList();
 		

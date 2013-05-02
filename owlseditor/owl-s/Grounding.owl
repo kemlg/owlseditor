@@ -7,13 +7,13 @@
 <!DOCTYPE uridef[
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
   <!--Added for shadow list vocab-->
-  <!ENTITY shadow-rdf "http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl">
+  <!ENTITY shadow-rdf "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl">
   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
   <!ENTITY owl "http://www.w3.org/2002/07/owl">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl">
-  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl">
-  <!ENTITY DEFAULT "http://www.daml.org/services/owl-s/1.1/Grounding.owl">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.2/Service.owl">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.2/Process.owl">
+  <!ENTITY DEFAULT "http://www.daml.org/services/owl-s/1.2/Grounding.owl">
 ]>
 
 
@@ -29,7 +29,7 @@
 
 <owl:Ontology rdf:about="">
   <owl:versionInfo>
-    $Id: Grounding.owl,v 1.34 2004/09/28 06:58:53 martin Exp $
+    $Id: Grounding.owl,v 1.38 2006/01/04 21:41:56 martin Exp $
   </owl:versionInfo>
   <rdfs:comment>
     Upper-level OWL ontology for Groundings that employ WSDL.
@@ -44,7 +44,7 @@
     to date by the OWL-S Coalition.
 
     For notes on version history, see 
-        http://www.daml.org/services/owl-s/1.1/status.html.    
+        http://www.daml.org/services/owl-s/1.2/status.html.    
   </rdfs:comment>
   <owl:imports>
 	<owl:Ontology rdf:about="&process;"/>
@@ -53,21 +53,122 @@
 
 
 <!--######################################################
-    WsdlGrounding
+    Grounding
     ######################################################-->
 
-<owl:Class rdf:ID="WsdlGrounding">
+<owl:Class rdf:ID="Grounding">
   <rdfs:comment>
-    A WsdlGrounding is just a collection of WsdlAtomicProcessGrounding
-    instances, one for each atomic process in the process model.
+    A Grounding is just a collection of AtomicProcessGrounding
+    instances, one for each atomic process in the process model.    
   </rdfs:comment>
   <rdfs:subClassOf rdf:resource="&service;#ServiceGrounding"/>
 </owl:Class>
 
 <owl:ObjectProperty rdf:ID="hasAtomicProcessGrounding">
-  <rdfs:domain rdf:resource="#WsdlGrounding"/>
-  <rdfs:range rdf:resource="#WsdlAtomicProcessGrounding"/>
+  <rdfs:domain rdf:resource="#Grounding"/>
+  <rdfs:range rdf:resource="#AtomicProcessGrounding"/>
 </owl:ObjectProperty>
+
+
+<!--######################################################
+    AtomicProcessGrounding
+    ######################################################-->
+   
+<owl:Class rdf:ID="AtomicProcessGrounding">
+  <rdfs:comment>
+    A class that relates elements of a OWL-S atomic process to a
+    WSDL specification.
+
+    Each instance of AtomicProcessGrounding must have exactly one
+    value for owlsProcess. Rest of the AtomicProcessGrounding depends
+    on the specifics of the grounding type. 
+  </rdfs:comment>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#owlsProcess"/>
+     <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>     
+
+<!-- owlsProcess -->
+
+<owl:ObjectProperty rdf:ID="owlsProcess">
+  <rdfs:comment>
+    The atomic process to which this grounding applies.
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#AtomicProcessGrounding"/>
+  <rdfs:range rdf:resource="&process;#AtomicProcess"/>
+</owl:ObjectProperty>
+<owl:FunctionalProperty rdf:about="#owlsProcess"/>
+
+
+<!--######################################################
+    MessageMap, InputMessageMap, OutputMessageMap
+    ######################################################-->
+    
+<owl:Class rdf:ID="MessageMap">
+  <rdfs:comment>
+    A class used to map parameters in OWL-S to the parameters
+    in the grounded operation. owlsParamater property is used
+    to specify the OWL-S parameter. 
+  </rdfs:comment>
+</owl:Class>
+
+<!-- owlsParameter -->
+
+<owl:ObjectProperty rdf:ID="owlsParameter">
+  <rdfs:comment>
+    An input or output property of an atomic process.
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#MessageMap"/>
+  <rdfs:range rdf:resource="&process;#Parameter"/>
+</owl:ObjectProperty>
+
+<owl:Class rdf:ID="InputMessageMap">
+  <rdfs:subClassOf rdf:resource="#MessageMap"/>
+  <rdfs:comment>
+    A MessageMap that maps inputs to grounding specification
+  </rdfs:comment>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#owlsParameter"/>
+      <owl:allValuesFrom rdf:resource="&process;#Input"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:ID="OutputMessageMap">
+  <rdfs:comment>
+    A MessageMap that maps outputs to grounding specification
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#MessageMap"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#owlsParameter"/>
+      <owl:allValuesFrom rdf:resource="&process;#Output"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+    
+
+<!--######################################################
+    WsdlGrounding
+    ######################################################-->
+
+<owl:Class rdf:ID="WsdlGrounding">
+  <rdfs:comment>
+    WsdlGrounding is A Grounding that grounds every process to 
+    a WSDL operation.    
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#Grounding"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#hasAtomicProcessGrounding"/>
+      <owl:allValuesFrom rdf:resource="#WsdlAtomicProcessGrounding"/>
+    </owl:Restriction>      
+  </rdfs:subClassOf>
+</owl:Class>
 
 
 <!--######################################################
@@ -100,24 +201,14 @@
     constrain the choice of ports, a WsdlAtomicProcessGrounding may do so
     by specifying any number of values for wsdlService and/or wsdlPort.
   </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#AtomicProcessGrounding"/>
   <rdfs:subClassOf>
     <owl:Restriction>
-      <owl:onProperty rdf:resource="#owlsProcess"/>
-     <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
-    </owl:Restriction>
-  </rdfs:subClassOf>
+      <owl:onProperty rdf:resource="#wsdlOperation"/>
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>      
+  </rdfs:subClassOf>  
 </owl:Class>
-
-<!-- owlsProcess -->
-
-<owl:ObjectProperty rdf:ID="owlsProcess">
-  <rdfs:comment>
-    The atomic process to which this grounding applies.
-  </rdfs:comment>
-  <rdfs:domain rdf:resource="#WsdlAtomicProcessGrounding"/>
-  <rdfs:range rdf:resource="&process;#AtomicProcess"/>
-</owl:ObjectProperty>
-<owl:FunctionalProperty rdf:about="#owlsProcess"/>
 
 <!-- wsdlOperation -->
   
@@ -278,19 +369,10 @@
 
 <owl:Class rdf:ID="WsdlMessageMap">
   <rdfs:comment>
-    Superclass for WsdlInputMessageMap and WsdlOutputMessageMap.
+    MessageMap for WSDL inputs and outputs
   </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#MessageMap"/>  
 </owl:Class>
-
-<!-- owlsParameter -->
-
-<owl:ObjectProperty rdf:ID="owlsParameter">
-  <rdfs:comment>
-    An input or output property of an atomic process.
-  </rdfs:comment>
-  <rdfs:domain rdf:resource="#WsdlMessageMap"/>
-  <rdfs:range rdf:resource="&process;#Parameter"/>
-</owl:ObjectProperty>
 
 <!-- wsdlMessagePart -->
 
@@ -330,186 +412,146 @@
 </owl:DatatypeProperty>
 
 <owl:Class rdf:ID="WsdlInputMessageMap">
-  <rdfs:subClassOf rdf:resource="#WsdlMessageMap"/>
   <rdfs:comment>
-    A class that shows how to derive a WSDL message part from 
-    (one or more) inputs of an atomic process.
-    A WsdlInputMessageMap must have 1 wsdlMessagePart, and 
-    EITHER 1 owlsParameter or 1 xsltTransformation.  (The
-    cardinality restrictions don't capture the disjunction.)
-    If there is a direct correspondence between a particular
-    OWL-S input and the wsdlMessagePart, use owlsParameter
-    to show that.  Otherwise, use xsltTransformation to give
-    a transformation from the OWL-S input(s) to the
-    wsdlMessagePart.
+	The purpose of a WsdlInputMessageMap is to show how to derive the WSDL
+	input message parts from the OWL-S Parameter values. There should be
+	one WsdlInputMessageMap for each WSDL input message part.
+	
+	There are two different kinds of input message maps:
+	
+	(1) DirectInputMessageMap - This is used when we have a 1-1 mapping between
+	Inputs in the AtomicProcess and WSDL message parts. There are two cases:
+	
+	(a) The parameterType of the Input is an OWL class.  The OWL class is
+	used as the message part type in the WSDL document.  (Note: for this
+	case to be fully general, further work may be needed to establish
+	conventions for serializing arbitrary OWL instances).
+	
+	(b) The parameterType is an XSD simple type, and the WSDL message part
+	has the same type.
+	
+	(2) XSLTInputMessageMap - This is used when the the parameterType and
+	the WSDL message part type is not the same. The WSDL type can be
+	either simple or complex.  In this case, a WSDL message part can be
+	derived from multiple Inputs.
   </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#WsdlMessageMap"/>
+  <rdfs:subClassOf rdf:resource="#InputMessageMap"/>
+  <owl:unionOf rdf:parseType="Collection">
+	<owl:Class rdf:about="#DirectInputMessageMap"/>
+	<owl:Class rdf:about="#XSLTInputMessageMap"/>
+  </owl:unionOf>
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#wsdlMessagePart"/>
       <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:ID="DirectInputMessageMap">
+  <rdfs:subClassOf rdf:resource="#WsdlInputMessageMap"/>
+  <owl:disjointWith rdf:resource="#XSLTInputMessageMap"/>
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#owlsParameter"/>     
-      <owl:maxCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:maxCardinality>
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#xsltTransformation"/>
-      <owl:maxCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:maxCardinality>
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">0</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
 </owl:Class>
 
+<owl:Class rdf:ID="XSLTInputMessageMap">
+  <rdfs:subClassOf rdf:resource="#WsdlInputMessageMap"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#owlsParameter"/>     
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">0</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#xsltTransformation"/>
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+
 <owl:Class rdf:ID="WsdlOutputMessageMap">
-  <rdfs:subClassOf rdf:resource="#WsdlMessageMap"/>
   <rdfs:comment>
-    A class that shows how to derive an atomic process output from 
-    the input message parts of a WSDL operation.
-    A WsdlOutputMessageMap must have 1 owlsParameter, and 
-    EITHER 1 wsdlMessagePart or 1 xsltTransformation.  (The
-    cardinality restrictions don't capture the disjunction.)
-    If there is a direct correspondence between a particular
-    WSDL message part and the OWL-S output, use wsdlMessagePart
-    to show that.  Otherwise, use xsltTransformation to give
-    a transformation from the message parts to the OWL-S output.
+	The purpose of WsdlOutputMessageMap is to show how to derive OWL-S
+	Parameter values from the WSDL output message parts. There should be
+	one WsdlOutputMessageMap for each Output of the corresponding
+	AtomicProcess.
+	
+	There are two kinds of output message maps, similarly to input message maps.
+	
+	(1) DirectOutputMessageMap - This is used when we have a 1-1 mapping between
+	WSDL message parts and Outputs in the Atomic Process. There are two cases:
+	
+	(a) The parameterType of the Output is an OWL class, and the OWL class
+	is used as the message part type in the WSDL document.  (Note: for
+	this case to be fully general, further work may be needed to establish
+	conventions for serializing arbitrary OWL instances).
+	
+	(b) The parameterType is an XSD simple type, and the WSDL message part
+	has the same type.
+	
+	(2) XSLTOutputMessageMap - This is used when the the parameterType and
+	the WSDL message part type is not the same. The WSDL type can be
+	either simple or complex.  In this case, an OWL Output can be derived
+	from multiple WSDL message parts.  
   </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#WsdlMessageMap"/>
+  <rdfs:subClassOf rdf:resource="#OutputMessageMap"/>  
+  <owl:unionOf rdf:parseType="Collection">
+	<owl:Class rdf:about="#DirectOutputMessageMap"/>
+	<owl:Class rdf:about="#XSLTOutputMessageMap"/>
+  </owl:unionOf>
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#owlsParameter"/>
       <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:ID="DirectOutputMessageMap">
+  <rdfs:subClassOf rdf:resource="#WsdlOutputMessageMap"/>
+  <owl:disjointWith rdf:resource="#XSLTOutputMessageMap"/>
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#wsdlMessagePart"/>
-      <owl:maxCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:maxCardinality>
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#xsltTransformation"/>
-      <owl:maxCardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:maxCardinality>
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">0</owl:cardinality>
     </owl:Restriction>
   </rdfs:subClassOf>
 </owl:Class>
 
-<!--######################################################
-  Everything below here is deprecated.
-  ######################################################-->
-
-<owl:ObjectProperty rdf:ID="wsdlInputMessageParts">
-  <rdfs:comment>
-    Deprecated as of DAML-S 0.9.
-  </rdfs:comment>
-  <owl:equivalentProperty rdf:resource="#wsdlInputs"/>
-</owl:ObjectProperty>
-<owl:FunctionalProperty rdf:about="#wsdlInputMessageParts"/>
-
-<owl:ObjectProperty rdf:ID="wsdlOutputMessageParts">
-  <rdfs:comment>
-    Deprecated as of DAML-S 0.9; wsdlOutputs should now be used.
-  </rdfs:comment>
-  <owl:equivalentProperty rdf:resource="#wsdlOutputs"/>
-</owl:ObjectProperty>
-<owl:FunctionalProperty rdf:about="#wsdlOutputMessageParts"/>
-
-<owl:DatatypeProperty rdf:ID="wsdlReference">
-  <rdfs:comment>
-    Deprecated as of DAML-S 0.9; wsdlVersion should now be used.
-  </rdfs:comment>
-  <rdfs:domain rdf:resource="#WsdlAtomicProcessGrounding"/>
-  <rdfs:range rdf:resource="&xsd;#anyURI"/>
-  <rdf:type rdf:resource="&owl;#FunctionalProperty"/>
-  <owl:equivalentProperty rdf:resource="#wsdlVersion"/>
-</owl:DatatypeProperty>
-
-<!-- otherReference -->
-
-<owl:DatatypeProperty rdf:ID="otherReference">
-  <rdfs:comment>
-    A URI indicating a relevant standards document (other than that
-    for WSDL).
-    Deprecated as of DAML-S 0.9; no longer recommended or supported.
-  </rdfs:comment>
-  <rdfs:domain rdf:resource="#WsdlAtomicProcessGrounding"/>
-  <rdfs:range rdf:resource="&xsd;#anyURI"/>
-</owl:DatatypeProperty>
-
-<!-- damlsParameter -->
-
-<owl:ObjectProperty rdf:ID="damlsParameter">
-  <rdfs:comment>
-    Deprecated as of OWL-S 1.0.  owlsParameter should be used.
-  </rdfs:comment>
-  <owl:equivalentProperty rdf:resource="#owlsParameter"/>
-</owl:ObjectProperty>
-
-<!-- wsdlInputs -->
-
-<owl:ObjectProperty rdf:ID="wsdlInputs">
-  <rdfs:comment>
-    Deprecated as of OWL-S 1.0.  wsdlInput should be used.
-  </rdfs:comment>
-  <rdfs:comment>
-    A list of WsdlMessageMap instances, one for each
-    message part of the WSDL input message.
-  </rdfs:comment>
-  <rdfs:domain rdf:resource="#WsdlAtomicProcessGrounding"/>
-  <rdfs:range rdf:resource="#WsdlInputMessageMapList"/>
-</owl:ObjectProperty>
-<owl:FunctionalProperty rdf:about="#wsdlInputs"/>
-
-<!-- wsdlOutputs -->
-
-<owl:ObjectProperty rdf:ID="wsdlOutputs">
-  <rdfs:comment>
-    Deprecated as of OWL-S 1.0.  wsdlOutput should be used.
-  </rdfs:comment>
-  <rdfs:comment>
-    A list of WsdlMessageMap instances, one for each
-    output of the atomic process.
-  </rdfs:comment>
-  <rdfs:domain rdf:resource="#WsdlAtomicProcessGrounding"/>
-  <rdfs:range rdf:resource="#WsdlOutputMessageMapList"/>
-</owl:ObjectProperty>
-<owl:FunctionalProperty rdf:about="#wsdlOutputs"/>
-
-<owl:Class rdf:ID="WsdlOutputMessageMapList">
-<rdfs:comment> Deprecated as of version 1.1; no longer needed </rdfs:comment>
-<rdfs:comment> A list of WsdlOutputMessageMap instances </rdfs:comment>
-  <rdfs:subClassOf rdf:resource="&shadow-rdf;#List"/>
+<owl:Class rdf:ID="XSLTOutputMessageMap">
+  <rdfs:subClassOf rdf:resource="#WsdlOutputMessageMap"/>
   <rdfs:subClassOf>
-   <owl:Restriction>
-     <owl:onProperty rdf:resource="&shadow-rdf;#first"/>
-     <owl:allValuesFrom rdf:resource="#WsdlOutputMessageMap"/>
-   </owl:Restriction>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#wsdlMessagePart"/>
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">0</owl:cardinality>
+    </owl:Restriction>
   </rdfs:subClassOf>
   <rdfs:subClassOf>
-   <owl:Restriction>
-     <owl:onProperty rdf:resource="&shadow-rdf;#rest"/>
-     <owl:allValuesFrom rdf:resource="#WsdlOutputMessageMapList"/>
-   </owl:Restriction>
-  </rdfs:subClassOf>
-</owl:Class>
-
-<owl:Class rdf:ID="WsdlInputMessageMapList">
-<rdfs:comment> Deprecated as of version 1.1; no longer needed </rdfs:comment>
-<rdfs:comment> A list of WsdlInputMessageMap instances </rdfs:comment>
-  <rdfs:subClassOf rdf:resource="&shadow-rdf;#List"/>
-  <rdfs:subClassOf>
-   <owl:Restriction>
-     <owl:onProperty rdf:resource="&shadow-rdf;#first"/>
-     <owl:allValuesFrom rdf:resource="#WsdlInputMessageMap"/>
-   </owl:Restriction>
-  </rdfs:subClassOf>
-  <rdfs:subClassOf>
-   <owl:Restriction>
-     <owl:onProperty rdf:resource="&shadow-rdf;#rest"/>
-     <owl:allValuesFrom rdf:resource="#WsdlInputMessageMapList"/>
-   </owl:Restriction>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#xsltTransformation"/>
+      <owl:cardinality rdf:datatype="&xsd;#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
   </rdfs:subClassOf>
 </owl:Class>
 

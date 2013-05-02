@@ -487,19 +487,19 @@ class GrappaSupport
 	if(bb.contains(pt)) {
 	    elem = subg;
 
-	    Enumeration enum;
+	    Enumeration enum1;
 	    Element subelem = null;
 
-	    enum = subg.subgraphElements();
-	    while(enum.hasMoreElements()) {
-		if((subelem = findContainingElement((Subgraph)(enum.nextElement()), pt)) != null) {
+	    enum1 = subg.subgraphElements();
+	    while(enum1.hasMoreElements()) {
+		if((subelem = findContainingElement((Subgraph)(enum1.nextElement()), pt)) != null) {
 		    elem = subelem;
 		}
 	    }
-	    enum = subg.edgeElements();
+	    enum1 = subg.edgeElements();
 	    Edge edge;
-	    while(enum.hasMoreElements()) {
-		edge = (Edge)enum.nextElement();
+	    while(enum1.hasMoreElements()) {
+		edge = (Edge)enum1.nextElement();
 		if((grappaNexus = edge.grappaNexus) == null) continue;
 		if(grappaNexus.rawBounds2D().contains(pt)) {
 		    if(grappaNexus.contains(pt)) {
@@ -507,10 +507,10 @@ class GrappaSupport
 		    }
 		}
 	    }
-	    enum = subg.nodeElements();
+	    enum1 = subg.nodeElements();
 	    Node node;
-	    while(enum.hasMoreElements()) {
-		node = (Node)enum.nextElement();
+	    while(enum1.hasMoreElements()) {
+		node = (Node)enum1.nextElement();
 		if((grappaNexus = node.grappaNexus) == null) continue;
 		if(grappaNexus.rawBounds2D().contains(pt)) {
 		    if(grappaNexus.contains(pt)) {
@@ -543,22 +543,22 @@ class GrappaSupport
 	if(box.contains(bb)) {
 	    return subg.vectorOfElements(Grappa.SUBGRAPH|Grappa.NODE|Grappa.EDGE);
 	} else if(box.intersects(bb)) {
-	    Enumeration enum;
+	    Enumeration enum1;
 	    Vector subelems = null;
 
-	    enum = subg.subgraphElements();
-	    while(enum.hasMoreElements()) {
-		if((subelems = findContainedElements((Subgraph)(enum.nextElement()), box)) != null) {
+	    enum1 = subg.subgraphElements();
+	    while(enum1.hasMoreElements()) {
+		if((subelems = findContainedElements((Subgraph)(enum1.nextElement()), box)) != null) {
 		    if(elems == null) {
 			elems = new Vector();
 		    }
 		    elems.add(subelems);
 		}
 	    }
-	    enum = subg.edgeElements();
+	    enum1 = subg.edgeElements();
 	    Edge edge;
-	    while(enum.hasMoreElements()) {
-		edge = (Edge)enum.nextElement();
+	    while(enum1.hasMoreElements()) {
+		edge = (Edge)enum1.nextElement();
 		if((grappaNexus = edge.grappaNexus) == null) continue;
 		if(box.contains(grappaNexus.rawBounds2D())) {
 		    if(elems == null) {
@@ -567,10 +567,10 @@ class GrappaSupport
 		    elems.add(edge);
 		}
 	    }
-	    enum = subg.nodeElements();
+	    enum1 = subg.nodeElements();
 	    Node node;
-	    while(enum.hasMoreElements()) {
-		node = (Node)enum.nextElement();
+	    while(enum1.hasMoreElements()) {
+		node = (Node)enum1.nextElement();
 		if((grappaNexus = node.grappaNexus) == null) continue;
 		if(box.contains(grappaNexus.rawBounds2D())) {
 		    if(elems == null) {
@@ -603,14 +603,14 @@ class GrappaSupport
 	    elem.highlight = 0;
 	    if(wasDelete) {
 		if(elem.isNode()) {
-		    Enumeration enum = ((Node)elem).edgeElements();
-		    while(enum.hasMoreElements()) {
-			((Element)(enum.nextElement())).highlight = 0;
+		    Enumeration enum1 = ((Node)elem).edgeElements();
+		    while(enum1.hasMoreElements()) {
+			((Element)(enum1.nextElement())).highlight = 0;
 		    }
 		} else if(elem.isSubgraph()) {
-		    Enumeration enum = ((Subgraph)elem).elements();
-		    while(enum.hasMoreElements()) {
-			((Element)(enum.nextElement())).highlight = 0;
+		    Enumeration enum1 = ((Subgraph)elem).elements();
+		    while(enum1.hasMoreElements()) {
+			((Element)(enum1.nextElement())).highlight = 0;
 		    }
 		}
 	    }
@@ -627,26 +627,26 @@ class GrappaSupport
 	    if((mode&DELETION_MASK) == DELETION_MASK) {
 		if(elem.isNode()) {
 		    if((elem.highlight&DELETION_MASK) == DELETION_MASK) {
-			Enumeration enum = ((Node)elem).edgeElements();
-			while(enum.hasMoreElements()) {
-			    ((Element)(enum.nextElement())).highlight |= DELETION_MASK;
+			Enumeration enum1 = ((Node)elem).edgeElements();
+			while(enum1.hasMoreElements()) {
+			    ((Element)(enum1.nextElement())).highlight |= DELETION_MASK;
 			}
 		    } else {
-			Enumeration enum = ((Node)elem).edgeElements();
-			while(enum.hasMoreElements()) {
-			    ((Element)(enum.nextElement())).highlight &= ~DELETION_MASK;
+			Enumeration enum1 = ((Node)elem).edgeElements();
+			while(enum1.hasMoreElements()) {
+			    ((Element)(enum1.nextElement())).highlight &= ~DELETION_MASK;
 			}
 		    }
 		} else if(elem.isSubgraph()) {
 		    if((elem.highlight&DELETION_MASK) == DELETION_MASK) {
-			Enumeration enum = ((Subgraph)elem).elements();
-			while(enum.hasMoreElements()) {
-			    ((Element)(enum.nextElement())).highlight |= DELETION_MASK;
+			Enumeration enum1 = ((Subgraph)elem).elements();
+			while(enum1.hasMoreElements()) {
+			    ((Element)(enum1.nextElement())).highlight |= DELETION_MASK;
 			}
 		    } else {
-			Enumeration enum = ((Subgraph)elem).elements();
-			while(enum.hasMoreElements()) {
-			    ((Element)(enum.nextElement())).highlight &= ~DELETION_MASK;
+			Enumeration enum1 = ((Subgraph)elem).elements();
+			while(enum1.hasMoreElements()) {
+			    ((Element)(enum1.nextElement())).highlight &= ~DELETION_MASK;
 			}
 		    }
 		}

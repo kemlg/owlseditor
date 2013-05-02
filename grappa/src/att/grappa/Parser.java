@@ -744,9 +744,9 @@ class CUP$Parser$actions {
 	list.removeAllElements();
       } else {
 	Subgraph subg = (Subgraph)(tailPair[0]);
-	Enumeration enum = subg.elements(Grappa.NODE);
-	while(enum.hasMoreElements()) {
-	  edgeRHS((Node)(enum.nextElement()),null,headPair,key,name);
+	Enumeration enum1 = subg.elements(Grappa.NODE);
+	while(enum1.hasMoreElements()) {
+	  edgeRHS((Node)(enum1.nextElement()),null,headPair,key,name);
 	}
       }
       tailPair = headPair;
@@ -771,9 +771,9 @@ class CUP$Parser$actions {
       }
     } else {
       Subgraph subg = (Subgraph)(headPair[0]);
-      Enumeration enum = subg.elements(Grappa.NODE);
-      while(enum.hasMoreElements()) {
-	thisEdge = new Edge(thisGraph, tail, tailPort, (Node)(enum.nextElement()), null, key, name);
+      Enumeration enum1 = subg.elements(Grappa.NODE);
+      while(enum1.hasMoreElements()) {
+	thisEdge = new Edge(thisGraph, tail, tailPort, (Node)(enum1.nextElement()), null, key, name);
 	parser.debug_message(1, "Creating edge in subgraph (" + thisGraph.getName() + ")...");
 	parser.debug_message(1, "thisEdge(" + thisEdge.getName() + ")");
 	thisElemType = Grappa.EDGE;

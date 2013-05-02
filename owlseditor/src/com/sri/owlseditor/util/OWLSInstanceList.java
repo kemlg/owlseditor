@@ -184,7 +184,7 @@ class OWLSModelAdapter extends ModelAdapter{
 			while (it.hasNext()){
 				OWLNamedClass oldcls = (OWLNamedClass)it.next();
 				if (oldcls.getName().equals(oldName)){
-					oldcls.setName(resource.getName());
+					oldcls.rename(resource.getName());
 				}
 			}
 		}

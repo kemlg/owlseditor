@@ -485,12 +485,12 @@ public class GrappaAdapter
 			if(elem == null || subg.currentSelection == elem || !(elem instanceof Subgraph)) return;
 			((Element)(subg.currentSelection)).highlight &= ~HIGHLIGHT_MASK;
 			Vector elems = new Vector();
-			Enumeration enum = ((Subgraph)elem).nodeElements();
-			while(enum.hasMoreElements())
-			    elems.add(enum.nextElement());
-			enum = ((Subgraph)elem).edgeElements();
-			while(enum.hasMoreElements())
-			    elems.add(enum.nextElement());
+			Enumeration enum1 = ((Subgraph)elem).nodeElements();
+			while(enum1.hasMoreElements())
+			    elems.add(enum1.nextElement());
+			enum1 = ((Subgraph)elem).edgeElements();
+			while(enum1.hasMoreElements())
+			    elems.add(enum1.nextElement());
 			subg.currentSelection = null;
 			if(elems != null && elems.size() > 0)
 			    drillDown(subg, elems, SELECTION_MASK, HIGHLIGHT_ON);

@@ -6,6 +6,9 @@
 	OWL-S can be found at 
 	http://www.isi.edu/~pan/damltime/AAAIsymp2004.pdf
 
+	More materials about OWL-Time:
+	http://www.isi.edu/~pan/OWL-Time.html
+
 -->
  
 <!DOCTYPE owl [
@@ -28,7 +31,7 @@
 
   <owl:Ontology rdf:about="">
     <rdfs:comment>
-      An entry sub-ontology of time.
+      An entry sub-ontology of time (OWL-Time).
     </rdfs:comment>
   </owl:Ontology>
 
@@ -59,6 +62,7 @@
       <owl:Class rdf:about="#Instant" />
       <owl:Class rdf:about="#Interval" />
     </owl:unionOf>
+    <rdfs:subClassOf rdf:resource="#TemporalThing"/>
   </owl:Class>
 
   <owl:Class rdf:ID="Event">
@@ -66,6 +70,7 @@
       <owl:Class rdf:about="#InstantEvent" />
       <owl:Class rdf:about="#IntervalEvent" />
     </owl:unionOf>
+    <rdfs:subClassOf rdf:resource="#TemporalThing"/>
   </owl:Class>
 
   <owl:Class rdf:ID="InstantThing">
@@ -94,6 +99,7 @@
   <owl:Class rdf:ID="ProperInterval"> 
     <rdfs:subClassOf rdf:resource="#Interval"/>
     <owl:disjointWith rdf:resource="#Instant"/>
+    <rdfs:subClassOf rdf:resource="#ProperIntervalThing"/>
   </owl:Class>
 
   <owl:Class rdf:ID="ProperIntervalThing"> 

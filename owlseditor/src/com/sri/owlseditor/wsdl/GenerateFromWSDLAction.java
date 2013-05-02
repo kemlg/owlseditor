@@ -31,13 +31,13 @@ import edu.stanford.smi.protege.Application;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.ui.ProjectManager;
 import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
-import edu.stanford.smi.protegex.owl.jena.URIResolver;
+//import edu.stanford.smi.protegex.owl.jena.URIResolver;
 import edu.stanford.smi.protegex.owl.jena.parser.ProtegeOWLParser;
 import edu.stanford.smi.protegex.owl.model.NamespaceManager;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.triplestore.TripleStore;
 import edu.stanford.smi.protegex.owl.model.triplestore.TripleStoreModel;
-import edu.stanford.smi.protegex.owl.ui.jena.OntPolicyManager;
+//import edu.stanford.smi.protegex.owl.ui.jena.OntPolicyManager;
 
 /** The action handler for the Generate from WSDL toolbar button */
 public class GenerateFromWSDLAction extends AbstractAction{
@@ -150,13 +150,13 @@ public class GenerateFromWSDLAction extends AbstractAction{
         	prefix = pref + index++;
         } while (nsm.getNamespaceForPrefix(prefix) != null);
 
-        URIResolver uriresolver = model.getURIResolver();
+//        URIResolver uriresolver = model.getURIResolver();
         nsm.setPrefix(defaultNS,prefix);
-        uriresolver.setPhysicalURL(URI.create(uri),filename);
+//        uriresolver.setPhysicalURL(URI.create(uri),filename);
         try {
-        		OntPolicyManager.saveCurrentModel(project);
+//        		OntPolicyManager.saveCurrentModel(project);
         		model.getDefaultOWLOntology().addImports(uri);
-        		ProtegeOWLParser.addImport(model,URI.create(uri));
+//        		ProtegeOWLParser.addImport(model,URI.create(uri));
         		model.getTripleStoreModel().updateEditableResourceState();
         } catch (Exception e) {
         	e.printStackTrace();

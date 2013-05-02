@@ -521,9 +521,9 @@ public class GrappaNexus
 	    // so just put the guts here
 	    Rectangle2D sgbox = null;
 	    Element elem = null;
-	    GraphEnumeration enum = subgraph.elements();
-	    while(enum.hasMoreElements()) {
-		elem = enum.nextGraphElement();
+	    GraphEnumeration enum1 = subgraph.elements();
+	    while(enum1.hasMoreElements()) {
+		elem = enum1.nextGraphElement();
 		if(elem == element) continue;
 		switch(elem.getType()) {
 		case Grappa.NODE:

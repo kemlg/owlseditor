@@ -192,17 +192,17 @@ public class Graph extends Subgraph
 	setName(graphName);
 
 	Attribute attr = null;
-	Enumeration enum = getGlobalAttributePairs(Grappa.NODE);
-	while(enum.hasMoreElements()) {
-	    setNodeAttribute((Attribute)enum.nextElement());
+	Enumeration enum1 = getGlobalAttributePairs(Grappa.NODE);
+	while(enum1.hasMoreElements()) {
+	    setNodeAttribute((Attribute)enum1.nextElement());
 	}
-	enum = getGlobalAttributePairs(Grappa.EDGE);
-	while(enum.hasMoreElements()) {
-	    setEdgeAttribute((Attribute)enum.nextElement());
+	enum1 = getGlobalAttributePairs(Grappa.EDGE);
+	while(enum1.hasMoreElements()) {
+	    setEdgeAttribute((Attribute)enum1.nextElement());
 	}
-	enum = getGlobalAttributePairs(Grappa.SUBGRAPH);
-	while(enum.hasMoreElements()) {
-	    setAttribute((Attribute)enum.nextElement());
+	enum1 = getGlobalAttributePairs(Grappa.SUBGRAPH);
+	while(enum1.hasMoreElements()) {
+	    setAttribute((Attribute)enum1.nextElement());
 	}
 
 	setDelete(false);
@@ -878,11 +878,11 @@ public class Graph extends Subgraph
      * this graph.
      */
     public void buildShapes() {
-	GraphEnumeration enum = elements();
+	GraphEnumeration enum1 = elements();
 	Element elem;
 
-	while(enum.hasMoreElements()) {
-	    elem = enum.nextGraphElement();
+	while(enum1.hasMoreElements()) {
+	    elem = enum1.nextGraphElement();
 	    if(elem.grappaNexus == null) {
 		elem.buildShape();
 	    }
@@ -895,9 +895,9 @@ public class Graph extends Subgraph
      */
     public void resync() {
 	Element elem = null;
-	GraphEnumeration enum = elements();
-	while(enum.hasMoreElements()) {
-	    elem = enum.nextGraphElement();
+	GraphEnumeration enum1 = elements();
+	while(enum1.hasMoreElements()) {
+	    elem = enum1.nextGraphElement();
 	    if(elem.grappaNexus == null) elem.buildShape();
 	    else elem.grappaNexus.rebuild();
 	}

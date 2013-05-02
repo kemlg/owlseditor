@@ -78,17 +78,17 @@ public class Subgraph extends Element
 	super(SUBGRAPH,subg);
 	setName(name);
 
-	Enumeration enum = subg.getNodeAttributePairs();
-	while(enum.hasMoreElements()) {
-	    setNodeAttribute((Attribute)enum.nextElement());
+	Enumeration enum1 = subg.getNodeAttributePairs();
+	while(enum1.hasMoreElements()) {
+	    setNodeAttribute((Attribute)enum1.nextElement());
 	}
-	enum = subg.getEdgeAttributePairs();
-	while(enum.hasMoreElements()) {
-	    setEdgeAttribute((Attribute)enum.nextElement());
+	enum1 = subg.getEdgeAttributePairs();
+	while(enum1.hasMoreElements()) {
+	    setEdgeAttribute((Attribute)enum1.nextElement());
 	}
-	enum = subg.getLocalAttributePairs();
-	while(enum.hasMoreElements()) {
-	    setAttribute((Attribute)enum.nextElement());
+	enum1 = subg.getLocalAttributePairs();
+	while(enum1.hasMoreElements()) {
+	    setAttribute((Attribute)enum1.nextElement());
 	}
 
 	subgraphAttrsOfInterest();
@@ -696,9 +696,9 @@ public class Subgraph extends Element
 	    }
 	    bbox = null;
 	    Element elem = null;
-	    GraphEnumeration enum = elements();
-	    while(enum.hasMoreElements()) {
-		elem = enum.nextGraphElement();
+	    GraphEnumeration enum1 = elements();
+	    while(enum1.hasMoreElements()) {
+		elem = enum1.nextGraphElement();
 		if(elem == (Element)this) continue;
 		switch(elem.getType()) {
 		case NODE:
@@ -768,9 +768,9 @@ public class Subgraph extends Element
      */
     public java.awt.geom.Rectangle2D resetBoundingBox() {
 	Element elem = null;
-	GraphEnumeration enum = elements(SUBGRAPH);
-	while(enum.hasMoreElements()) {
-	    elem = enum.nextGraphElement();
+	GraphEnumeration enum1 = elements(SUBGRAPH);
+	while(enum1.hasMoreElements()) {
+	    elem = enum1.nextGraphElement();
 	    elem.grappaNexus.bbox = null;
 	    elem.setAttribute(BBOX_ATTR, null);
 	}
@@ -1009,9 +1009,9 @@ public class Subgraph extends Element
 
 	if(elem != null || graphdict == null) return elem;
 
-	Enumeration enum = graphdict.elements();
-	while(enum.hasMoreElements()) {
-	    if((elem = ((Subgraph)enum.nextElement()).findElementInSubgraphByName(type,name)) != null) {
+	Enumeration enum1 = graphdict.elements();
+	while(enum1.hasMoreElements()) {
+	    if((elem = ((Subgraph)enum1.nextElement()).findElementInSubgraphByName(type,name)) != null) {
 		return elem;
 	    }
 	}
@@ -1477,9 +1477,9 @@ public class Subgraph extends Element
 	if((types&EDGE) != 0 && edgedict != null) count += edgedict.size(); 
 	if(graphdict != null) {
 	    if((types&SUBGRAPH) != 0) count += graphdict.size(); 
-	    Enumeration enum = graphdict.elements();
-	    while(enum.hasMoreElements()) {
-		count += ((Subgraph)enum.nextElement()).countOfElements(types);
+	    Enumeration enum1 = graphdict.elements();
+	    while(enum1.hasMoreElements()) {
+		count += ((Subgraph)enum1.nextElement()).countOfElements(types);
 	    }
 	}
 	return count;
@@ -1501,9 +1501,9 @@ public class Subgraph extends Element
 	    return;
 	}
 	if(graphdict != null) {
-	    Enumeration enum = graphdict.elements();
-	    while(enum.hasMoreElements()) {
-		((Subgraph)enum.nextElement()).removeEmptySubgraphs();
+	    Enumeration enum1 = graphdict.elements();
+	    while(enum1.hasMoreElements()) {
+		((Subgraph)enum1.nextElement()).removeEmptySubgraphs();
 	    }
 	}
     }
@@ -1523,9 +1523,9 @@ public class Subgraph extends Element
 	    return(true);
 	}
 	if(graphdict != null) {
-	    Enumeration enum = graphdict.elements();
-	    while(enum.hasMoreElements()) {
-		if(((Subgraph)enum.nextElement()).hasEmptySubgraphs()) {
+	    Enumeration enum1 = graphdict.elements();
+	    while(enum1.hasMoreElements()) {
+		if(((Subgraph)enum1.nextElement()).hasEmptySubgraphs()) {
 		    return(true);
 		}
 	    }
@@ -1556,9 +1556,9 @@ public class Subgraph extends Element
 	    Subgraph sg;
 	    String style;
 	    Attribute attr;
-	    Enumeration enum = elements(Grappa.SUBGRAPH);
-	    while(enum.hasMoreElements()) {
-		sg = (Subgraph)(enum.nextElement());
+	    Enumeration enum1 = elements(Grappa.SUBGRAPH);
+	    while(enum1.hasMoreElements()) {
+		sg = (Subgraph)(enum1.nextElement());
 		if(sg != this) {
 		    attr = sg.getAttribute(STYLE_ATTR);
 		    if(attr != null) {
@@ -1573,9 +1573,9 @@ public class Subgraph extends Element
 	    Subgraph sg;
 	    String style;
 	    Attribute attr;
-	    Enumeration enum = elements(Grappa.SUBGRAPH);
-	    while(enum.hasMoreElements()) {
-		sg = (Subgraph)(enum.nextElement());
+	    Enumeration enum1 = elements(Grappa.SUBGRAPH);
+	    while(enum1.hasMoreElements()) {
+		sg = (Subgraph)(enum1.nextElement());
 		if(sg != this) {
 		    sg.setAttribute(COLOR_ATTR,java.awt.Color.getHSBColor((float)(0.05+0.9*(nbr++/sgtot)),(float)1.0,(float)1.0));
 		    attr = sg.getAttribute(STYLE_ATTR);
@@ -1611,7 +1611,7 @@ public class Subgraph extends Element
 
     private void combPatchWork() {
 
-	Enumeration enum;
+	Enumeration enum1;
 	Hashtable dict;
 	Subgraph sg;
 	Element[] patches;
@@ -1648,7 +1648,7 @@ public class Subgraph extends Element
     private double prepPatchWork(String attrname, int mode) {
 
 	double total;
-	Enumeration enum;
+	Enumeration enum1;
 	Hashtable dict;
 	Object obj;
 	int m;
@@ -1667,9 +1667,9 @@ public class Subgraph extends Element
 	    if(attrname != null)
 		sgPatches = new Element[dict.size()];
 	    n = 0;
-	    enum = dict.elements();
-	    while(enum.hasMoreElements()) {
-		sg = (Subgraph)enum.nextElement();
+	    enum1 = dict.elements();
+	    while(enum1.hasMoreElements()) {
+		sg = (Subgraph)enum1.nextElement();
 		total += sg.prepPatchWork(attrname, mode);
 		if(attrname != null)
 		    sgPatches[n++] = sg;
@@ -1693,9 +1693,9 @@ public class Subgraph extends Element
 		System.arraycopy(sgPatches,0,elPatches,0,n);
 		sgPatches = null;
 	    }
-	    enum = dict.elements();
-	    while(enum.hasMoreElements()) {
-		el = (Element)enum.nextElement();
+	    enum1 = dict.elements();
+	    while(enum1.hasMoreElements()) {
+		el = (Element)enum1.nextElement();
 		if((obj = el.getAttributeValue(attrname)) != null) {
 		    if(obj instanceof Number) {
 			el.setPatchSize(((Number)obj).doubleValue());
@@ -2138,7 +2138,7 @@ public class Subgraph extends Element
     class Enumerator implements GraphEnumeration {
 	private Subgraph root = null;
 	private int types = 0;
-	private Enumeration enum = null;
+	private Enumeration enum1 = null;
 	private GraphEnumeration subEnum = null;
 	private Element elem = null;
 	private int dictType = 0;
@@ -2152,11 +2152,11 @@ public class Subgraph extends Element
 	    } else {
 		elem = null;
 	    }
-	    enum = subgraphElements();
-	    if(enum.hasMoreElements()) {
+	    enum1 = subgraphElements();
+	    if(enum1.hasMoreElements()) {
 		dictType = SUBGRAPH;
-		while(enum.hasMoreElements()) {
-		    subEnum = ((Subgraph)(enum.nextElement())).new Enumerator(types);
+		while(enum1.hasMoreElements()) {
+		    subEnum = ((Subgraph)(enum1.nextElement())).new Enumerator(types);
 		    if(subEnum.hasMoreElements()) {
 			if(elem == null) {
 			    elem = (Element)subEnum.nextElement();
@@ -2166,22 +2166,22 @@ public class Subgraph extends Element
 		}
 	    } else {
 		dictType = 0;
-		enum = null;
+		enum1 = null;
 		subEnum = null;
 	    }
-	    if(enum == null) {
-		if((types&NODE) != 0 && (enum = nodeElements()).hasMoreElements()) {
+	    if(enum1 == null) {
+		if((types&NODE) != 0 && (enum1 = nodeElements()).hasMoreElements()) {
 		    dictType = NODE;
 		    if(elem == null) {
-			elem = (Element)enum.nextElement();
+			elem = (Element)enum1.nextElement();
 		    }
-		} else if((types&EDGE) != 0 && (enum = edgeElements()).hasMoreElements()) {
+		} else if((types&EDGE) != 0 && (enum1 = edgeElements()).hasMoreElements()) {
 		    dictType = EDGE;
 		    if(elem == null) {
-			elem = (Element)enum.nextElement();
+			elem = (Element)enum1.nextElement();
 		    }
 		} else {
-		    enum = null;
+		    enum1 = null;
 		}
 	    }
 	}
@@ -2197,9 +2197,9 @@ public class Subgraph extends Element
 	    Element el = elem;
 	    if(subEnum != null && subEnum.hasMoreElements()) {
 		elem = (Element)subEnum.nextElement();
-	    } else if(enum != null && enum.hasMoreElements()) {
+	    } else if(enum1 != null && enum1.hasMoreElements()) {
 		do {
-		    elem = (Element)enum.nextElement();
+		    elem = (Element)enum1.nextElement();
 		    if(elem.isSubgraph()) {
 			subEnum = ((Subgraph)elem).new Enumerator(getEnumerationTypes());
 			if(subEnum.hasMoreElements()) {
@@ -2211,34 +2211,34 @@ public class Subgraph extends Element
 		    } else {
 			break;
 		    }
-		} while(enum.hasMoreElements());
+		} while(enum1.hasMoreElements());
 	    } else {
 		elem = null;
 	    }
 	    if(elem == null) {
 		if(dictType != 0) {
 		    if(dictType == SUBGRAPH) {
-			if((getEnumerationTypes()&NODE) != 0 && (enum = nodeElements()).hasMoreElements()) {
+			if((getEnumerationTypes()&NODE) != 0 && (enum1 = nodeElements()).hasMoreElements()) {
 			    dictType = NODE;
-			    elem = (Element)enum.nextElement();
-			} else if((getEnumerationTypes()&EDGE) != 0 && (enum = edgeElements()).hasMoreElements()) {
+			    elem = (Element)enum1.nextElement();
+			} else if((getEnumerationTypes()&EDGE) != 0 && (enum1 = edgeElements()).hasMoreElements()) {
 			    dictType = EDGE;
-			    elem = (Element)enum.nextElement();
+			    elem = (Element)enum1.nextElement();
 			} else {
 			    dictType = 0;
-			    enum = null;
+			    enum1 = null;
 			}
 		    } else if(dictType == NODE) {
-			if((getEnumerationTypes()&EDGE) != 0 && (enum = edgeElements()).hasMoreElements()) {
+			if((getEnumerationTypes()&EDGE) != 0 && (enum1 = edgeElements()).hasMoreElements()) {
 			    dictType = EDGE;
-			    elem = (Element)enum.nextElement();
+			    elem = (Element)enum1.nextElement();
 			} else {
 			    dictType = 0;
-			    enum = null;
+			    enum1 = null;
 			}
 		    } else {
 			dictType = 0;
-			enum = null;
+			enum1 = null;
 		    }
 		}
 	    }

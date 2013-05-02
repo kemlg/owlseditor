@@ -2,12 +2,12 @@
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
   xmlns:owl="http://www.w3.org/2002/07/owl#"
-  xmlns="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#"
-  xml:base="http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl">
+  xmlns="http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#"
+  xml:base="http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl">
 
 <owl:Ontology rdf:about="">
   <owl:versionInfo>
-    $Id: ObjectList.owl,v 1.4 2004/05/06 00:08:51 martin Exp $
+    $Id: ObjectList.owl,v 1.5 2004/11/28 16:29:55 martin Exp $
   </owl:versionInfo>
   <rdfs:comment>
   </rdfs:comment>

@@ -8,9 +8,9 @@
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns">
   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema">
   <!ENTITY owl "http://www.w3.org/2002/07/owl">
-  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl">
-  <!ENTITY DEFAULT "http://www.daml.org/services/owl-s/1.1/Service.owl">
-  <!ENTITY THIS "http://www.daml.org/services/owl-s/1.1/Service.owl">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.2/Service.owl">
+  <!ENTITY DEFAULT "http://www.daml.org/services/owl-s/1.2/Service.owl">
+  <!ENTITY THIS "http://www.daml.org/services/owl-s/1.2/Service.owl">
 ]>
 
 <rdf:RDF 
@@ -22,7 +22,7 @@
 
 <owl:Ontology rdf:about="">
   <owl:versionInfo>
-    $Id: Service.owl,v 1.23 2004/05/12 06:08:50 martin Exp $
+    $Id: Service.owl,v 1.25 2005/05/18 21:45:19 martin Exp $
   </owl:versionInfo>
   <rdfs:comment>
     Top level of OWL ontology for services.
@@ -127,22 +127,12 @@ agent to make use of the selected service.
   <owl:inverseOf rdf:resource="&service;#presents"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:ID="isPresentedBy">
-  <rdfs:comment>deprecated form</rdfs:comment>
-  <owl:equivalentProperty rdf:resource="#presentedBy"/>
-</owl:ObjectProperty>
-
 <!--   Being described by a model -->
 
 <owl:ObjectProperty rdf:ID="describedBy">
   <rdfs:domain rdf:resource="&service;#Service"/>
   <rdfs:range rdf:resource="&service;#ServiceModel"/>
   <owl:inverseOf rdf:resource="&service;#describes"/>
-</owl:ObjectProperty>
-
-<owl:ObjectProperty rdf:ID="isDescribedBy">
-  <rdfs:comment>deprecated form</rdfs:comment>
-  <owl:equivalentProperty rdf:resource="#describedBy"/>
 </owl:ObjectProperty>
 
 <owl:Class rdf:about="#Service">
@@ -189,11 +179,6 @@ agent to make use of the selected service.
   <rdfs:domain rdf:resource="&service;#ServiceGrounding"/>
   <rdfs:range rdf:resource="&service;#Service"/>
   <owl:inverseOf rdf:resource="&service;#supports"/>
-</owl:ObjectProperty>
-
-<owl:ObjectProperty rdf:ID="isSupportedBy">
-  <rdfs:comment>deprecated form</rdfs:comment>
-  <owl:equivalentProperty rdf:resource="#supportedBy"/>
 </owl:ObjectProperty>
 
 <owl:Class rdf:about="#ServiceGrounding">

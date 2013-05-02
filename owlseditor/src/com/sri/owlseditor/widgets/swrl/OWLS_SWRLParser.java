@@ -146,9 +146,9 @@ public class OWLS_SWRLParser {
         else if (isBuiltinName(identifier)) {
             atom = parseBuiltinParameters(identifier);
         }
-        else if (isXSDDatatype(identifier)) {
-            atom = parseXSDDatatypeParameters(identifier);
-        }
+//        else if (isXSDDatatype(identifier)) {
+//            atom = parseXSDDatatypeParameters(identifier);
+//        }
         else {
             throw new SWRLParseException("Invalid atom name '" + identifier + "'.");
         } // if
@@ -366,23 +366,23 @@ public class OWLS_SWRLParser {
     } // parseBuiltinParameters
 
 
-    private SWRLAtom parseXSDDatatypeParameters(String identifier)
-            throws SWRLParseException {
-        RDFObject dObject;
-        SWRLAtom atom = null;
-        RDFSDatatype datatype;
-
-        dObject = parseDObject();
-
-        if (!parseOnly) {
-            datatype = owlModel.getRDFSDatatypeByName(identifier);
-            atom = swrlFactory.createDataRangeAtom(datatype, dObject);
-        } // if
-
-        checkAndSkipToken(")", "Expecting closing parenthesis after DataRangeAtom '" + identifier + "'.");
-
-        return atom;
-    } // parseXSDDatatypeParameters
+//    private SWRLAtom parseXSDDatatypeParameters(String identifier)
+//            throws SWRLParseException {
+//        RDFObject dObject;
+//        SWRLAtom atom = null;
+//        RDFSDatatype datatype;
+//
+//        dObject = parseDObject();
+//
+//        if (!parseOnly) {
+//            datatype = owlModel.getRDFSDatatypeByName(identifier);
+//            atom = swrlFactory.createDataRangeAtom(datatype, dObject);
+//        } // if
+//
+//        checkAndSkipToken(")", "Expecting closing parenthesis after DataRangeAtom '" + identifier + "'.");
+//
+//        return atom;
+//    } // parseXSDDatatypeParameters
 
 
     private SWRLAtom parseEnumeratedListParameters(List enumeratedList)
