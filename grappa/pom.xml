@@ -27,9 +27,9 @@
 	</build>
 	<distributionManagement>
 		<repository>
-			<id>bintray-kemlg-owlsutils-edu.upc.kemlg.owls.dependencies</id>
-			<name>kemlg-owlsutils-edu.upc.kemlg.owls.dependencies</name>
-			<url>https://api.bintray.com/maven/kemlg/owlsutils/edu.upc.kemlg.owls.dependencies</url>
+			<id>bintray-kemlg-owlsutils-att.grappa</id>
+			<name>kemlg-owlsutils-att.grappa</name>
+			<url>https://api.bintray.com/maven/kemlg/owlsutils/att.grappa</url>
 		</repository>
 	</distributionManagement>
 </project>
