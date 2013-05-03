@@ -1,0 +1,93 @@
+=============================================================
+Java OWLS2WSDL Translation Tool
+
+Developed by Oliver Fourman, Ingo Zinnikus, Matthias Klusch
+Copyright 2007, Oliver Fourman
+=============================================================
+
+Joint work at 
+
+  German Research Center for Artificial Intelligence (DFKI GmbH)
+  Saarbrücken, Germany
+
+  Hochschule für Technik und Wirtschaft (HTW) des Saarlandes
+  Saarbrücken, Germany
+
+
+Under project grants:
+
+  ATHENA: http://www.athena-ip.org
+  SCALLOPS: http:// www.dfki.de/~klusch/scallops
+
+
+Abstract
+=============================================================
+
+One of the most unregarded topics in the area of OWL-S is the top down
+approach of generating the WSDL Grounding. This tool generates WSDL
+service descriptions for given OWL-S atomic process signatures.
+In particular, the translation of an atomic OWL-S service process signature
+requires the translation of parameter types defined in OWL-DL.
+
+The semi-automatic OWLS2WSDL tool converts referenced OWL concepts to
+XML Schema types. Respectively generated data structures for each
+OWL class may vary depending on the chosen configuration of the
+integrated XML Schema generator. 
+
+OWLS2WSDL has been used to generate the groundings of OWL-S
+services in the test collection OWLS-TC2 in WSDL.
+(http://projects.semwebcentral.org/projects/owls-tc/)
+
+
+Requirements
+=============================================================
+* Java Version: jre1.5.x
+* Enough memory! Start the java engine at least with -Xms256m -Xmx512m flags.
+* To test the translation you need a pre-installed OWLS-TC environment:
+  Download: http://projects.semwebcentral.org/projects/owls-tc/
+
+
+Optional Software
+=============================================================
+Generated WSDL descriptions are compatible to the latest
+WSDL Analyzer (Athena IP) and XMLSpy (Altova) versions.
+
+
+Documentation (7/2007)
+=============================================================
+* Only in german available at the moment.
+  http://www.htw-saarland.de/Members/fourman/thesis/
+
+
+This product includes following software components
+=============================================================
+* OWL-S API (http://code.google.com/p/owl-s/); mindswap.com (UMBC, USA)
+* XML Schema API (http://www.castor.org/xmlschema.html); Castor Project
+* Jena (http://jena.sourceforge.net); HP Labs
+* Axis (http://ws.apache.org/axis); Apache Software Foundation
+
+
+Licensing and Disclaimer
+=============================================================
+
+  OWLS2WSDL is free for non-commercial use only.
+  You can redistribute it and/or modify it under the terms 
+  of the Mozilla Public License version 1.1 as 
+  published by the Mozilla Foundation at 
+  http://www.mozilla.org/MPL/MPL-1.1.txt
+
+  DISCLAIMER OF WARRANTY
+
+  COVERED CODE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS,
+  WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,  
+  INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT THE COVERED
+  CODE IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR
+  PURPOSE OR NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY
+  AND PERFORMANCE OF THE COVERED CODE IS WITH YOU.  
+  SHOULD ANY COVERED CODE PROVE DEFECTIVE IN ANY RESPECT, YOU
+  (NOT THE INITIAL DEVELOPER OR ANY OTHER CONTRIBUTOR) ASSUME  
+  THE COST OF ANY NECESSARY SERVICING, REPAIR OR CORRECTION.  
+  THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART
+  OF THIS LICENSE. NO USE OF ANY COVERED CODE IS AUTHORIZED
+  HEREUNDER EXCEPT UNDER THIS DISCLAIMER.
+
