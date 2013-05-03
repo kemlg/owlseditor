@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-
-Name: org/tigris/lazer/
-Specification-Title: Lazer
-Specification-Version: @version@
-Implementation-Version: @version@
-Implementation-Title: Lazer
