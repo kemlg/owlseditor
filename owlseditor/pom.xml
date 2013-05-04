@@ -9,7 +9,7 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-			<id>central</id>
+			<id>owlsutils</id>
 			<name>bintray</name>
 			<url>http://dl.bintray.com/content/kemlg/owlsutils</url>
 		</repository>
@@ -19,7 +19,7 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-			<id>central</id>
+			<id>owlsutils</id>
 			<name>bintray-plugins</name>
 			<url>http://dl.bintray.com/content/kemlg/owlsutils</url>
 		</pluginRepository>
