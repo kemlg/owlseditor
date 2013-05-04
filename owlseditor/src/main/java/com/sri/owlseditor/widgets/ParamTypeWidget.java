@@ -32,7 +32,6 @@ import edu.stanford.smi.protege.model.Cls;
 import edu.stanford.smi.protege.model.Facet;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.Slot;
-import edu.stanford.smi.protege.model.ValueType;
 import edu.stanford.smi.protege.resource.ResourceKey;
 import edu.stanford.smi.protege.ui.DisplayUtilities;
 import edu.stanford.smi.protege.ui.FrameComparator;

@@ -1,0 +1,35 @@
+<component>
+	<dependencySets>
+		<dependencySet>
+			<useProjectArtifact>
+				true
+			</useProjectArtifact>
+			<outputDirectory>.</outputDirectory>
+			<excludes>
+				<exclude>
+					edu.stanford.smi.protege:protege
+				</exclude>
+				<exclude>
+					edu.stanford.smi.protege:protege-owl
+				</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+			<directory>${project.basedir}/contrib</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>plugin.properties</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/contrib/doc</directory>
+			<outputDirectory>doc/</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/contrib/owl-s</directory>
+			<outputDirectory>owl-s/</outputDirectory>
+		</fileSet>
+	</fileSets>
+</component>

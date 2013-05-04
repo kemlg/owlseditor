@@ -3,29 +3,177 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sri</groupId>
 	<artifactId>owlseditor</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.2.2</version>
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>bintray</name>
+			<url>http://dl.bintray.com/content/kemlg/owlsutils</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>bintray-plugins</name>
+			<url>http://dl.bintray.com/content/kemlg/owlsutils</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
 			<resource>
-				<directory>src</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
 		<plugins>
 			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>zip-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<finalName>com.sri.owlseditor</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source />
-					<target />
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<!-- <index>true</index> <manifest> <addClasspath>true</addClasspath> 
+							</manifest> // -->
+						<manifestSections>
+							<manifestSection>
+								<name>com/sri/owlseditor/Owlstab.class</name>
+								<manifestEntries>
+									<Tab-Widget>True</Tab-Widget>
+								</manifestEntries>
+							</manifestSection>
+							<manifestSection>
+								<name>com/sri/owlseditor/widgets/ExprLangWidget.class</name>
+								<manifestEntries>
+									<Slot-Widget>True</Slot-Widget>
+									<Default-Widget>True</Default-Widget>
+									<Default-Widget-For-Slot>expr:expressionLanguage</Default-Widget-For-Slot>
+									<Default-Widget-For-Cardinality>Single</Default-Widget-For-Cardinality>
+								</manifestEntries>
+							</manifestSection>
+							<manifestSection>
+								<name>com/sri/owlseditor/widgets/ExprBodyWidget.class</name>
+								<manifestEntries>
+									<Slot-Widget>True</Slot-Widget>
+									<Default-Widget>True</Default-Widget>
+									<Default-Widget-For-Slot>expr:expressionBody</Default-Widget-For-Slot>
+									<Default-Widget-For-Cardinality>Single</Default-Widget-For-Cardinality>
+								</manifestEntries>
+							</manifestSection>
+							<manifestSection>
+								<name>com/sri/owlseditor/widgets/swrl/SWRLWidget.class</name>
+								<manifestEntries>
+									<Slot-Widget>True</Slot-Widget>
+									<Default-Widget>True</Default-Widget>
+									<Default-Widget-For-Slot>expr:expressionObject</Default-Widget-For-Slot>
+									<Default-Widget-For-Cardinality>Single</Default-Widget-For-Cardinality>
+								</manifestEntries>
+							</manifestSection>
+							<manifestSection>
+								<name>com/sri/owlseditor/widgets/dataflow/HasDataFromWidget.class</name>
+								<manifestEntries>
+									<Slot-Widget>True</Slot-Widget>
+									<Default-Widget>True</Default-Widget>
+									<Default-Widget-For-Slot>process:hasDataFrom</Default-Widget-For-Slot>
+									<Default-Widget-For-Cardinality>Single</Default-Widget-For-Cardinality>
+								</manifestEntries>
+							</manifestSection>
+							<manifestSection>
+								<name>com/sri/owlseditor/widgets/dataflow/ProducedBindingWidget.class</name>
+								<manifestEntries>
+									<Slot-Widget>True</Slot-Widget>
+									<Default-Widget>True</Default-Widget>
+									<Default-Widget-For-Slot>process:producedBinding</Default-Widget-For-Slot>
+									<Default-Widget-For-Cardinality>Single</Default-Widget-For-Cardinality>
+								</manifestEntries>
+							</manifestSection>
+							<manifestSection>
+								<name>com/sri/owlseditor/widgets/ParamTypeWidget.class</name>
+								<manifestEntries>
+									<Slot-Widget>True</Slot-Widget>
+									<Default-Widget>True</Default-Widget>
+									<Default-Widget-For-Slot>process:parameterType</Default-Widget-For-Slot>
+									<Default-Widget-For-Cardinality>Single</Default-Widget-For-Cardinality>
+								</manifestEntries>
+							</manifestSection>
+							<manifestSection>
+								<name>com/sri/owlseditor/widgets/wsdl/WSDLInputWidget.class</name>
+								<manifestEntries>
+									<Slot-Widget>True</Slot-Widget>
+									<Default-Widget>True</Default-Widget>
+									<Default-Widget-For-Slot>grounding:wsdlInput</Default-Widget-For-Slot>
+									<Default-Widget-For-Cardinality>Single</Default-Widget-For-Cardinality>
+								</manifestEntries>
+							</manifestSection>
+							<manifestSection>
+								<name>com/sri/owlseditor/widgets/wsdl/WSDLOutputWidget.class</name>
+								<manifestEntries>
+									<Slot-Widget>True</Slot-Widget>
+									<Default-Widget>True</Default-Widget>
+									<Default-Widget-For-Slot>grounding:wsdlOutput</Default-Widget-For-Slot>
+									<Default-Widget-For-Cardinality>Single</Default-Widget-For-Cardinality>
+								</manifestEntries>
+							</manifestSection>
+						</manifestSections>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>edu.stanford.smi.protege</groupId>
+			<artifactId>protege</artifactId>
+			<version>3.4.8</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>edu.stanford.smi.protege</groupId>
+			<artifactId>protege-owl</artifactId>
+			<version>3.4.8</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mindswap</groupId>
+			<artifactId>owls</artifactId>
+			<version>1.0</version>
+			<type>jar</type>
+		</dependency>
 		<dependency>
 			<groupId>com.github.ansell.pellet</groupId>
 			<artifactId>pellet-core</artifactId>
@@ -44,7 +192,7 @@
 		<dependency>
 			<groupId>att</groupId>
 			<artifactId>grappa</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>batik</groupId>
@@ -60,13 +208,18 @@
 			<groupId>com.jgoodies</groupId>
 			<artifactId>jgoodies-looks</artifactId>
 			<version>2.5.2</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
 			<version>2.11.0</version>
-			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>bintray-kemlg-owlsutils-com.sri.owlseditor</id>
+			<name>kemlg-owlsutils-com.sri.owlseditor</name>
+			<url>https://api.bintray.com/maven/kemlg/owlsutils/com.sri.owlseditor</url>
+		</repository>
+	</distributionManagement>
 </project>
