@@ -16,6 +16,10 @@ This repository is being maintained by the [KEMLg](http://kemlg.upc.edu) researc
 
 In order to install, unzip the binary release into `${protege.dir}/plugins/`.
 
+## Documentation
+
+The original documentation compiled by Shahin Saadati and Grit Denker from SRI International is fairly complete. It can be found in PDF format [here](http://owlseditor.semwebcentral.org/documents/tutorial.pdf).
+
 ## Building the plug-in
 
 In order to build owlseditor, you will need to have Maven installed. Clone this repository and run:
