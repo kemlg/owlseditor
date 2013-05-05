@@ -10,7 +10,7 @@ This repository is being maintained by the [KEMLg](http://kemlg.upc.edu) researc
 
 ## Binary release
 
-* Version 1.2.2 [[zip](http://dl.bintray.com/content/kemlg/owlsutils/com/sri/owlseditor/1.2.2/owlseditor-1.2.2.zip?direct)] (tested in Protégé 3.4.8)
+* Version 1.2.2 ([zip](http://dl.bintray.com/content/kemlg/owlsutils/com/sri/owlseditor/1.2.2/owlseditor-1.2.2.zip?direct)) (tested in Protégé 3.4.8)
 
 ## Installation
 
