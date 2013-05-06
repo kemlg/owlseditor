@@ -16,6 +16,7 @@
 
 package com.sri.owlseditor.iopr;
 
+import com.sri.owlseditor.util.MultipleInstanceSelector;
 import com.sri.owlseditor.util.OWLSInstanceList;
 
 import edu.stanford.smi.protege.model.Project;

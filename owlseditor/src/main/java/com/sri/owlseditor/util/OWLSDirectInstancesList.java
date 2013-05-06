@@ -285,7 +285,7 @@ public class OWLSDirectInstancesList extends SelectableContainer implements
 		listenedToInstances.clear();
 	}
 
-	private void addInstanceListener(Instance instance) {
+	protected void addInstanceListener(Instance instance) {
 		instance.addFrameListener(_instanceFrameListener);
 		listenedToInstances.add(instance);
 	}

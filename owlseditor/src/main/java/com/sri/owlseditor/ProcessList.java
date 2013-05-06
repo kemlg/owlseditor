@@ -15,6 +15,8 @@ All Rights Reserved.
  ******************************************************************************************/
 package com.sri.owlseditor;
 
+import java.awt.event.MouseListener;
+
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protegex.owl.model.RDFIndividual;
 
@@ -23,7 +25,7 @@ public class ProcessList extends BoldableOWLSInstanceList {
 	public ProcessList(Project project) {
 		super(project, "process:Process");
 	}
-
+	
 	public void update(RDFIndividual instance) {
 		// System.out.println("ProcessList.update()");
 		boldItems.clear();

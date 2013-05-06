@@ -15,6 +15,7 @@ All Rights Reserved.
  ******************************************************************************************/
 package com.sri.owlseditor.util;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.ListModel;
+
+import com.sri.owlseditor.BoldableOWLSInstanceList;
 
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.util.LabeledComponent;
@@ -52,9 +55,9 @@ public class OWLSInstanceList extends OWLSDirectInstancesList {
 
 	protected Project project;
 	protected OWLModel model;
-	protected String clsName;
+	public String clsName;
 	protected OWLNamedClass cls;
-	
+
 	static List<OWLSInstanceList>	instances;
 	
 	static {
@@ -223,16 +226,11 @@ class OWLSModelAdapter extends ModelAdapter {
 					target.addValue(inst, i);
 				}
 			}
-			((SelectableList)ilist.getSelectable()).setModel(target);
-			ilist.paint(ilist.getGraphics());
 			
-			Iterator<OWLSInstanceList> it = OWLSInstanceList.instances.iterator();
-			while(it.hasNext()) {
-				OWLSInstanceList	oil;
-				
-				oil = it.next();
-				oil.reload();
-			}
+			BoldableOWLSInstanceList l = BoldableOWLSInstanceList.lastClicked;
+			l.reload();
+			((SelectableList) ilist.getSelectable()).setModel(target);
+			ilist.paint(ilist.getGraphics());
 		}
 	}
 

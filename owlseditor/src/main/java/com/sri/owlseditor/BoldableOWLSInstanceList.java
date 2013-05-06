@@ -15,6 +15,8 @@ All Rights Reserved.
  ******************************************************************************************/
 package com.sri.owlseditor;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -58,6 +60,8 @@ public abstract class BoldableOWLSInstanceList extends OWLSInstanceList {
 
 	protected OWLObjectProperty supportedBy;
 	protected OWLObjectProperty hasAtomicProcessGrounding;
+	
+	public static BoldableOWLSInstanceList lastClicked;
 
 	public BoldableOWLSInstanceList(Project project, String clsName) {
 		super(project, clsName, false);
@@ -65,6 +69,7 @@ public abstract class BoldableOWLSInstanceList extends OWLSInstanceList {
 		SelectableList list = (SelectableList) getSelectable();
 		list.setCellRenderer(new OWLSFrameRenderer(model, this));
 		setupClassesAndProperties();
+		this.addSelectionListener(new BoldableListMouseListener(this));
 	}
 
 	/**

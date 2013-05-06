@@ -16,6 +16,8 @@
 
 package com.sri.owlseditor.iopr;
 
+import com.sri.owlseditor.util.MultipleInstanceSelector;
+
 import edu.stanford.smi.protege.model.Project;
 
 public class InputList extends IOPRInstancesList {
