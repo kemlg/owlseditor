@@ -44,12 +44,10 @@ import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.util.ComponentFactory;
 import edu.stanford.smi.protege.widget.AbstractTabWidget;
 import edu.stanford.smi.protege.widget.WidgetMapper;
-import edu.stanford.smi.protegex.owl.ProtegeOWL;
 import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
 import edu.stanford.smi.protegex.owl.jena.parser.ProtegeOWLParser;
 import edu.stanford.smi.protegex.owl.model.NamespaceManager;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
-import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLOntology;
 import edu.stanford.smi.protegex.owl.model.triplestore.TripleStore;
 import edu.stanford.smi.protegex.owl.model.triplestore.TripleStoreModel;
@@ -191,9 +189,14 @@ public class Owlstab extends AbstractTabWidget {
 		ioprManager = new IOPRManager(okb);
 		selector.addServiceSelectorListener(ioprManager);
 
-		graphDisplay = new GraphDisplay(okb,
-				(OWLIndividual) selector.getSelectedInstance()); // graph-display
-		selector.addServiceSelectorListener(graphDisplay); // graph-display
+                try {
+                    graphDisplay = new GraphDisplay(okb,
+                                    (OWLIndividual) selector.getSelectedInstance()); // graph-display
+                    selector.addServiceSelectorListener(graphDisplay); // graph-display
+                }
+                catch(NullPointerException e) {
+                    System.out.println("Please, install GraphViz");
+                }
 
 		options = new OptionsManager(getProject());
 		Cleaner.getInstance().registerCleanerListener(options);
